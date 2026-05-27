@@ -109,25 +109,34 @@
 
     <section id="pageEtf" class="page" aria-label="ETF Seite">
       <div class="panel">
-        <h3>Eigenen Portfolio-Mix erstellen</h3>
+        <h3>Eigenen ETF erstellen</h3>
         <div class="row" style="margin-bottom:10px;">
-          <input id="etfName" class="input" placeholder="Name (z. B. Tech & Crypto Mix)" />
-          <button id="createEtfBtn" class="smallbtn">Erstellen</button>
+          <input id="etfName" class="input" placeholder="ETF-Name (z. B. Tech Giants)" />
         </div>
-        <div class="row">
-          <input id="assetInput" class="input" placeholder="Asset hinzufügen: AAPL / BTC" />
-          <button id="addAssetBtn" class="smallbtn">Hinzufügen</button>
+        <div class="row" style="margin-bottom:4px;">
+          <input id="assetInput" class="input" placeholder="Ticker (z. B. AAPL)" style="flex:2;" />
+          <input id="weightInput" class="input weight-input" placeholder="%" type="number" min="1" max="100" />
+          <button id="addAssetBtn" class="smallbtn">+</button>
         </div>
         <div id="assetTags"></div>
+        <div id="weightSum" class="weight-sum"></div>
         <div class="row" style="margin-top:12px;">
           <button id="saveEtfBtn" class="smallbtn" style="flex:1;">Speichern</button>
-          <button id="resetEtfBtn" class="smallbtn" style="flex:1; background:rgba(255,255,255,0.05);">Reset</button>
+          <button id="resetEtfBtn" class="smallbtn reset-btn" style="flex:1;">Reset</button>
         </div>
       </div>
 
       <div class="panel">
-        <h3>Leaderboard (Community Mixes)</h3>
-        <div id="leaderboard" class="list" aria-label="Leaderboard Liste"></div>
+        <div class="lb-header">
+          <h3>Leaderboard — Top 10</h3>
+          <div class="lb-filter" role="group" aria-label="Zeitraum">
+            <button class="lb-filter-btn active" data-period="d">Heute</button>
+            <button class="lb-filter-btn" data-period="w">1W</button>
+            <button class="lb-filter-btn" data-period="m">1M</button>
+            <button class="lb-filter-btn" data-period="y">1J</button>
+          </div>
+        </div>
+        <div id="leaderboard" class="list" aria-label="Leaderboard"></div>
       </div>
     </section>
   </div>
@@ -144,7 +153,7 @@
 
   <nav class="bottom-nav" aria-label="Taskleiste">
     <button id="tabSwipe" class="tab active" type="button" aria-label="Swipe">Swipe</button>
-    <button id="tabEtf" class="tab" type="button" aria-label="Portfolio Builder">Portfolio</button>
+    <button id="tabEtf" class="tab" type="button" aria-label="ETF Builder">ETF</button>
   </nav>
 
   <script src="app.js"></script>

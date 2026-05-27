@@ -251,87 +251,161 @@ document.getElementById("tabEtf").addEventListener("click", () => {
   document.getElementById("pageEtf").classList.add("active");
   document.getElementById("tabSwipe").classList.remove("active");
   document.getElementById("tabEtf").classList.add("active");
-  document.getElementById("pageSubtitle").textContent = "Baue dein Portfolio";
+  document.getElementById("pageSubtitle").textContent = "Baue deinen ETF";
 });
 
-// ── ETF Builder ───────────────────────────────────────────────────────────────
-let etfName    = "";
-let etfAssets  = [];
-const savedEtfs = [];
+// ── ETF: Performance-Berechnung ───────────────────────────────────────────────
 
-document.getElementById("createEtfBtn").addEventListener("click", () => {
-  const name = document.getElementById("etfName").value.trim();
-  if (!name) { showToast("Bitte einen Namen eingeben"); return; }
-  etfName = name;
-  showToast(`Portfolio "${name}" bereit`);
-});
-
-document.getElementById("addAssetBtn").addEventListener("click", addAsset);
-document.getElementById("assetInput").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addAsset();
-});
-
-function addAsset() {
-  const input  = document.getElementById("assetInput");
-  const ticker = input.value.trim().toUpperCase();
-  if (!ticker) return;
-  if (etfAssets.includes(ticker)) { showToast(`${ticker} bereits hinzugefügt`); return; }
-  etfAssets.push(ticker);
-  input.value = "";
-  renderAssetTags();
+// Konsistenter Tageswert: seed aus Ticker + Datum, damit er pro Tag gleich bleibt
+function simulateTodayPerf(stock) {
+  const seed = stock.id + new Date().toDateString();
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h * 31 + seed.charCodeAt(i), 1) | 0;
+  const norm = ((h >>> 0) / 0xffffffff) - 0.5; // -0.5 … +0.5
+  return +((stock.perf.w / 5) + norm * 0.8).toFixed(2);
 }
 
-function removeAsset(ticker) {
-  etfAssets = etfAssets.filter(a => a !== ticker);
-  renderAssetTags();
+// Einmalig alle today-Werte befüllen
+stocks.forEach(s => { s.perf.d = simulateTodayPerf(s); });
+
+function calcEtfPerf(holdings, period) {
+  let result = 0;
+  for (const h of holdings) {
+    const stock = stocks.find(s => s.ticker === h.ticker);
+    if (!stock) continue;
+    result += (stock.perf[period] ?? 0) * h.weight / 100;
+  }
+  return +result.toFixed(2);
 }
 
-function renderAssetTags() {
-  document.getElementById("assetTags").innerHTML = etfAssets.map(a =>
-    `<span class="asset-tag">${a}<button onclick="removeAsset('${a}')" aria-label="${a} entfernen">×</button></span>`
+// ── ETF: Beispiel-ETFs ────────────────────────────────────────────────────────
+const exampleEtfs = [
+  { id:"ex1", name:"Tech Giants",       holdings:[{ticker:"AAPL",weight:30},{ticker:"MSFT",weight:30},{ticker:"NVDA",weight:40}], isExample:true },
+  { id:"ex2", name:"EV & AI",           holdings:[{ticker:"TSLA",weight:40},{ticker:"NVDA",weight:60}],                           isExample:true },
+  { id:"ex3", name:"Big Tech Balanced", holdings:[{ticker:"AAPL",weight:25},{ticker:"MSFT",weight:25},{ticker:"AMZN",weight:25},{ticker:"NVDA",weight:25}], isExample:true },
+  { id:"ex4", name:"Diversified Core",  holdings:[{ticker:"SAP",weight:30},{ticker:"AAPL",weight:25},{ticker:"MSFT",weight:25},{ticker:"AMZN",weight:20}], isExample:true },
+  { id:"ex5", name:"German Champion",   holdings:[{ticker:"SAP",weight:100}],                                                     isExample:true },
+  { id:"ex6", name:"Volatility Play",   holdings:[{ticker:"TSLA",weight:50},{ticker:"NVDA",weight:50}],                           isExample:true },
+  { id:"ex7", name:"Conservative Core", holdings:[{ticker:"MSFT",weight:50},{ticker:"SAP",weight:30},{ticker:"AAPL",weight:20}],  isExample:true },
+  { id:"ex8", name:"Cloud Leaders",     holdings:[{ticker:"MSFT",weight:60},{ticker:"AMZN",weight:40}],                           isExample:true },
+];
+const userEtfs = [];
+let lbPeriod = "d";
+
+// ── ETF: Builder ──────────────────────────────────────────────────────────────
+let etfName     = "";
+let etfHoldings = []; // [{ ticker, weight }]
+
+document.getElementById("addAssetBtn").addEventListener("click", addHolding);
+document.getElementById("assetInput").addEventListener("keydown",  e => { if (e.key === "Enter") addHolding(); });
+document.getElementById("weightInput").addEventListener("keydown", e => { if (e.key === "Enter") addHolding(); });
+
+function addHolding() {
+  const tickerEl = document.getElementById("assetInput");
+  const weightEl = document.getElementById("weightInput");
+  const ticker   = tickerEl.value.trim().toUpperCase();
+  const weight   = parseInt(weightEl.value, 10);
+
+  if (!ticker)          { showToast("Bitte einen Ticker eingeben"); return; }
+  if (!stocks.find(s => s.ticker === ticker)) { showToast(`${ticker} nicht in unserer Datenbank`); return; }
+  if (isNaN(weight) || weight < 1 || weight > 100) { showToast("Gewichtung: 1–100 %"); return; }
+  if (etfHoldings.find(h => h.ticker === ticker)) { showToast(`${ticker} bereits enthalten`); return; }
+
+  etfHoldings.push({ ticker, weight });
+  tickerEl.value = "";
+  weightEl.value = "";
+  tickerEl.focus();
+  renderHoldings();
+}
+
+function removeHolding(ticker) {
+  etfHoldings = etfHoldings.filter(h => h.ticker !== ticker);
+  renderHoldings();
+}
+
+function renderHoldings() {
+  const total = etfHoldings.reduce((s, h) => s + h.weight, 0);
+
+  document.getElementById("assetTags").innerHTML = etfHoldings.map(h =>
+    `<span class="asset-tag">
+      <span class="asset-tag-ticker">${h.ticker}</span>
+      <span class="asset-tag-weight">${h.weight}%</span>
+      <button onclick="removeHolding('${h.ticker}')" aria-label="${h.ticker} entfernen">×</button>
+    </span>`
   ).join("");
+
+  const sumEl = document.getElementById("weightSum");
+  if (etfHoldings.length === 0) { sumEl.innerHTML = ""; return; }
+
+  const diff   = 100 - total;
+  const cls    = total === 100 ? "ok" : total > 100 ? "over" : "under";
+  const label  = total === 100
+    ? "✓ Gewichtung vollständig (100 %)"
+    : diff > 0
+      ? `Gesamt: ${total} % — noch ${diff} % fehlen`
+      : `Gesamt: ${total} % — ${-diff} % zu viel`;
+  sumEl.innerHTML = `<span class="weight-sum-bar ${cls}">${label}</span>`;
 }
 
 document.getElementById("saveEtfBtn").addEventListener("click", () => {
-  if (!etfName)             { showToast("Zuerst einen Namen erstellen"); return; }
-  if (etfAssets.length < 1) { showToast("Mindestens ein Asset hinzufügen"); return; }
-  savedEtfs.unshift({ name: etfName, assets: [...etfAssets], likes: 0 });
+  const name = document.getElementById("etfName").value.trim();
+  if (!name)                  { showToast("Bitte einen ETF-Namen eingeben"); return; }
+  if (etfHoldings.length < 1) { showToast("Mindestens eine Position hinzufügen"); return; }
+  const total = etfHoldings.reduce((s, h) => s + h.weight, 0);
+  if (total !== 100) {
+    const diff = 100 - total;
+    showToast(diff > 0 ? `Noch ${diff} % fehlen` : `${-diff} % zu viel`);
+    return;
+  }
+  userEtfs.unshift({ id: `u${Date.now()}`, name, holdings: [...etfHoldings], isExample: false });
   renderLeaderboard();
-  const saved = etfName;
-  etfName = ""; etfAssets = [];
   document.getElementById("etfName").value = "";
-  document.getElementById("assetTags").innerHTML = "";
-  showToast(`"${saved}" gespeichert!`);
+  etfHoldings = [];
+  renderHoldings();
+  showToast(`"${name}" gespeichert!`);
 });
 
 document.getElementById("resetEtfBtn").addEventListener("click", () => {
-  etfName = ""; etfAssets = [];
+  etfHoldings = [];
   document.getElementById("etfName").value = "";
-  document.getElementById("assetTags").innerHTML = "";
+  renderHoldings();
+});
+
+// ── ETF: Leaderboard ──────────────────────────────────────────────────────────
+document.querySelectorAll(".lb-filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".lb-filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    lbPeriod = btn.dataset.period;
+    renderLeaderboard();
+  });
 });
 
 function renderLeaderboard() {
-  const el = document.getElementById("leaderboard");
-  if (savedEtfs.length === 0) {
-    el.innerHTML = `<p class="empty-hint">Speichere deinen ersten Mix!</p>`;
-    return;
-  }
-  const sorted = [...savedEtfs].sort((a, b) => b.likes - a.likes);
-  el.innerHTML = sorted.map((etf, i) => `
-    <div class="lb-item">
-      <span class="lb-rank">#${i + 1}</span>
-      <div class="lb-info">
-        <strong>${etf.name}</strong>
-        <small>${etf.assets.join(" · ")}</small>
-      </div>
-      <button class="lb-like" onclick="likeEtf('${etf.name.replace(/'/g, "\\'")}')">♥ ${etf.likes}</button>
-    </div>
-  `).join("");
-}
+  const all = [...exampleEtfs, ...userEtfs];
+  const periodLabel = { d:"Heute", w:"letzte Woche", m:"letzten Monat", y:"letztes Jahr" };
 
-function likeEtf(name) {
-  const etf = savedEtfs.find(e => e.name === name);
-  if (etf) { etf.likes++; renderLeaderboard(); }
+  const ranked = all
+    .map(etf => ({ ...etf, perf: calcEtfPerf(etf.holdings, lbPeriod) }))
+    .sort((a, b) => b.perf - a.perf)
+    .slice(0, 10);
+
+  const el = document.getElementById("leaderboard");
+  el.innerHTML = ranked.map((etf, i) => {
+    const tickers  = etf.holdings.map(h => h.ticker).join(" · ");
+    const perfSign = etf.perf > 0 ? "+" : "";
+    const perfCls  = etf.perf > 0 ? "perf-pos" : etf.perf < 0 ? "perf-neg" : "perf-neu";
+    const badge    = etf.isExample ? "" : `<span class="lb-you">Du</span>`;
+    return `
+      <div class="lb-item">
+        <span class="lb-rank">#${i + 1}</span>
+        <div class="lb-info">
+          <strong>${etf.name}${badge}</strong>
+          <small>${tickers}</small>
+        </div>
+        <span class="lb-perf ${perfCls}">${perfSign}${etf.perf.toFixed(2)} %</span>
+      </div>`;
+  }).join("");
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
