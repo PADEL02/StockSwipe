@@ -1,0 +1,186 @@
+:root {
+  /* Clean Luxury Colors */
+  --bg: #05070A; /* Sehr tiefes, edles Schwarz/Blau */
+  --card-bg: rgba(20, 24, 32, 0.7);
+  --text: #F3F4F6;
+  --muted: #9CA3AF;
+  --line: rgba(255, 255, 255, 0.08);
+  
+  /* Rubine, Smaragd, Mattgold */
+  --like: #10B981; /* Smaragdgrün */
+  --nope: #E11D48; /* Rubinrot */
+  --super: #C5A059; /* Mattgold */
+  
+  --shadow-lux: 0 30px 60px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+  --radius: 32px;
+  --font: 'Plus Jakarta Sans', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; overscroll-behavior-y: none; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background-color: var(--bg);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.03), transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(225, 29, 72, 0.03), transparent 50%);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.app {
+  height: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 18px 14px 90px; gap: 14px; position: relative;
+}
+
+/* Header */
+.topbar { width: min(420px, 100%); display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-badge {
+  width: 42px; height: 42px; border-radius: 14px;
+  background: linear-gradient(135deg, #1f242e, #0a0d14);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+}
+.brand-badge span { font-weight: 800; font-size: 14px; background: linear-gradient(to right, #fff, #999); -webkit-background-clip: text; color: transparent; }
+.brand-title strong { display: block; font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.brand-title small { display: block; color: var(--muted); font-size: 13px; font-weight: 600; }
+
+.watchlist-btn {
+  width: 42px; height: 42px; border-radius: 14px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+  color: var(--super); cursor: pointer; display: grid; place-items: center; font-size: 18px;
+}
+.watchlist-badge {
+  position: absolute; top: -4px; right: -4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--super); color: #000; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.page { width: min(420px, 100%); flex: 1; display: none; }
+.page.active { display: flex; flex-direction: column; gap: 14px; }
+
+/* Deck & 3D Environment */
+.deck { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; position: relative; perspective: 1500px; }
+
+/* The Card */
+.card {
+  width: 100%; max-width: 420px; height: min(640px, calc(100vh - 240px));
+  background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius);
+  box-shadow: var(--shadow-lux);
+  position: absolute; touch-action: none; user-select: none;
+  transform-style: preserve-3d; /* Wichtig für den echten 3D Effekt */
+}
+.card-inner { width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; border-radius: inherit; }
+.profile { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+
+/* Clean Luxury Emblem */
+.logo-wrap {
+  height: 48%; border-radius: 24px;
+  display: grid; place-items: center; position: relative;
+}
+.logo-ring {
+  position: absolute; width: 110px; height: 110px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05); background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+}
+.logo {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: linear-gradient(145deg, #1a1e26, #0d1118);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.5);
+  display: grid; place-items: center; z-index: 1;
+  font-weight: 800; font-size: 26px; color: var(--text);
+}
+
+.name-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.name-row h2 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+.ticker { color: var(--muted); font-weight: 700; font-size: 14px; background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 12px; }
+
+.numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pill {
+  background: rgba(0,0,0,0.2); border: 1px solid var(--line); border-radius: 16px;
+  padding: 14px; display: flex; flex-direction: column; gap: 6px;
+}
+.pill small { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.pill strong { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.trend { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.trend-chip { font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 10px; background: rgba(255,255,255,0.04); color: var(--muted); }
+.trend-chip b { color: var(--text); font-weight: 800; margin-left: 4px; }
+
+/* Stamps */
+.stamp {
+  position: absolute; top: 30px; padding: 8px 18px; border-radius: 12px;
+  font-weight: 900; font-size: 24px; letter-spacing: 2px; border: 3px solid;
+  opacity: 0; z-index: 10;
+}
+.stamp.like { left: 24px; color: var(--like); border-color: var(--like); transform: rotate(-15deg); }
+.stamp.nope { right: 24px; color: var(--nope); border-color: var(--nope); transform: rotate(15deg); }
+.stamp.super { left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-10deg); color: var(--super); border-color: var(--super); }
+
+/* Draggable Sheet */
+.sheet {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 70%; background: rgba(10, 13, 18, 0.85); backdrop-filter: blur(25px);
+  border-top: 1px solid rgba(255,255,255,0.1); border-radius: 32px 32px 0 0;
+  transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 20;
+}
+.sheet.open { transform: translateY(0%); }
+.sheet-content { padding: 0 24px 24px; height: 100%; display: flex; flex-direction: column; gap: 16px; }
+.sheet-handle-area { width: 100%; padding: 16px 0; cursor: grab; display: flex; justify-content: center; }
+.sheet-handle { width: 40px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.2); }
+.sheet-title { display: flex; align-items: center; justify-content: space-between; }
+.sheet-title h3 { margin: 0; font-size: 18px; font-weight: 800; }
+.sheet-title button { background: rgba(255,255,255,0.05); border: none; color: var(--text); border-radius: 50%; width: 32px; height: 32px; font-weight: bold; cursor: pointer; }
+.desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0; font-weight: 500; }
+
+/* Swipe Controls */
+.controls { width: 100%; display: flex; justify-content: center; gap: 20px; padding: 10px 0; }
+.btn {
+  width: 64px; height: 64px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.btn:active { transform: scale(0.9); }
+.btn.nope:hover { background: rgba(225, 29, 72, 0.1); border-color: rgba(225, 29, 72, 0.3); box-shadow: 0 0 20px rgba(225, 29, 72, 0.2); }
+.btn.nope .dot { width: 20px; height: 20px; border-radius: 4px; background: var(--nope); transform: rotate(45deg); }
+.btn.like:hover { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+.btn.like .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--like); }
+.btn.super:hover { background: rgba(197, 160, 89, 0.1); border-color: rgba(197, 160, 89, 0.3); }
+.btn.super .dot { color: var(--super); font-size: 26px; }
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  width: calc(100% - 40px); max-width: 380px; display: flex; gap: 8px; padding: 8px;
+  border-radius: 24px; border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(15, 18, 25, 0.8); backdrop-filter: blur(20px); z-index: 40;
+}
+.tab {
+  flex: 1; height: 48px; border-radius: 16px; border: none; background: transparent;
+  color: var(--muted); cursor: pointer; font-weight: 700; font-size: 14px; transition: all 0.2s;
+}
+.tab.active { background: rgba(255,255,255,0.06); color: var(--text); }
+
+/* Panels & Watchlist (Adapted for Clean Luxury) */
+.panel { background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 24px; padding: 20px; }
+.panel h3 { margin: 0 0 16px 0; font-size: 18px; font-weight: 800; }
+.input { flex: 1; height: 48px; border-radius: 14px; border: 1px solid var(--line); background: rgba(0,0,0,0.2); color: var(--text); padding: 0 16px; font-weight: 600; font-family: inherit; }
+.smallbtn { height: 48px; padding: 0 16px; border-radius: 14px; border: none; background: rgba(255,255,255,0.1); color: var(--text); font-weight: 700; cursor: pointer; font-family: inherit; }
+.watchlist {
+  position: fixed; top: 80px; right: 14px; width: min(360px, calc(100% - 28px)); max-height: 60vh;
+  background: rgba(15, 18, 25, 0.95); backdrop-filter: blur(30px); border: 1px solid var(--line);
+  border-radius: 24px; box-shadow: var(--shadow-lux); opacity: 0; pointer-events: none;
+  transform: translateY(-20px) scale(0.95); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 50;
+}
+.watchlist.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.watchlist-head { display: flex; align-items: center; justify-content: space-between; padding: 20px; border-bottom: 1px solid var(--line); }
+.watchlist-list { padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow: auto; max-height: calc(60vh - 70px); }
+.wl-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); }
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; padding: 12px 24px; border-radius: 99px; background: rgba(255,255,255,0.9); color: #000; font-weight: 700; font-size: 14px; transition: all 0.3s; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }

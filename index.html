@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>StockSwipe – Clean Luxury</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar" aria-label="App Kopfzeile">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true"><span>SS</span></div>
+        <div class="brand-title">
+          <strong>StockSwipe</strong>
+          <small id="pageSubtitle">Swipe dich durch Aktien</small>
+        </div>
+      </div>
+
+      <button id="watchlistBtn" class="watchlist-btn" aria-label="Watchlist öffnen">
+        <span aria-hidden="true">★</span>
+        <span id="watchlistBadge" class="watchlist-badge" style="display:none;">0</span>
+      </button>
+    </header>
+
+    <section id="pageSwipe" class="page active" aria-label="Swipe Seite">
+      <main class="deck" aria-label="Kartenstapel">
+        <div id="card" class="card" role="article" aria-label="Aktienkarte">
+          <div class="card-inner">
+            <section class="profile">
+              <div class="stamp like" id="stampLike">LIKE</div>
+              <div class="stamp nope" id="stampNope">NOPE</div>
+              <div class="stamp super" id="stampSuper">SUPER</div>
+
+              <div class="logo-wrap" aria-label="Unternehmenslogo">
+                <div class="logo-ring"></div>
+                <div id="logo" class="logo">AP</div>
+              </div>
+
+              <div class="name-row">
+                <h2 id="companyName">Apple</h2>
+                <span id="ticker" class="ticker">AAPL</span>
+              </div>
+
+              <div class="numbers" aria-label="Kennzahlen">
+                <div class="pill">
+                  <small>Aktueller Kurs</small>
+                  <strong id="price">–</strong>
+                </div>
+                <div class="pill">
+                  <small>Market Cap</small>
+                  <strong id="mcap">–</strong>
+                </div>
+                <div class="pill" style="grid-column: 1 / -1;">
+                  <small>Wertentwicklung</small>
+                  <div class="trend" id="trend">
+                    <span class="trend-chip">1W <b id="perfW">–</b></span>
+                    <span class="trend-chip">1M <b id="perfM">–</b></span>
+                    <span class="trend-chip">1Y <b id="perfY">–</b></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div id="sheet" class="sheet" aria-label="Unternehmensdetails">
+              <div class="sheet-content">
+                <div class="sheet-handle-area" id="sheetHandle">
+                  <div class="sheet-handle" aria-hidden="true"></div>
+                </div>
+                <div class="sheet-title">
+                  <h3 id="sheetTitle">Unternehmensbeschreibung</h3>
+                  <button id="closeSheetBtn" type="button">✕</button>
+                </div>
+                <p id="description" class="desc">–</p>
+
+                <div class="meta" aria-label="Weitere Werte">
+                  <div class="pill">
+                    <small>Branche</small>
+                    <strong id="sector">–</strong>
+                  </div>
+                  <div class="pill">
+                    <small>Land</small>
+                    <strong id="country">–</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <nav class="controls" aria-label="Aktionen">
+        <button id="btnNope" class="btn nope" type="button" aria-label="Dislike">
+          <span class="dot nope" aria-hidden="true"></span>
+        </button>
+        <button id="btnSuper" class="btn super" type="button" aria-label="Superlike">
+          <span class="dot super" aria-hidden="true">★</span>
+        </button>
+        <button id="btnLike" class="btn like" type="button" aria-label="Like">
+          <span class="dot like" aria-hidden="true"></span>
+        </button>
+      </nav>
+    </section>
+
+    <section id="pageEtf" class="page" aria-label="ETF Seite">
+      <div class="panel">
+        <h3>Eigenen Portfolio-Mix erstellen</h3>
+        <div class="row" style="margin-bottom:10px;">
+          <input id="etfName" class="input" placeholder="Name (z. B. Tech & Crypto Mix)" />
+          <button id="createEtfBtn" class="smallbtn">Erstellen</button>
+        </div>
+        <div class="row">
+          <input id="assetInput" class="input" placeholder="Asset hinzufügen: AAPL / BTC" />
+          <button id="addAssetBtn" class="smallbtn">Hinzufügen</button>
+        </div>
+        <div id="assetTags"></div>
+        <div class="row" style="margin-top:12px;">
+          <button id="saveEtfBtn" class="smallbtn" style="flex:1;">Speichern</button>
+          <button id="resetEtfBtn" class="smallbtn" style="flex:1; background:rgba(255,255,255,0.05);">Reset</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Leaderboard (Community Mixes)</h3>
+        <div id="leaderboard" class="list" aria-label="Leaderboard Liste"></div>
+      </div>
+    </section>
+  </div>
+
+  <aside id="watchlist" class="watchlist" aria-label="Watchlist Popup">
+    <div class="watchlist-head">
+      <strong>Deine Watchlist</strong>
+      <button id="watchlistClose" type="button">✕</button>
+    </div>
+    <div id="watchlistList" class="watchlist-list"></div>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <nav class="bottom-nav" aria-label="Taskleiste">
+    <button id="tabSwipe" class="tab active" type="button" aria-label="Swipe">Swipe</button>
+    <button id="tabEtf" class="tab" type="button" aria-label="Portfolio Builder">Portfolio</button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
