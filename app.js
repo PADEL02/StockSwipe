@@ -1,6 +1,6 @@
 ﻿﻿// Daten (Beispielhaft)
 const stocks = [
-  { id:"aapl", name:"Apple Inc.", ticker:"AAPL", logoText:"", price:172.43, marketCap:2680000000000, perf:{ w:1.2, m:-2.7, y:18.4 }, sector:"Technologie", country:"USA", description:"Apple entwickelt Consumer-Elektronik, Betriebssysteme und digitale Services." },
+  { id:"aapl", name:"Apple Inc.", ticker:"AAPL", logoText:"AP", price:172.43, marketCap:2680000000000, perf:{ w:1.2, m:-2.7, y:18.4 }, sector:"Technologie", country:"USA", description:"Apple entwickelt Consumer-Elektronik, Betriebssysteme und digitale Services." },
   { id:"msft", name:"Microsoft", ticker:"MSFT", logoText:"MS", price:412.18, marketCap:3050000000000, perf:{ w:-0.6, m:3.1, y:28.9 }, sector:"Software", country:"USA", description:"Microsoft bietet Software, Cloud-Services und Produktivitätstools." },
   { id:"sap", name:"SAP SE", ticker:"SAP", logoText:"SAP", price:185.92, marketCap:225000000000, perf:{ w:0.9, m:6.8, y:31.5 }, sector:"Enterprise-Software", country:"Deutschland", description:"SAP entwickelt Unternehmenssoftware für Geschäftsprozesse." },
   { id:"tsla", name:"Tesla", ticker:"TSLA", logoText:"T", price:187.55, marketCap:596000000000, perf:{ w:2.4, m:-6.2, y:-12.1 }, sector:"Automotive", country:"USA", description:"Tesla entwickelt Elektrofahrzeuge und Batteriespeicher." }
