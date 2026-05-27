@@ -209,6 +209,12 @@ function updateWatchlistBadge() {
   badge.textContent   = watchlist.size;
 }
 
+function removeFromWatchlist(id) {
+  watchlist.delete(id);
+  updateWatchlistBadge();
+  renderWatchlistItems();
+}
+
 function renderWatchlistItems() {
   const list = document.getElementById("watchlistList");
   if (watchlist.size === 0) {
@@ -226,6 +232,7 @@ function renderWatchlistItems() {
         <span class="wl-price">${nfEUR.format(s.price)}</span>
         ${s.superliked ? `<span class="wl-super">★</span>` : ""}
       </div>
+      <button class="wl-remove" onclick="removeFromWatchlist('${s.id}')" aria-label="${s.name} entfernen">×</button>
     </div>
   `).join("");
 }
