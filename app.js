@@ -754,15 +754,15 @@ function renderDiveTree(key) {
       } else {
         btn.classList.add("active");
         diveActiveCatIdx = idx;
-        renderDiveCompanies(data.categories[idx], panel);
+        renderDiveCompanies(data.categories[idx], panel, btn);
       }
     });
   });
 }
 
-function renderDiveCompanies(cat, panel) {
+function renderDiveCompanies(cat, panel, activeBtn) {
   panel.innerHTML = `
-    <div class="dt-connector-v"></div>
+    <div class="dt-connector-v" id="dtCatConnector"></div>
     <div class="dt-companies-row">
       ${cat.companies.map((c, i) => `
         <div class="dt-company-card" style="animation-delay:${i * 0.07}s">
@@ -773,6 +773,14 @@ function renderDiveCompanies(cat, panel) {
       `).join("")}
     </div>
   `;
+
+  // Align connector with the horizontal center of the active category button
+  const connector = document.getElementById("dtCatConnector");
+  const wrapRect  = panel.parentElement.getBoundingClientRect();
+  const btnRect   = activeBtn.getBoundingClientRect();
+  const centerX   = Math.round(btnRect.left + btnRect.width / 2 - wrapRect.left - 1);
+  connector.style.margin     = "0";
+  connector.style.marginLeft = centerX + "px";
 }
 
 // Dive event listeners
