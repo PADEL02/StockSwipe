@@ -1,11 +1,121 @@
 // Daten
 const stocks = [
-  { id:"aapl",  name:"Apple Inc.",  ticker:"AAPL", logoText:"AP",  price:172.43, marketCap:2680000000000, perf:{ w:1.2,  m:-2.7, y:18.4  }, sector:"Technologie",       country:"USA",         description:"Apple entwickelt Consumer-Elektronik, Betriebssysteme und digitale Services. Das Unternehmen ist bekannt für iPhone, Mac und das iOS-Ökosystem." },
-  { id:"msft",  name:"Microsoft",   ticker:"MSFT", logoText:"MS",  price:412.18, marketCap:3050000000000, perf:{ w:-0.6, m:3.1,  y:28.9  }, sector:"Software",          country:"USA",         description:"Microsoft bietet Software, Cloud-Services und Produktivitätstools. Azure und Office 365 sind die zentralen Wachstumstreiber." },
-  { id:"nvda",  name:"NVIDIA",      ticker:"NVDA", logoText:"NV",  price:875.40, marketCap:2160000000000, perf:{ w:4.1,  m:11.2, y:198.3 }, sector:"Halbleiter",        country:"USA",         description:"NVIDIA dominiert den Markt für KI-Grafikprozessoren. Der H100-Chip ist zum Standard für KI-Training und Inferenz geworden." },
-  { id:"amzn",  name:"Amazon",      ticker:"AMZN", logoText:"AM",  price:184.70, marketCap:1920000000000, perf:{ w:1.8,  m:2.4,  y:42.1  }, sector:"E-Commerce/Cloud", country:"USA",         description:"Amazon betreibt die weltgrößte E-Commerce-Plattform und mit AWS den führenden Cloud-Dienst weltweit." },
-  { id:"sap",   name:"SAP SE",      ticker:"SAP",  logoText:"SAP", price:185.92, marketCap:225000000000,  perf:{ w:0.9,  m:6.8,  y:31.5  }, sector:"Enterprise-SW",    country:"Deutschland", description:"SAP entwickelt Unternehmenssoftware für Geschäftsprozesse. Weltmarktführer im ERP-Segment mit starker Cloud-Transformation." },
-  { id:"tsla",  name:"Tesla",       ticker:"TSLA", logoText:"T",   price:187.55, marketCap:596000000000,  perf:{ w:2.4,  m:-6.2, y:-12.1 }, sector:"Automotive",       country:"USA",         description:"Tesla entwickelt Elektrofahrzeuge und Batteriespeicher. Marktführer bei E-Mobilität mit wachsender Energiesparte." },
+  {
+    id:"aapl", name:"Apple Inc.", ticker:"AAPL", logoText:"AP", countryFlag:"🇺🇸",
+    price:172.43, marketCap:2680000000000, perf:{ w:1.2, m:-2.7, y:18.4 },
+    sector:"Technologie", country:"USA",
+    description:"Apple entwickelt Consumer-Elektronik, Betriebssysteme und digitale Services. Das Unternehmen ist bekannt für iPhone, Mac und das iOS-Ökosystem.",
+    products:[
+      { name:"iPhone",    short:"iP", icon:"ios"      },
+      { name:"Mac",       short:"MC", icon:"macos"    },
+      { name:"App Store", short:"AS", icon:"appstore"  },
+      { name:"iCloud",    short:"iC", icon:"icloud"   },
+    ],
+    dividend:{ pays:true, amount:"0,24 $", frequency:"quartalsw." },
+    competitors:[
+      { name:"Samsung",   short:"SA", icon:"samsung" },
+      { name:"Google",    short:"GO", icon:"google"  },
+      { name:"Microsoft", short:"MS", icon:null       },
+    ],
+    trend:{ emoji:"📱", label:"Consumer Leader", color:"up" },
+  },
+  {
+    id:"msft", name:"Microsoft", ticker:"MSFT", logoText:"MS", countryFlag:"🇺🇸",
+    price:412.18, marketCap:3050000000000, perf:{ w:-0.6, m:3.1, y:28.9 },
+    sector:"Software", country:"USA",
+    description:"Microsoft bietet Software, Cloud-Services und Produktivitätstools. Azure und Office 365 sind die zentralen Wachstumstreiber.",
+    products:[
+      { name:"Windows", short:"WI", icon:null },
+      { name:"Azure",   short:"AZ", icon:null },
+      { name:"Office",  short:"OF", icon:null },
+      { name:"Teams",   short:"TE", icon:null },
+      { name:"Xbox",    short:"XB", icon:null },
+      { name:"GitHub",  short:"GH", icon:"github" },
+    ],
+    dividend:{ pays:true, amount:"0,75 $", frequency:"quartalsw." },
+    competitors:[
+      { name:"Google", short:"GO", icon:"google" },
+      { name:"Apple",  short:"AP", icon:"apple"  },
+      { name:"Amazon", short:"AM", icon:null      },
+    ],
+    trend:{ emoji:"🤖", label:"KI-Pionier", color:"hot" },
+  },
+  {
+    id:"nvda", name:"NVIDIA", ticker:"NVDA", logoText:"NV", countryFlag:"🇺🇸",
+    price:875.40, marketCap:2160000000000, perf:{ w:4.1, m:11.2, y:198.3 },
+    sector:"Halbleiter", country:"USA",
+    description:"NVIDIA dominiert den Markt für KI-Grafikprozessoren. Der H100-Chip ist zum Standard für KI-Training und Inferenz geworden.",
+    products:[
+      { name:"GeForce RTX", short:"GF", icon:null },
+      { name:"CUDA",        short:"CU", icon:null },
+      { name:"H100",        short:"H1", icon:null },
+      { name:"Omniverse",   short:"OV", icon:null },
+    ],
+    dividend:{ pays:true, amount:"0,01 $", frequency:"quartalsw." },
+    competitors:[
+      { name:"AMD",      short:"AM", icon:"amd"      },
+      { name:"Intel",    short:"IN", icon:"intel"    },
+      { name:"Qualcomm", short:"QC", icon:"qualcomm" },
+    ],
+    trend:{ emoji:"🚀", label:"KI-Boom", color:"hot" },
+  },
+  {
+    id:"amzn", name:"Amazon", ticker:"AMZN", logoText:"AM", countryFlag:"🇺🇸",
+    price:184.70, marketCap:1920000000000, perf:{ w:1.8, m:2.4, y:42.1 },
+    sector:"E-Commerce/Cloud", country:"USA",
+    description:"Amazon betreibt die weltgrößte E-Commerce-Plattform und mit AWS den führenden Cloud-Dienst weltweit.",
+    products:[
+      { name:"AWS",    short:"AW", icon:null    },
+      { name:"Prime",  short:"PR", icon:null    },
+      { name:"Alexa",  short:"AL", icon:null    },
+      { name:"Twitch", short:"TW", icon:"twitch" },
+    ],
+    dividend:{ pays:false },
+    competitors:[
+      { name:"Microsoft", short:"MS", icon:null       },
+      { name:"Google",    short:"GO", icon:"google"   },
+      { name:"Walmart",   short:"WM", icon:null        },
+    ],
+    trend:{ emoji:"☁️", label:"Cloud Giant", color:"up" },
+  },
+  {
+    id:"sap", name:"SAP SE", ticker:"SAP", logoText:"SAP", countryFlag:"🇩🇪",
+    price:185.92, marketCap:225000000000, perf:{ w:0.9, m:6.8, y:31.5 },
+    sector:"Enterprise-SW", country:"Deutschland",
+    description:"SAP entwickelt Unternehmenssoftware für Geschäftsprozesse. Weltmarktführer im ERP-Segment mit starker Cloud-Transformation.",
+    products:[
+      { name:"S/4HANA", short:"S4", icon:null },
+      { name:"ERP",     short:"ER", icon:null },
+      { name:"BTP",     short:"BT", icon:null },
+      { name:"Ariba",   short:"AR", icon:null },
+    ],
+    dividend:{ pays:true, amount:"1,50 €", frequency:"jährlich" },
+    competitors:[
+      { name:"Oracle",     short:"OR", icon:null },
+      { name:"Salesforce", short:"SF", icon:null },
+      { name:"Microsoft",  short:"MS", icon:null },
+    ],
+    trend:{ emoji:"🏭", label:"Enterprise ERP", color:"neutral" },
+  },
+  {
+    id:"tsla", name:"Tesla", ticker:"TSLA", logoText:"T", countryFlag:"🇺🇸",
+    price:187.55, marketCap:596000000000, perf:{ w:2.4, m:-6.2, y:-12.1 },
+    sector:"Automotive", country:"USA",
+    description:"Tesla entwickelt Elektrofahrzeuge und Batteriespeicher. Marktführer bei E-Mobilität mit wachsender Energiesparte.",
+    products:[
+      { name:"Model 3",    short:"M3", icon:null },
+      { name:"Model S",    short:"MS", icon:null },
+      { name:"Powerwall",  short:"PW", icon:null },
+      { name:"Solar Roof", short:"SR", icon:null },
+    ],
+    dividend:{ pays:false },
+    competitors:[
+      { name:"BYD",      short:"BY", icon:null   },
+      { name:"Rivian",   short:"RI", icon:null   },
+      { name:"Mercedes", short:"MB", icon:null   },
+    ],
+    trend:{ emoji:"⚡", label:"E-Mobilität", color:"up" },
+  },
 ];
 
 let index = 0;
@@ -45,6 +155,41 @@ function animateValue(el, start, end, duration) {
   requestAnimationFrame(step);
 }
 
+// ── Card Helpers ──────────────────────────────────────────────────────────────
+function brandIconError(img) {
+  const fb = img.dataset.fallback || "?";
+  img.parentElement.innerHTML = `<span class="brand-fallback">${fb}</span>`;
+}
+
+function renderBrandRow(container, items) {
+  if (!items || !items.length) { container.innerHTML = ""; return; }
+  container.innerHTML = items.map(item => {
+    if (item.icon) {
+      return `<div class="brand-icon" title="${item.name}">` +
+        `<img src="https://cdn.simpleicons.org/${item.icon}/ffffff" alt="${item.name}"` +
+        ` data-fallback="${item.short}" onerror="brandIconError(this)">` +
+        `</div>`;
+    }
+    return `<span class="brand-chip">${item.name}</span>`;
+  }).join("");
+}
+
+function renderDividendInfo(el, div) {
+  if (div && div.pays) {
+    el.innerHTML =
+      `<span class="div-badge div-yes">✓ Ja</span>` +
+      `<span class="div-amount">${div.amount} &middot; ${div.frequency}</span>`;
+  } else {
+    el.innerHTML = `<span class="div-badge div-no">✗ Keine</span>`;
+  }
+}
+
+function renderTrendStamp(el, trend) {
+  if (!trend) { el.textContent = ""; el.className = "trend-stamp"; return; }
+  el.textContent = `${trend.emoji} ${trend.label}`;
+  el.className = `trend-stamp trend-${trend.color}`;
+}
+
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderStock() {
   const s = stocks[index % stocks.length];
@@ -52,11 +197,17 @@ function renderStock() {
   document.getElementById("logo").textContent        = s.logoText;
   document.getElementById("companyName").textContent = s.name;
   document.getElementById("ticker").textContent      = s.ticker;
+  document.getElementById("countryFlag").textContent = s.countryFlag || "";
   document.getElementById("mcap").textContent        = formatCap(s.marketCap);
   document.getElementById("sheetTitle").textContent  = s.name;
   document.getElementById("description").textContent = s.description;
   document.getElementById("sector").textContent      = s.sector;
   document.getElementById("country").textContent     = s.country;
+
+  renderBrandRow(document.getElementById("productList"),    s.products    || []);
+  renderDividendInfo(document.getElementById("dividendInfo"), s.dividend  || { pays:false });
+  renderBrandRow(document.getElementById("competitorList"), s.competitors || []);
+  renderTrendStamp(document.getElementById("trendStamp"),   s.trend       || null);
 
   animateValue(priceEl, lastPrice, s.price, 800);
   lastPrice = s.price;

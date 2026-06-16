@@ -37,34 +37,36 @@
               <div class="stamp nope" id="stampNope">NOPE</div>
               <div class="stamp super" id="stampSuper">SUPER</div>
 
-              <div class="logo-wrap" aria-label="Unternehmenslogo">
-                <div class="logo-ring"></div>
+              <!-- Kompakter Header: Logo + Name + Ticker + Flagge -->
+              <div class="card-head">
                 <div id="logo" class="logo">AP</div>
+                <div class="card-head-text">
+                  <h2 id="companyName">Apple Inc.</h2>
+                  <span id="ticker" class="ticker">AAPL</span>
+                </div>
+                <span id="countryFlag" class="country-flag">🇺🇸</span>
               </div>
 
-              <div class="name-row">
-                <h2 id="companyName">Apple</h2>
-                <span id="ticker" class="ticker">AAPL</span>
+              <!-- Produkte -->
+              <div class="card-section">
+                <span class="section-label">Produkte</span>
+                <div id="productList" class="brand-row"></div>
               </div>
 
-              <div class="numbers" aria-label="Kennzahlen">
-                <div class="pill">
-                  <small>Aktueller Kurs</small>
-                  <strong id="price">–</strong>
-                </div>
-                <div class="pill">
-                  <small>Market Cap</small>
-                  <strong id="mcap">–</strong>
-                </div>
-                <div class="pill" style="grid-column: 1 / -1;">
-                  <small>Wertentwicklung</small>
-                  <div class="trend" id="trend">
-                    <span class="trend-chip">1W <b id="perfW">–</b></span>
-                    <span class="trend-chip">1M <b id="perfM">–</b></span>
-                    <span class="trend-chip">1Y <b id="perfY">–</b></span>
-                  </div>
-                </div>
+              <!-- Dividende -->
+              <div class="card-section">
+                <span class="section-label">Dividende</span>
+                <div id="dividendInfo" class="dividend-info"></div>
               </div>
+
+              <!-- Wettbewerber -->
+              <div class="card-section">
+                <span class="section-label">Wettbewerber</span>
+                <div id="competitorList" class="brand-row"></div>
+              </div>
+
+              <!-- Trendstempel -->
+              <div id="trendStamp" class="trend-stamp"></div>
             </section>
 
             <div id="sheet" class="sheet" aria-label="Unternehmensdetails">
@@ -73,9 +75,30 @@
                   <div class="sheet-handle" aria-hidden="true"></div>
                 </div>
                 <div class="sheet-title">
-                  <h3 id="sheetTitle">Unternehmensbeschreibung</h3>
+                  <h3 id="sheetTitle">Apple Inc.</h3>
                   <button id="closeSheetBtn" type="button">✕</button>
                 </div>
+
+                <!-- Kennzahlen (von der Karte hierher verschoben) -->
+                <div class="numbers" aria-label="Kennzahlen">
+                  <div class="pill">
+                    <small>Aktueller Kurs</small>
+                    <strong id="price">–</strong>
+                  </div>
+                  <div class="pill">
+                    <small>Market Cap</small>
+                    <strong id="mcap">–</strong>
+                  </div>
+                  <div class="pill" style="grid-column: 1 / -1;">
+                    <small>Wertentwicklung</small>
+                    <div class="trend">
+                      <span class="trend-chip">1W <b id="perfW">–</b></span>
+                      <span class="trend-chip">1M <b id="perfM">–</b></span>
+                      <span class="trend-chip">1Y <b id="perfY">–</b></span>
+                    </div>
+                  </div>
+                </div>
+
                 <p id="description" class="desc">–</p>
 
                 <div class="meta" aria-label="Weitere Werte">

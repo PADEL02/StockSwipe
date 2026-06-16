@@ -100,38 +100,98 @@ body {
 }
 .profile {
   flex: 1; padding: 24px;
-  display: flex; flex-direction: column; gap: 18px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 
-/* ── Logo ────────────────────────────────────────────────────────────────────── */
-.logo-wrap {
-  height: 48%; border-radius: 24px;
-  display: grid; place-items: center; position: relative;
-}
-.logo-ring {
-  position: absolute; width: 110px; height: 110px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.05);
-  background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+/* ── Card Head (compact logo + name + flag row) ──────────────────────────────── */
+.card-head {
+  display: flex; align-items: center; gap: 12px;
 }
 .logo {
-  width: 80px; height: 80px; border-radius: 50%;
+  width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
   background: linear-gradient(145deg, #1a1e26, #0d1118);
   border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.5);
-  display: grid; place-items: center; z-index: 1;
-  font-weight: 800; font-size: 22px; color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 6px 14px rgba(0,0,0,0.4);
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 16px; color: var(--text);
+}
+.card-head-text {
+  flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0;
+}
+.card-head-text h2 {
+  margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.country-flag {
+  font-size: 26px; line-height: 1; flex-shrink: 0;
+}
+.ticker {
+  color: var(--muted); font-weight: 700; font-size: 12px;
+  background: rgba(255,255,255,0.05); padding: 3px 10px; border-radius: 8px;
+  display: inline-block; width: fit-content;
 }
 
-/* ── Name Row ────────────────────────────────────────────────────────────────── */
-.name-row {
-  display: flex; align-items: center;
-  justify-content: space-between; margin-top: auto;
+/* ── Card Sections ───────────────────────────────────────────────────────────── */
+.card-section {
+  display: flex; flex-direction: column; gap: 7px;
 }
-.name-row h2 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-.ticker {
-  color: var(--muted); font-weight: 700; font-size: 14px;
-  background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 12px;
+.section-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--muted);
 }
+
+/* ── Brand Row (product / competitor icons + chips) ──────────────────────────── */
+.brand-row {
+  display: flex; flex-wrap: wrap; gap: 7px; align-items: center;
+}
+.brand-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
+}
+.brand-icon img {
+  width: 20px; height: 20px; object-fit: contain; pointer-events: none;
+}
+.brand-fallback {
+  font-weight: 800; font-size: 10px; color: var(--text); text-align: center;
+}
+.brand-chip {
+  height: 36px; display: flex; align-items: center;
+  font-size: 11px; font-weight: 700; padding: 0 10px; border-radius: 8px;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--muted); white-space: nowrap;
+}
+
+/* ── Dividend ────────────────────────────────────────────────────────────────── */
+.dividend-info {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.div-badge {
+  font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 20px;
+}
+.div-yes {
+  background: rgba(16,185,129,0.15); color: var(--like);
+  border: 1px solid rgba(16,185,129,0.3);
+}
+.div-no {
+  background: rgba(225,29,72,0.10); color: var(--nope);
+  border: 1px solid rgba(225,29,72,0.2);
+}
+.div-amount {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+}
+
+/* ── Trend Stamp ─────────────────────────────────────────────────────────────── */
+.trend-stamp {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 800; padding: 6px 14px; border-radius: 20px;
+  align-self: flex-start; margin-top: auto;
+  border: 1px solid transparent;
+}
+.trend-up      { background: rgba(16,185,129,0.12);  color: var(--like);  border-color: rgba(16,185,129,0.25); }
+.trend-down    { background: rgba(225,29,72,0.12);   color: var(--nope);  border-color: rgba(225,29,72,0.25); }
+.trend-hot     { background: rgba(249,115,22,0.12);  color: #F97316;      border-color: rgba(249,115,22,0.25); }
+.trend-neutral { background: rgba(255,255,255,0.05); color: var(--muted); border-color: var(--line); }
 
 /* ── Metrics ─────────────────────────────────────────────────────────────────── */
 .numbers, .meta {
