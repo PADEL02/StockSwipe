@@ -94,40 +94,108 @@ body {
 }
 .card-inner {
   width: 100%; height: 100%;
-  display: flex; flex-direction: column;
   overflow: hidden; border-radius: inherit;
   position: relative;
 }
-.profile {
-  flex: 1; padding: 24px;
-  display: flex; flex-direction: column; gap: 14px;
+
+/* ── Card Background Photo ───────────────────────────────────────────────────── */
+.card-bg {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background-size: cover;
+  background-position: center;
+  background-color: #0d1118;
 }
 
-/* ── Card Head (compact logo + name + flag row) ──────────────────────────────── */
-.card-head {
-  display: flex; align-items: center; gap: 12px;
+/* ── Tinder-style Gradient Overlay ───────────────────────────────────────────── */
+.card-overlay {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.42) 0%,
+    rgba(0,0,0,0.06) 28%,
+    rgba(0,0,0,0.06) 44%,
+    rgba(0,0,0,0.58) 68%,
+    rgba(0,0,0,0.90) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  pointer-events: none;
 }
+
+/* ── Top row: logo + flag ────────────────────────────────────────────────────── */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* ── Bottom: name, facts, trend ──────────────────────────────────────────────── */
+.card-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.name-ticker-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.name-ticker-row h2 {
+  margin: 0;
+  font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+.card-facts-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.sector-badge {
+  font-size: 12px; font-weight: 700;
+  padding: 4px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+
+/* ── Sheet Sections (products / competitors) ─────────────────────────────────── */
+.sheet-section {
+  display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+
+/* ── Logo (glassy pill over photo) ──────────────────────────────────────────── */
 .logo {
-  width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
-  background: linear-gradient(145deg, #1a1e26, #0d1118);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 6px 14px rgba(0,0,0,0.4);
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.35);
   display: grid; place-items: center;
-  font-weight: 800; font-size: 16px; color: var(--text);
+  font-weight: 800; font-size: 14px; color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
-.card-head-text {
-  flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0;
-}
-.card-head-text h2 {
-  margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
+
+/* ── Country Flag ────────────────────────────────────────────────────────────── */
 .country-flag {
-  font-size: 26px; line-height: 1; flex-shrink: 0;
+  font-size: 28px; line-height: 1; flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
+
+/* ── Ticker (glassy chip over photo) ────────────────────────────────────────── */
 .ticker {
-  color: var(--muted); font-weight: 700; font-size: 12px;
-  background: rgba(255,255,255,0.05); padding: 3px 10px; border-radius: 8px;
+  color: rgba(255,255,255,0.9); font-weight: 700; font-size: 12px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 3px 10px; border-radius: 8px;
   display: inline-block; width: fit-content;
 }
 
@@ -162,31 +230,33 @@ body {
   color: var(--muted); white-space: nowrap;
 }
 
-/* ── Dividend ────────────────────────────────────────────────────────────────── */
+/* ── Dividend (shown on card over photo) ─────────────────────────────────────── */
 .dividend-info {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
 }
 .div-badge {
   font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 20px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .div-yes {
-  background: rgba(16,185,129,0.15); color: var(--like);
-  border: 1px solid rgba(16,185,129,0.3);
+  background: rgba(16,185,129,0.25); color: #6ee7b7;
+  border: 1px solid rgba(16,185,129,0.5);
 }
 .div-no {
-  background: rgba(225,29,72,0.10); color: var(--nope);
-  border: 1px solid rgba(225,29,72,0.2);
+  background: rgba(225,29,72,0.20); color: #fca5a5;
+  border: 1px solid rgba(225,29,72,0.4);
 }
 .div-amount {
-  font-size: 12px; font-weight: 600; color: var(--muted);
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.75);
 }
 
 /* ── Trend Stamp ─────────────────────────────────────────────────────────────── */
 .trend-stamp {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 13px; font-weight: 800; padding: 6px 14px; border-radius: 20px;
-  align-self: flex-start; margin-top: auto;
+  align-self: flex-start;
   border: 1px solid transparent;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .trend-up      { background: rgba(16,185,129,0.12);  color: var(--like);  border-color: rgba(16,185,129,0.25); }
 .trend-down    { background: rgba(225,29,72,0.12);   color: var(--nope);  border-color: rgba(225,29,72,0.25); }
