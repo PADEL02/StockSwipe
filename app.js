@@ -17,6 +17,8 @@ const stocks = [
       { name:"Google",    short:"GO", icon:"google"  },
       { name:"Microsoft", short:"MS", icon:null       },
     ],
+    photo:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1d1d1f 0%,#2d2d30 100%)",
     trend:{ emoji:"📱", label:"Consumer Leader", color:"up" },
   },
   {
@@ -38,6 +40,8 @@ const stocks = [
       { name:"Apple",  short:"AP", icon:"apple"  },
       { name:"Amazon", short:"AM", icon:null      },
     ],
+    photo:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#001f3d 0%,#0078d4 100%)",
     trend:{ emoji:"🤖", label:"KI-Pionier", color:"hot" },
   },
   {
@@ -57,6 +61,8 @@ const stocks = [
       { name:"Intel",    short:"IN", icon:"intel"    },
       { name:"Qualcomm", short:"QC", icon:"qualcomm" },
     ],
+    photo:"https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1a2a00 0%,#76b900 100%)",
     trend:{ emoji:"🚀", label:"KI-Boom", color:"hot" },
   },
   {
@@ -76,6 +82,8 @@ const stocks = [
       { name:"Google",    short:"GO", icon:"google"   },
       { name:"Walmart",   short:"WM", icon:null        },
     ],
+    photo:"https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1a0d00 0%,#ff9900 100%)",
     trend:{ emoji:"☁️", label:"Cloud Giant", color:"up" },
   },
   {
@@ -95,6 +103,8 @@ const stocks = [
       { name:"Salesforce", short:"SF", icon:null },
       { name:"Microsoft",  short:"MS", icon:null },
     ],
+    photo:"https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#001a40 0%,#0070f2 100%)",
     trend:{ emoji:"🏭", label:"Enterprise ERP", color:"neutral" },
   },
   {
@@ -114,6 +124,8 @@ const stocks = [
       { name:"Rivian",   short:"RI", icon:null   },
       { name:"Mercedes", short:"MB", icon:null   },
     ],
+    photo:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1a0000 0%,#cc0000 100%)",
     trend:{ emoji:"⚡", label:"E-Mobilität", color:"up" },
   },
 ];
@@ -194,10 +206,18 @@ function renderTrendStamp(el, trend) {
 function renderStock() {
   const s = stocks[index % stocks.length];
 
+  // Card background photo + gradient fallback
+  const cardBg = document.getElementById("cardBg");
+  cardBg.style.background    = s.gradient;
+  cardBg.style.backgroundImage = `url("${s.photo}")`;
+  cardBg.style.backgroundSize   = "cover";
+  cardBg.style.backgroundPosition = "center";
+
   document.getElementById("logo").textContent        = s.logoText;
   document.getElementById("companyName").textContent = s.name;
   document.getElementById("ticker").textContent      = s.ticker;
   document.getElementById("countryFlag").textContent = s.countryFlag || "";
+  document.getElementById("sectorBadge").textContent = s.sector;
   document.getElementById("mcap").textContent        = formatCap(s.marketCap);
   document.getElementById("sheetTitle").textContent  = s.name;
   document.getElementById("description").textContent = s.description;

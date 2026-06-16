@@ -32,43 +32,37 @@
       <main class="deck" aria-label="Kartenstapel">
         <div id="card" class="card" role="article" aria-label="Aktienkarte">
           <div class="card-inner">
-            <section class="profile">
+
+            <!-- Hintergrundfoto -->
+            <div class="card-bg" id="cardBg"></div>
+
+            <!-- Gradient-Overlay mit Inhalten -->
+            <div class="card-overlay" aria-hidden="true">
               <div class="stamp like" id="stampLike">LIKE</div>
               <div class="stamp nope" id="stampNope">NOPE</div>
               <div class="stamp super" id="stampSuper">SUPER</div>
 
-              <!-- Kompakter Header: Logo + Name + Ticker + Flagge -->
-              <div class="card-head">
+              <!-- Oben: Logo + Flagge -->
+              <div class="card-top">
                 <div id="logo" class="logo">AP</div>
-                <div class="card-head-text">
-                  <h2 id="companyName">Apple Inc.</h2>
-                  <span id="ticker" class="ticker">AAPL</span>
-                </div>
                 <span id="countryFlag" class="country-flag">🇺🇸</span>
               </div>
 
-              <!-- Produkte -->
-              <div class="card-section">
-                <span class="section-label">Produkte</span>
-                <div id="productList" class="brand-row"></div>
+              <!-- Unten: Name, Fakten, Trend -->
+              <div class="card-bottom">
+                <div class="name-ticker-row">
+                  <h2 id="companyName">Apple Inc.</h2>
+                  <span id="ticker" class="ticker">AAPL</span>
+                </div>
+                <div class="card-facts-row">
+                  <div id="dividendInfo" class="dividend-info"></div>
+                  <span id="sectorBadge" class="sector-badge">Technologie</span>
+                </div>
+                <div id="trendStamp" class="trend-stamp"></div>
               </div>
+            </div>
 
-              <!-- Dividende -->
-              <div class="card-section">
-                <span class="section-label">Dividende</span>
-                <div id="dividendInfo" class="dividend-info"></div>
-              </div>
-
-              <!-- Wettbewerber -->
-              <div class="card-section">
-                <span class="section-label">Wettbewerber</span>
-                <div id="competitorList" class="brand-row"></div>
-              </div>
-
-              <!-- Trendstempel -->
-              <div id="trendStamp" class="trend-stamp"></div>
-            </section>
-
+            <!-- Detail-Sheet (hochwischen) -->
             <div id="sheet" class="sheet" aria-label="Unternehmensdetails">
               <div class="sheet-content">
                 <div class="sheet-handle-area" id="sheetHandle">
@@ -79,7 +73,7 @@
                   <button id="closeSheetBtn" type="button">✕</button>
                 </div>
 
-                <!-- Kennzahlen (von der Karte hierher verschoben) -->
+                <!-- Kennzahlen -->
                 <div class="numbers" aria-label="Kennzahlen">
                   <div class="pill">
                     <small>Aktueller Kurs</small>
@@ -97,6 +91,18 @@
                       <span class="trend-chip">1Y <b id="perfY">–</b></span>
                     </div>
                   </div>
+                </div>
+
+                <!-- Produkte -->
+                <div class="sheet-section">
+                  <span class="section-label">Produkte</span>
+                  <div id="productList" class="brand-row"></div>
+                </div>
+
+                <!-- Wettbewerber -->
+                <div class="sheet-section">
+                  <span class="section-label">Wettbewerber</span>
+                  <div id="competitorList" class="brand-row"></div>
                 </div>
 
                 <p id="description" class="desc">–</p>
