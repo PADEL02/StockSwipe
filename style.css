@@ -71,7 +71,8 @@ body {
 /* ── Pages ───────────────────────────────────────────────────────────────────── */
 .page        { width: min(420px, 100%); flex: 1; display: none; overflow: hidden; }
 .page.active { display: flex; flex-direction: column; gap: 14px; }
-#pageEtf.active { overflow-y: auto; padding-bottom: 8px; }
+#pageEtf.active  { overflow-y: auto; padding-bottom: 8px; }
+#pageDive.active { overflow-y: auto; padding-bottom: 8px; }
 
 /* ── Deck ────────────────────────────────────────────────────────────────────── */
 .deck {
@@ -512,6 +513,152 @@ body {
   white-space: nowrap; pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Dive: Search ────────────────────────────────────────────────────────────── */
+.dive-search-wrap {
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding-bottom: 4px;
+  background: var(--bg);
+}
+.dive-input-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 0 16px;
+  height: 52px;
+  transition: border-color 0.2s;
+}
+.dive-input-row:focus-within { border-color: rgba(255,255,255,0.22); }
+.dive-search-icon { font-size: 18px; flex-shrink: 0; }
+.dive-input {
+  flex: 1; background: none; border: none;
+  color: var(--text); font-family: var(--font);
+  font-size: 15px; font-weight: 600; outline: none;
+}
+.dive-input::placeholder { color: var(--muted); font-weight: 500; }
+.dive-clear-btn {
+  width: 26px; height: 26px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.1); color: var(--muted);
+  font-size: 12px; cursor: pointer;
+  display: grid; place-items: center; flex-shrink: 0;
+  transition: all 0.15s; font-family: var(--font);
+}
+.dive-clear-btn:hover { background: rgba(255,255,255,0.18); color: var(--text); }
+
+/* ── Dive: Company Chips ─────────────────────────────────────────────────────── */
+.dive-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding-bottom: 4px;
+}
+.dive-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--text); font-family: var(--font);
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all 0.18s;
+}
+.dive-chip:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+.dive-chip:active { transform: scale(0.94); }
+
+/* ── Dive: Tree Wrapper ───────────────────────────────────────────────────────── */
+.dive-tree-wrap {
+  display: flex; flex-direction: column; gap: 0;
+}
+
+/* ── Dive: Root Node ─────────────────────────────────────────────────────────── */
+.dt-root-card {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px; padding: 16px 20px;
+}
+.dt-root-logo {
+  width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: grid; place-items: center; overflow: hidden;
+}
+.dt-root-logo img { width: 30px; height: 30px; object-fit: contain; }
+.dt-root-logo span { font-weight: 800; font-size: 14px; color: var(--text); }
+.dt-root-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.dt-root-info strong { font-size: 19px; font-weight: 800; }
+.dt-root-info small  { font-size: 12px; color: var(--muted); font-weight: 600; }
+.dt-root-flag { font-size: 26px; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+
+/* ── Dive: Vertical Connector ────────────────────────────────────────────────── */
+.dt-connector-v {
+  width: 2px; height: 22px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+  border-radius: 1px; margin: 0 auto; flex-shrink: 0;
+}
+
+/* ── Dive: Category Buttons ──────────────────────────────────────────────────── */
+.dt-cats-row {
+  display: flex; gap: 8px;
+}
+.dt-cat-btn {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 5px;
+  padding: 12px 6px; border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: var(--text); font-family: var(--font);
+  cursor: pointer; text-align: center;
+  transition: all 0.2s;
+}
+.dt-cat-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
+.dt-cat-btn.active {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.22);
+  box-shadow: 0 0 18px rgba(255,255,255,0.04);
+}
+.dt-cat-emoji { font-size: 22px; line-height: 1; }
+.dt-cat-label {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  line-height: 1.3; word-break: break-word;
+}
+.dt-cat-btn.active .dt-cat-label { color: var(--text); }
+
+/* ── Dive: Companies Panel ───────────────────────────────────────────────────── */
+.dt-companies-panel {
+  display: flex; flex-direction: column; gap: 0;
+}
+.dt-companies-row {
+  display: flex; gap: 8px;
+}
+.dt-company-card {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  padding: 12px 6px; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+  text-align: center;
+  animation: dtFadeUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.dt-company-logo {
+  width: 42px; height: 42px; border-radius: 13px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: grid; place-items: center; overflow: hidden;
+}
+.dt-company-logo img  { width: 24px; height: 24px; object-fit: contain; }
+.dt-company-logo span { font-weight: 800; font-size: 11px; color: var(--text); }
+.dt-company-name {
+  font-size: 11px; font-weight: 700; color: var(--text);
+  line-height: 1.25; word-break: break-word;
+}
+.dt-company-flag { font-size: 15px; line-height: 1; }
+
+@keyframes dtFadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ── Helpers ─────────────────────────────────────────────────────────────────── */
 .empty-hint {

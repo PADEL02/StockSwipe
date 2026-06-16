@@ -130,6 +130,230 @@ const stocks = [
   },
 ];
 
+// ── Dive Data ─────────────────────────────────────────────────────────────────
+const diveData = {
+  nvidia: {
+    name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV",
+    categories:[
+      { name:"Chip-Fertigung", emoji:"🏭", companies:[
+        { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
+        { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+        { name:"SK Hynix", flag:"🇰🇷", icon:null,      logoText:"SK" },
+      ]},
+      { name:"Software / KI", emoji:"🤖", companies:[
+        { name:"OpenAI", flag:"🇺🇸", icon:"openai", logoText:"OA" },
+        { name:"Meta",   flag:"🇺🇸", icon:"meta",   logoText:"ME" },
+        { name:"Google", flag:"🇺🇸", icon:"google", logoText:"GO" },
+      ]},
+      { name:"Hardware-Partner", emoji:"🖥️", companies:[
+        { name:"Dell", flag:"🇺🇸", icon:null,   logoText:"DE" },
+        { name:"HP",   flag:"🇺🇸", icon:null,   logoText:"HP" },
+        { name:"ASUS", flag:"🇹🇼", icon:"asus", logoText:"AS" },
+      ]},
+    ],
+  },
+  apple: {
+    name:"Apple", flag:"🇺🇸", icon:"apple", logoText:"AP",
+    categories:[
+      { name:"Fertigung", emoji:"🏭", companies:[
+        { name:"TSMC",    flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
+        { name:"Foxconn", flag:"🇹🇼", icon:null,      logoText:"FX" },
+        { name:"Samsung", flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+      ]},
+      { name:"Netzbetreiber", emoji:"📡", companies:[
+        { name:"AT&T",    flag:"🇺🇸", icon:null, logoText:"AT" },
+        { name:"Verizon", flag:"🇺🇸", icon:null, logoText:"VZ" },
+        { name:"Telekom", flag:"🇩🇪", icon:null, logoText:"TK" },
+      ]},
+      { name:"Software-Ökosystem", emoji:"📱", companies:[
+        { name:"Adobe",   flag:"🇺🇸", icon:"adobe",   logoText:"AD" },
+        { name:"Spotify", flag:"🇸🇪", icon:"spotify", logoText:"SP" },
+        { name:"Google",  flag:"🇺🇸", icon:"google",  logoText:"GO" },
+      ]},
+    ],
+  },
+  microsoft: {
+    name:"Microsoft", flag:"🇺🇸", icon:null, logoText:"MS",
+    categories:[
+      { name:"KI-Partner", emoji:"🤖", companies:[
+        { name:"OpenAI", flag:"🇺🇸", icon:"openai", logoText:"OA" },
+        { name:"GitHub", flag:"🇺🇸", icon:"github", logoText:"GH" },
+        { name:"Nuance", flag:"🇺🇸", icon:null,     logoText:"NU" },
+      ]},
+      { name:"Cloud-Kunden", emoji:"☁️", companies:[
+        { name:"SAP",        flag:"🇩🇪", icon:"sap",   logoText:"SAP" },
+        { name:"Salesforce", flag:"🇺🇸", icon:null,    logoText:"SF"  },
+        { name:"Adobe",      flag:"🇺🇸", icon:"adobe", logoText:"AD"  },
+      ]},
+      { name:"Hardware-OEMs", emoji:"💻", companies:[
+        { name:"Dell",   flag:"🇺🇸", icon:null, logoText:"DE" },
+        { name:"HP",     flag:"🇺🇸", icon:null, logoText:"HP" },
+        { name:"Lenovo", flag:"🇨🇳", icon:null, logoText:"LN" },
+      ]},
+    ],
+  },
+  tesla: {
+    name:"Tesla", flag:"🇺🇸", icon:"tesla", logoText:"T",
+    categories:[
+      { name:"Batterien", emoji:"🔋", companies:[
+        { name:"Panasonic", flag:"🇯🇵", icon:null, logoText:"PA" },
+        { name:"CATL",      flag:"🇨🇳", icon:null, logoText:"CA" },
+        { name:"LG Energy", flag:"🇰🇷", icon:"lg", logoText:"LG" },
+      ]},
+      { name:"Rohstoffe", emoji:"⛏️", companies:[
+        { name:"Albemarle", flag:"🇺🇸", icon:null, logoText:"AL" },
+        { name:"Ganfeng",   flag:"🇨🇳", icon:null, logoText:"GF" },
+        { name:"Glencore",  flag:"🇨🇭", icon:null, logoText:"GL" },
+      ]},
+      { name:"Chips & Software", emoji:"💾", companies:[
+        { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+        { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
+        { name:"Mobileye", flag:"🇮🇱", icon:null,      logoText:"MB" },
+      ]},
+    ],
+  },
+  amazon: {
+    name:"Amazon", flag:"🇺🇸", icon:null, logoText:"AM",
+    categories:[
+      { name:"Logistik", emoji:"📦", companies:[
+        { name:"UPS",   flag:"🇺🇸", icon:null, logoText:"UP" },
+        { name:"FedEx", flag:"🇺🇸", icon:null, logoText:"FX" },
+        { name:"DHL",   flag:"🇩🇪", icon:null, logoText:"DH" },
+      ]},
+      { name:"AWS-Hardware", emoji:"🖥️", companies:[
+        { name:"Intel",  flag:"🇺🇸", icon:"intel",  logoText:"IN" },
+        { name:"AMD",    flag:"🇺🇸", icon:"amd",    logoText:"AM" },
+        { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV" },
+      ]},
+      { name:"Marken-Partner", emoji:"🛍️", companies:[
+        { name:"P&G",      flag:"🇺🇸", icon:null, logoText:"PG" },
+        { name:"Unilever", flag:"🇬🇧", icon:null, logoText:"UN" },
+        { name:"L'Oréal",  flag:"🇫🇷", icon:null, logoText:"LO" },
+      ]},
+    ],
+  },
+  tsmc: {
+    name:"TSMC", flag:"🇹🇼", icon:"tsmc", logoText:"TS",
+    categories:[
+      { name:"Maschinen", emoji:"⚙️", companies:[
+        { name:"ASML",              flag:"🇳🇱", icon:"asml", logoText:"AS" },
+        { name:"Applied Materials", flag:"🇺🇸", icon:null,   logoText:"AP" },
+        { name:"Tokyo Electron",    flag:"🇯🇵", icon:null,   logoText:"TE" },
+      ]},
+      { name:"Chemikalien", emoji:"🧪", companies:[
+        { name:"Air Products", flag:"🇺🇸", icon:null, logoText:"AI" },
+        { name:"Shin-Etsu",    flag:"🇯🇵", icon:null, logoText:"SE" },
+        { name:"Merck KGaA",   flag:"🇩🇪", icon:null, logoText:"MK" },
+      ]},
+      { name:"Kunden", emoji:"🤝", companies:[
+        { name:"Apple",  flag:"🇺🇸", icon:"apple",  logoText:"AP" },
+        { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV" },
+        { name:"AMD",    flag:"🇺🇸", icon:"amd",    logoText:"AM" },
+      ]},
+    ],
+  },
+  sap: {
+    name:"SAP SE", flag:"🇩🇪", icon:"sap", logoText:"SAP",
+    categories:[
+      { name:"Implementierungspartner", emoji:"🤝", companies:[
+        { name:"Accenture", flag:"🇮🇪", icon:null,   logoText:"AC" },
+        { name:"Deloitte",  flag:"🇺🇸", icon:null,   logoText:"DE" },
+        { name:"IBM",       flag:"🇺🇸", icon:"ibm",  logoText:"IB" },
+      ]},
+      { name:"Cloud-Infra", emoji:"☁️", companies:[
+        { name:"Azure",        flag:"🇺🇸", icon:null,     logoText:"AZ" },
+        { name:"AWS",          flag:"🇺🇸", icon:null,     logoText:"AW" },
+        { name:"Google Cloud", flag:"🇺🇸", icon:"google", logoText:"GC" },
+      ]},
+      { name:"Wettbewerber", emoji:"⚔️", companies:[
+        { name:"Oracle",      flag:"🇺🇸", icon:null, logoText:"OR" },
+        { name:"Salesforce",  flag:"🇺🇸", icon:null, logoText:"SF" },
+        { name:"ServiceNow",  flag:"🇺🇸", icon:null, logoText:"SN" },
+      ]},
+    ],
+  },
+  rheinmetall: {
+    name:"Rheinmetall", flag:"🇩🇪", icon:null, logoText:"RM",
+    categories:[
+      { name:"Rüstungs-Zulieferer", emoji:"🛡️", companies:[
+        { name:"Hensoldt",      flag:"🇩🇪", icon:null, logoText:"HS" },
+        { name:"Diehl Defence", flag:"🇩🇪", icon:null, logoText:"DD" },
+        { name:"MBDA",          flag:"🇫🇷", icon:null, logoText:"MB" },
+      ]},
+      { name:"Rohstoffe / Material", emoji:"⚒️", companies:[
+        { name:"ThyssenKrupp", flag:"🇩🇪", icon:null, logoText:"TK" },
+        { name:"SSAB",         flag:"🇸🇪", icon:null, logoText:"SS" },
+        { name:"Voestalpine",  flag:"🇦🇹", icon:null, logoText:"VA" },
+      ]},
+      { name:"Software / Elektronik", emoji:"💻", companies:[
+        { name:"Elbit Systems", flag:"🇮🇱", icon:null, logoText:"EL" },
+        { name:"Leonardo",      flag:"🇮🇹", icon:null, logoText:"LE" },
+        { name:"Thales",        flag:"🇫🇷", icon:null, logoText:"TH" },
+      ]},
+    ],
+  },
+  volkswagen: {
+    name:"Volkswagen", flag:"🇩🇪", icon:"volkswagen", logoText:"VW",
+    categories:[
+      { name:"Batterien", emoji:"🔋", companies:[
+        { name:"Northvolt",   flag:"🇸🇪", icon:null,      logoText:"NV" },
+        { name:"CATL",        flag:"🇨🇳", icon:null,      logoText:"CA" },
+        { name:"Samsung SDI", flag:"🇰🇷", icon:"samsung", logoText:"SD" },
+      ]},
+      { name:"Software / Cariad", emoji:"💻", companies:[
+        { name:"Google",   flag:"🇺🇸", icon:"google",   logoText:"GO" },
+        { name:"Bosch",    flag:"🇩🇪", icon:"bosch",    logoText:"BO" },
+        { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm", logoText:"QC" },
+      ]},
+      { name:"Komponenten", emoji:"⚙️", companies:[
+        { name:"Schaeffler",  flag:"🇩🇪", icon:null, logoText:"SC" },
+        { name:"ZF",          flag:"🇩🇪", icon:null, logoText:"ZF" },
+        { name:"Continental", flag:"🇩🇪", icon:null, logoText:"CO" },
+      ]},
+    ],
+  },
+  siemens: {
+    name:"Siemens", flag:"🇩🇪", icon:"siemens", logoText:"SI",
+    categories:[
+      { name:"Energie", emoji:"⚡", companies:[
+        { name:"Siemens Energy", flag:"🇩🇪", icon:null, logoText:"SE" },
+        { name:"Vestas",         flag:"🇩🇰", icon:null, logoText:"VE" },
+        { name:"GE Vernova",     flag:"🇺🇸", icon:null, logoText:"GV" },
+      ]},
+      { name:"Automatisierung", emoji:"🦾", companies:[
+        { name:"ABB",      flag:"🇨🇭", icon:"abb",  logoText:"AB" },
+        { name:"Rockwell", flag:"🇺🇸", icon:null,   logoText:"RK" },
+        { name:"Fanuc",    flag:"🇯🇵", icon:null,   logoText:"FA" },
+      ]},
+      { name:"Industrie-Software", emoji:"💾", companies:[
+        { name:"PTC",               flag:"🇺🇸", icon:null, logoText:"PT" },
+        { name:"Dassault Systèmes", flag:"🇫🇷", icon:null, logoText:"DS" },
+        { name:"Ansys",             flag:"🇺🇸", icon:null, logoText:"AN" },
+      ]},
+    ],
+  },
+  airbus: {
+    name:"Airbus", flag:"🇫🇷", icon:"airbus", logoText:"AB",
+    categories:[
+      { name:"Triebwerke", emoji:"✈️", companies:[
+        { name:"Rolls-Royce",       flag:"🇬🇧", icon:null, logoText:"RR" },
+        { name:"CFM International", flag:"🇫🇷", icon:null, logoText:"CF" },
+        { name:"Pratt & Whitney",   flag:"🇺🇸", icon:null, logoText:"PW" },
+      ]},
+      { name:"Materialien", emoji:"🔩", companies:[
+        { name:"Hexcel",             flag:"🇺🇸", icon:null, logoText:"HX" },
+        { name:"Toray",              flag:"🇯🇵", icon:null, logoText:"TR" },
+        { name:"Spirit AeroSystems", flag:"🇺🇸", icon:null, logoText:"SA" },
+      ]},
+      { name:"Avionik / Software", emoji:"📡", companies:[
+        { name:"Thales",            flag:"🇫🇷", icon:null, logoText:"TH" },
+        { name:"Honeywell",         flag:"🇺🇸", icon:null, logoText:"HW" },
+        { name:"Collins Aerospace", flag:"🇺🇸", icon:null, logoText:"CA" },
+      ]},
+    ],
+  },
+};
+
 let index = 0;
 let lastPrice = 0;
 let dx = 0, dy = 0;
@@ -417,20 +641,152 @@ document.getElementById("watchlistClose").addEventListener("click", () => {
 });
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
-document.getElementById("tabSwipe").addEventListener("click", () => {
-  document.getElementById("pageSwipe").classList.add("active");
-  document.getElementById("pageEtf").classList.remove("active");
-  document.getElementById("tabSwipe").classList.add("active");
-  document.getElementById("tabEtf").classList.remove("active");
-  document.getElementById("pageSubtitle").textContent = "Swipe dich durch Aktien";
+const TAB_CONFIG = {
+  Swipe: { page:"pageSwipe", tab:"tabSwipe", subtitle:"Swipe dich durch Aktien" },
+  Etf:   { page:"pageEtf",   tab:"tabEtf",   subtitle:"Baue deinen ETF"         },
+  Dive:  { page:"pageDive",  tab:"tabDive",  subtitle:"Erkunde Netzwerke"        },
+};
+
+function switchTab(active) {
+  Object.entries(TAB_CONFIG).forEach(([key, cfg]) => {
+    document.getElementById(cfg.page).classList.toggle("active", key === active);
+    document.getElementById(cfg.tab ).classList.toggle("active", key === active);
+  });
+  document.getElementById("pageSubtitle").textContent = TAB_CONFIG[active].subtitle;
+}
+
+document.getElementById("tabSwipe").addEventListener("click", () => switchTab("Swipe"));
+document.getElementById("tabEtf")  .addEventListener("click", () => switchTab("Etf"));
+document.getElementById("tabDive") .addEventListener("click", () => switchTab("Dive"));
+
+// ── Dive ──────────────────────────────────────────────────────────────────────
+let diveActiveCompany = null;
+let diveActiveCatIdx  = null;
+
+function initDiveChips() {
+  const chips = document.getElementById("diveChips");
+  chips.innerHTML = Object.entries(diveData).map(([key, d]) =>
+    `<button class="dive-chip" data-key="${key}" type="button">${d.flag} ${d.name}</button>`
+  ).join("");
+  chips.querySelectorAll(".dive-chip").forEach(btn =>
+    btn.addEventListener("click", () => selectDiveCompany(btn.dataset.key))
+  );
+}
+
+function filterDiveChips(q) {
+  const term = q.toLowerCase();
+  document.querySelectorAll(".dive-chip").forEach(btn => {
+    const key  = btn.dataset.key;
+    const name = diveData[key].name.toLowerCase();
+    btn.style.display = (!term || name.includes(term) || key.includes(term)) ? "" : "none";
+  });
+}
+
+function selectDiveCompany(key) {
+  if (!diveData[key]) return;
+  diveActiveCompany = key;
+  diveActiveCatIdx  = null;
+  document.getElementById("diveInput").value       = diveData[key].name;
+  document.getElementById("diveClearBtn").style.display = "";
+  document.getElementById("diveChips").style.display   = "none";
+  renderDiveTree(key);
+  document.getElementById("diveTreeWrap").style.display = "";
+}
+
+function resetDive() {
+  diveActiveCompany = null;
+  diveActiveCatIdx  = null;
+  document.getElementById("diveInput").value           = "";
+  document.getElementById("diveClearBtn").style.display = "none";
+  document.getElementById("diveChips").style.display   = "";
+  document.getElementById("diveTreeWrap").style.display = "none";
+  document.getElementById("diveChips").querySelectorAll(".dive-chip")
+    .forEach(c => c.style.display = "");
+}
+
+function diveMakeLogoHTML(icon, logoText) {
+  if (icon) {
+    return `<img src="https://cdn.simpleicons.org/${icon}/ffffff" alt="${logoText}"` +
+           ` data-fallback="${logoText}" onerror="brandIconError(this)">`;
+  }
+  return `<span>${logoText}</span>`;
+}
+
+function renderDiveTree(key) {
+  const data = diveData[key];
+  const wrap = document.getElementById("diveTreeWrap");
+
+  wrap.innerHTML = `
+    <div class="dt-root-card">
+      <div class="dt-root-logo">${diveMakeLogoHTML(data.icon, data.logoText)}</div>
+      <div class="dt-root-info">
+        <strong>${data.name}</strong>
+        <small>Netzwerk-Übersicht</small>
+      </div>
+      <span class="dt-root-flag">${data.flag}</span>
+    </div>
+
+    <div class="dt-connector-v"></div>
+
+    <div class="dt-cats-row" id="dtCatsRow">
+      ${data.categories.map((cat, i) => `
+        <button class="dt-cat-btn" data-catidx="${i}" type="button">
+          <span class="dt-cat-emoji">${cat.emoji}</span>
+          <span class="dt-cat-label">${cat.name}</span>
+        </button>
+      `).join("")}
+    </div>
+
+    <div class="dt-companies-panel" id="dtCompaniesPanel"></div>
+  `;
+
+  wrap.querySelectorAll(".dt-cat-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx      = parseInt(btn.dataset.catidx);
+      const isActive = btn.classList.contains("active");
+
+      wrap.querySelectorAll(".dt-cat-btn").forEach(b => b.classList.remove("active"));
+      const panel = document.getElementById("dtCompaniesPanel");
+
+      if (isActive) {
+        diveActiveCatIdx = null;
+        panel.innerHTML  = "";
+      } else {
+        btn.classList.add("active");
+        diveActiveCatIdx = idx;
+        renderDiveCompanies(data.categories[idx], panel);
+      }
+    });
+  });
+}
+
+function renderDiveCompanies(cat, panel) {
+  panel.innerHTML = `
+    <div class="dt-connector-v"></div>
+    <div class="dt-companies-row">
+      ${cat.companies.map((c, i) => `
+        <div class="dt-company-card" style="animation-delay:${i * 0.07}s">
+          <div class="dt-company-logo">${diveMakeLogoHTML(c.icon, c.logoText)}</div>
+          <span class="dt-company-name">${c.name}</span>
+          <span class="dt-company-flag">${c.flag}</span>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+// Dive event listeners
+document.getElementById("diveInput").addEventListener("input", e => {
+  if (diveActiveCompany) resetDive();
+  filterDiveChips(e.target.value);
 });
-document.getElementById("tabEtf").addEventListener("click", () => {
-  document.getElementById("pageSwipe").classList.remove("active");
-  document.getElementById("pageEtf").classList.add("active");
-  document.getElementById("tabSwipe").classList.remove("active");
-  document.getElementById("tabEtf").classList.add("active");
-  document.getElementById("pageSubtitle").textContent = "Baue deinen ETF";
+document.getElementById("diveInput").addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const first = [...document.querySelectorAll(".dive-chip")]
+    .find(c => c.style.display !== "none");
+  if (first) selectDiveCompany(first.dataset.key);
 });
+document.getElementById("diveClearBtn").addEventListener("click", resetDive);
 
 // ── ETF: Performance-Berechnung ───────────────────────────────────────────────
 
@@ -589,3 +945,4 @@ function renderLeaderboard() {
 // ── Init ──────────────────────────────────────────────────────────────────────
 renderStock();
 renderLeaderboard();
+initDiveChips();

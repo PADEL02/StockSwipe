@@ -168,6 +168,20 @@
         <div id="leaderboard" class="list" aria-label="Leaderboard"></div>
       </div>
     </section>
+
+    <section id="pageDive" class="page" aria-label="Dive Seite">
+      <div class="dive-search-wrap">
+        <div class="dive-input-row">
+          <span class="dive-search-icon" aria-hidden="true">🔍</span>
+          <input id="diveInput" class="dive-input" type="text"
+                 placeholder="Unternehmen suchen…" autocomplete="off" spellcheck="false" />
+          <button id="diveClearBtn" class="dive-clear-btn" type="button"
+                  aria-label="Suche zurücksetzen" style="display:none;">✕</button>
+        </div>
+      </div>
+      <div id="diveChips" class="dive-chips"></div>
+      <div id="diveTreeWrap" class="dive-tree-wrap" style="display:none;"></div>
+    </section>
   </div>
 
   <aside id="watchlist" class="watchlist" aria-label="Watchlist Popup">
@@ -181,8 +195,9 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <nav class="bottom-nav" aria-label="Taskleiste">
-    <button id="tabSwipe" class="tab active" type="button" aria-label="Swipe">Swipe</button>
-    <button id="tabEtf" class="tab" type="button" aria-label="ETF Builder">ETF</button>
+    <button id="tabDive"  class="tab"        type="button" aria-label="Dive">Dive</button>
+    <button id="tabSwipe" class="tab active"  type="button" aria-label="Swipe">Swipe</button>
+    <button id="tabEtf"   class="tab"        type="button" aria-label="ETF Builder">ETF</button>
   </nav>
 
   <script src="app.js"></script>
