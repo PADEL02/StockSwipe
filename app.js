@@ -136,19 +136,55 @@ const diveData = {
     name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV",
     categories:[
       { name:"Chip-Fertigung", emoji:"🏭", companies:[
-        { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
-        { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA" },
-        { name:"SK Hynix", flag:"🇰🇷", icon:null,      logoText:"SK" },
+        { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS", sub:[
+          { name:"ASML",          flag:"🇳🇱", icon:"asml",  logoText:"AS" },
+          { name:"Arm Holdings",  flag:"🇬🇧", icon:"arm",   logoText:"AR" },
+          { name:"Tokyo Electron",flag:"🇯🇵", icon:null,    logoText:"TE" },
+        ]},
+        { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA", sub:[
+          { name:"ASML",     flag:"🇳🇱", icon:"asml",    logoText:"AS" },
+          { name:"SK Hynix", flag:"🇰🇷", icon:null,      logoText:"SK" },
+          { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm",logoText:"QC" },
+        ]},
+        { name:"SK Hynix", flag:"🇰🇷", icon:null,      logoText:"SK", sub:[
+          { name:"Micron",   flag:"🇺🇸", icon:null,      logoText:"MC" },
+          { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+          { name:"Intel",    flag:"🇺🇸", icon:"intel",   logoText:"IN" },
+        ]},
       ]},
       { name:"Software / KI", emoji:"🤖", companies:[
-        { name:"OpenAI", flag:"🇺🇸", icon:"openai", logoText:"OA" },
-        { name:"Meta",   flag:"🇺🇸", icon:"meta",   logoText:"ME" },
-        { name:"Google", flag:"🇺🇸", icon:"google", logoText:"GO" },
+        { name:"OpenAI", flag:"🇺🇸", icon:"openai", logoText:"OA", sub:[
+          { name:"Microsoft", flag:"🇺🇸", icon:null,     logoText:"MS" },
+          { name:"Anthropic", flag:"🇺🇸", icon:null,     logoText:"AN" },
+          { name:"Google",    flag:"🇺🇸", icon:"google", logoText:"GO" },
+        ]},
+        { name:"Meta",   flag:"🇺🇸", icon:"meta",   logoText:"ME", sub:[
+          { name:"Instagram", flag:"🇺🇸", icon:null,      logoText:"IG" },
+          { name:"WhatsApp",  flag:"🇺🇸", icon:"whatsapp",logoText:"WA" },
+          { name:"Llama AI",  flag:"🇺🇸", icon:null,      logoText:"LA" },
+        ]},
+        { name:"Google", flag:"🇺🇸", icon:"google", logoText:"GO", sub:[
+          { name:"DeepMind", flag:"🇬🇧", icon:null,     logoText:"DM" },
+          { name:"YouTube",  flag:"🇺🇸", icon:"youtube",logoText:"YT" },
+          { name:"Waymo",    flag:"🇺🇸", icon:null,     logoText:"WM" },
+        ]},
       ]},
       { name:"Hardware-Partner", emoji:"🖥️", companies:[
-        { name:"Dell", flag:"🇺🇸", icon:null,   logoText:"DE" },
-        { name:"HP",   flag:"🇺🇸", icon:null,   logoText:"HP" },
-        { name:"ASUS", flag:"🇹🇼", icon:"asus", logoText:"AS" },
+        { name:"Dell", flag:"🇺🇸", icon:null,   logoText:"DE", sub:[
+          { name:"VMware",    flag:"🇺🇸", icon:null,    logoText:"VM" },
+          { name:"Intel",     flag:"🇺🇸", icon:"intel", logoText:"IN" },
+          { name:"Alienware", flag:"🇺🇸", icon:null,    logoText:"AW" },
+        ]},
+        { name:"HP",   flag:"🇺🇸", icon:null,   logoText:"HP", sub:[
+          { name:"Aruba", flag:"🇺🇸", icon:null,    logoText:"AR" },
+          { name:"Poly",  flag:"🇺🇸", icon:null,    logoText:"PL" },
+          { name:"Intel", flag:"🇺🇸", icon:"intel", logoText:"IN" },
+        ]},
+        { name:"ASUS", flag:"🇹🇼", icon:"asus", logoText:"AS", sub:[
+          { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm",logoText:"QC" },
+          { name:"AMD",      flag:"🇺🇸", icon:"amd",     logoText:"AM" },
+          { name:"Intel",    flag:"🇺🇸", icon:"intel",   logoText:"IN" },
+        ]},
       ]},
     ],
   },
@@ -156,19 +192,55 @@ const diveData = {
     name:"Apple", flag:"🇺🇸", icon:"apple", logoText:"AP",
     categories:[
       { name:"Fertigung", emoji:"🏭", companies:[
-        { name:"TSMC",    flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
-        { name:"Foxconn", flag:"🇹🇼", icon:null,      logoText:"FX" },
-        { name:"Samsung", flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+        { name:"TSMC",    flag:"🇹🇼", icon:"tsmc",    logoText:"TS", sub:[
+          { name:"ASML",          flag:"🇳🇱", icon:"asml", logoText:"AS" },
+          { name:"Arm Holdings",  flag:"🇬🇧", icon:"arm",  logoText:"AR" },
+          { name:"Tokyo Electron",flag:"🇯🇵", icon:null,   logoText:"TE" },
+        ]},
+        { name:"Foxconn", flag:"🇹🇼", icon:null,      logoText:"FX", sub:[
+          { name:"Luxshare", flag:"🇨🇳", icon:null, logoText:"LX" },
+          { name:"Sharp",    flag:"🇯🇵", icon:null, logoText:"SH" },
+          { name:"BYD",      flag:"🇨🇳", icon:null, logoText:"BY" },
+        ]},
+        { name:"Samsung", flag:"🇰🇷", icon:"samsung", logoText:"SA", sub:[
+          { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
+          { name:"SK Hynix", flag:"🇰🇷", icon:null,      logoText:"SK" },
+          { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm",logoText:"QC" },
+        ]},
       ]},
       { name:"Netzbetreiber", emoji:"📡", companies:[
-        { name:"AT&T",    flag:"🇺🇸", icon:null, logoText:"AT" },
-        { name:"Verizon", flag:"🇺🇸", icon:null, logoText:"VZ" },
-        { name:"Telekom", flag:"🇩🇪", icon:null, logoText:"TK" },
+        { name:"AT&T",    flag:"🇺🇸", icon:null, logoText:"AT", sub:[
+          { name:"WarnerMedia",flag:"🇺🇸", icon:null, logoText:"WM" },
+          { name:"DirecTV",    flag:"🇺🇸", icon:null, logoText:"DT" },
+          { name:"Cricket",    flag:"🇺🇸", icon:null, logoText:"CR" },
+        ]},
+        { name:"Verizon", flag:"🇺🇸", icon:null, logoText:"VZ", sub:[
+          { name:"Tracfone", flag:"🇺🇸", icon:null, logoText:"TF" },
+          { name:"Fios",     flag:"🇺🇸", icon:null, logoText:"FI" },
+          { name:"Yahoo",    flag:"🇺🇸", icon:null, logoText:"YH" },
+        ]},
+        { name:"Telekom", flag:"🇩🇪", icon:null, logoText:"TK", sub:[
+          { name:"T-Mobile US",flag:"🇺🇸", icon:null, logoText:"TM" },
+          { name:"Tele2",      flag:"🇸🇪", icon:null, logoText:"T2" },
+          { name:"GD Towers",  flag:"🇩🇪", icon:null, logoText:"GD" },
+        ]},
       ]},
       { name:"Software-Ökosystem", emoji:"📱", companies:[
-        { name:"Adobe",   flag:"🇺🇸", icon:"adobe",   logoText:"AD" },
-        { name:"Spotify", flag:"🇸🇪", icon:"spotify", logoText:"SP" },
-        { name:"Google",  flag:"🇺🇸", icon:"google",  logoText:"GO" },
+        { name:"Adobe",   flag:"🇺🇸", icon:"adobe",   logoText:"AD", sub:[
+          { name:"Figma",     flag:"🇺🇸", icon:null, logoText:"FG" },
+          { name:"Photoshop", flag:"🇺🇸", icon:null, logoText:"PS" },
+          { name:"Behance",   flag:"🇺🇸", icon:null, logoText:"BE" },
+        ]},
+        { name:"Spotify", flag:"🇸🇪", icon:"spotify", logoText:"SP", sub:[
+          { name:"Universal Music",flag:"🇺🇸", icon:null,    logoText:"UM" },
+          { name:"Warner Music",   flag:"🇺🇸", icon:null,    logoText:"WM" },
+          { name:"Anchor FM",      flag:"🇺🇸", icon:null,    logoText:"AF" },
+        ]},
+        { name:"Google",  flag:"🇺🇸", icon:"google",  logoText:"GO", sub:[
+          { name:"Alphabet", flag:"🇺🇸", icon:null,      logoText:"AL" },
+          { name:"DeepMind", flag:"🇬🇧", icon:null,      logoText:"DM" },
+          { name:"YouTube",  flag:"🇺🇸", icon:"youtube", logoText:"YT" },
+        ]},
       ]},
     ],
   },
@@ -176,19 +248,55 @@ const diveData = {
     name:"Microsoft", flag:"🇺🇸", icon:null, logoText:"MS",
     categories:[
       { name:"KI-Partner", emoji:"🤖", companies:[
-        { name:"OpenAI", flag:"🇺🇸", icon:"openai", logoText:"OA" },
-        { name:"GitHub", flag:"🇺🇸", icon:"github", logoText:"GH" },
-        { name:"Nuance", flag:"🇺🇸", icon:null,     logoText:"NU" },
+        { name:"OpenAI", flag:"🇺🇸", icon:"openai", logoText:"OA", sub:[
+          { name:"Anthropic", flag:"🇺🇸", icon:null,     logoText:"AN" },
+          { name:"Google",    flag:"🇺🇸", icon:"google", logoText:"GO" },
+          { name:"Meta",      flag:"🇺🇸", icon:"meta",   logoText:"ME" },
+        ]},
+        { name:"GitHub", flag:"🇺🇸", icon:"github", logoText:"GH", sub:[
+          { name:"Copilot", flag:"🇺🇸", icon:null, logoText:"CP" },
+          { name:"GitLab",  flag:"🇺🇸", icon:null, logoText:"GL" },
+          { name:"npm",     flag:"🇺🇸", icon:null, logoText:"NP" },
+        ]},
+        { name:"Nuance", flag:"🇺🇸", icon:null,     logoText:"NU", sub:[
+          { name:"Dragon AI",  flag:"🇺🇸", icon:null, logoText:"DA" },
+          { name:"DAX Copilot",flag:"🇺🇸", icon:null, logoText:"DC" },
+          { name:"Suki AI",    flag:"🇺🇸", icon:null, logoText:"SK" },
+        ]},
       ]},
       { name:"Cloud-Kunden", emoji:"☁️", companies:[
-        { name:"SAP",        flag:"🇩🇪", icon:"sap",   logoText:"SAP" },
-        { name:"Salesforce", flag:"🇺🇸", icon:null,    logoText:"SF"  },
-        { name:"Adobe",      flag:"🇺🇸", icon:"adobe", logoText:"AD"  },
+        { name:"SAP",        flag:"🇩🇪", icon:"sap",   logoText:"SAP", sub:[
+          { name:"Accenture", flag:"🇮🇪", icon:null, logoText:"AC" },
+          { name:"Oracle",    flag:"🇺🇸", icon:null, logoText:"OR" },
+          { name:"Qualtrics", flag:"🇺🇸", icon:null, logoText:"QT" },
+        ]},
+        { name:"Salesforce", flag:"🇺🇸", icon:null,    logoText:"SF", sub:[
+          { name:"Slack",    flag:"🇺🇸", icon:null, logoText:"SL" },
+          { name:"Tableau",  flag:"🇺🇸", icon:null, logoText:"TB" },
+          { name:"MuleSoft", flag:"🇺🇸", icon:null, logoText:"ML" },
+        ]},
+        { name:"Adobe",      flag:"🇺🇸", icon:"adobe", logoText:"AD", sub:[
+          { name:"Figma",         flag:"🇺🇸", icon:null, logoText:"FG" },
+          { name:"Creative Cloud",flag:"🇺🇸", icon:null, logoText:"CC" },
+          { name:"Marketo",       flag:"🇺🇸", icon:null, logoText:"MK" },
+        ]},
       ]},
       { name:"Hardware-OEMs", emoji:"💻", companies:[
-        { name:"Dell",   flag:"🇺🇸", icon:null, logoText:"DE" },
-        { name:"HP",     flag:"🇺🇸", icon:null, logoText:"HP" },
-        { name:"Lenovo", flag:"🇨🇳", icon:null, logoText:"LN" },
+        { name:"Dell",   flag:"🇺🇸", icon:null, logoText:"DE", sub:[
+          { name:"VMware",    flag:"🇺🇸", icon:null,    logoText:"VM" },
+          { name:"Alienware", flag:"🇺🇸", icon:null,    logoText:"AW" },
+          { name:"Intel",     flag:"🇺🇸", icon:"intel", logoText:"IN" },
+        ]},
+        { name:"HP",     flag:"🇺🇸", icon:null, logoText:"HP", sub:[
+          { name:"Aruba",  flag:"🇺🇸", icon:null,    logoText:"AR" },
+          { name:"HP Inc", flag:"🇺🇸", icon:null,    logoText:"HPI"},
+          { name:"Intel",  flag:"🇺🇸", icon:"intel", logoText:"IN" },
+        ]},
+        { name:"Lenovo", flag:"🇨🇳", icon:null, logoText:"LN", sub:[
+          { name:"Motorola", flag:"🇺🇸", icon:null,    logoText:"MO" },
+          { name:"ThinkPad", flag:"🇨🇳", icon:null,    logoText:"TP" },
+          { name:"Intel",    flag:"🇺🇸", icon:"intel", logoText:"IN" },
+        ]},
       ]},
     ],
   },
@@ -196,19 +304,55 @@ const diveData = {
     name:"Tesla", flag:"🇺🇸", icon:"tesla", logoText:"T",
     categories:[
       { name:"Batterien", emoji:"🔋", companies:[
-        { name:"Panasonic", flag:"🇯🇵", icon:null, logoText:"PA" },
-        { name:"CATL",      flag:"🇨🇳", icon:null, logoText:"CA" },
-        { name:"LG Energy", flag:"🇰🇷", icon:"lg", logoText:"LG" },
+        { name:"Panasonic", flag:"🇯🇵", icon:null, logoText:"PA", sub:[
+          { name:"Toyota", flag:"🇯🇵", icon:null, logoText:"TO" },
+          { name:"Sanyo",  flag:"🇯🇵", icon:null, logoText:"SY" },
+          { name:"Sony",   flag:"🇯🇵", icon:"sony",logoText:"SO" },
+        ]},
+        { name:"CATL",      flag:"🇨🇳", icon:null, logoText:"CA", sub:[
+          { name:"BYD",        flag:"🇨🇳", icon:null,        logoText:"BY" },
+          { name:"BMW",        flag:"🇩🇪", icon:null,        logoText:"BM" },
+          { name:"Volkswagen", flag:"🇩🇪", icon:"volkswagen",logoText:"VW" },
+        ]},
+        { name:"LG Energy", flag:"🇰🇷", icon:"lg", logoText:"LG", sub:[
+          { name:"LG Chem", flag:"🇰🇷", icon:"lg", logoText:"LC" },
+          { name:"GM",      flag:"🇺🇸", icon:null,  logoText:"GM" },
+          { name:"Hyundai", flag:"🇰🇷", icon:null,  logoText:"HY" },
+        ]},
       ]},
       { name:"Rohstoffe", emoji:"⛏️", companies:[
-        { name:"Albemarle", flag:"🇺🇸", icon:null, logoText:"AL" },
-        { name:"Ganfeng",   flag:"🇨🇳", icon:null, logoText:"GF" },
-        { name:"Glencore",  flag:"🇨🇭", icon:null, logoText:"GL" },
+        { name:"Albemarle", flag:"🇺🇸", icon:null, logoText:"AL", sub:[
+          { name:"SQM",     flag:"🇨🇱", icon:null, logoText:"SQ" },
+          { name:"Livent",  flag:"🇺🇸", icon:null, logoText:"LI" },
+          { name:"Piedmont",flag:"🇺🇸", icon:null, logoText:"PI" },
+        ]},
+        { name:"Ganfeng",   flag:"🇨🇳", icon:null, logoText:"GF", sub:[
+          { name:"CATL",       flag:"🇨🇳", icon:null,        logoText:"CA" },
+          { name:"BMW",        flag:"🇩🇪", icon:null,        logoText:"BM" },
+          { name:"Volkswagen", flag:"🇩🇪", icon:"volkswagen",logoText:"VW" },
+        ]},
+        { name:"Glencore",  flag:"🇨🇭", icon:null, logoText:"GL", sub:[
+          { name:"Rio Tinto",flag:"🇬🇧", icon:null, logoText:"RT" },
+          { name:"BHP",      flag:"🇦🇺", icon:null, logoText:"BH" },
+          { name:"Trafigura",flag:"🇨🇭", icon:null, logoText:"TR" },
+        ]},
       ]},
       { name:"Chips & Software", emoji:"💾", companies:[
-        { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA" },
-        { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
-        { name:"Mobileye", flag:"🇮🇱", icon:null,      logoText:"MB" },
+        { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA", sub:[
+          { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS" },
+          { name:"SK Hynix", flag:"🇰🇷", icon:null,      logoText:"SK" },
+          { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm",logoText:"QC" },
+        ]},
+        { name:"TSMC",     flag:"🇹🇼", icon:"tsmc",    logoText:"TS", sub:[
+          { name:"ASML",        flag:"🇳🇱", icon:"asml",  logoText:"AS" },
+          { name:"Apple",       flag:"🇺🇸", icon:"apple", logoText:"AP" },
+          { name:"Arm Holdings",flag:"🇬🇧", icon:"arm",   logoText:"AR" },
+        ]},
+        { name:"Mobileye", flag:"🇮🇱", icon:null,      logoText:"MB", sub:[
+          { name:"Intel",      flag:"🇺🇸", icon:"intel", logoText:"IN" },
+          { name:"Waymo",      flag:"🇺🇸", icon:null,    logoText:"WM" },
+          { name:"Continental",flag:"🇩🇪", icon:null,    logoText:"CO" },
+        ]},
       ]},
     ],
   },
@@ -216,19 +360,55 @@ const diveData = {
     name:"Amazon", flag:"🇺🇸", icon:null, logoText:"AM",
     categories:[
       { name:"Logistik", emoji:"📦", companies:[
-        { name:"UPS",   flag:"🇺🇸", icon:null, logoText:"UP" },
-        { name:"FedEx", flag:"🇺🇸", icon:null, logoText:"FX" },
-        { name:"DHL",   flag:"🇩🇪", icon:null, logoText:"DH" },
+        { name:"UPS",   flag:"🇺🇸", icon:null, logoText:"UP", sub:[
+          { name:"FedEx",  flag:"🇺🇸", icon:null, logoText:"FX" },
+          { name:"USPS",   flag:"🇺🇸", icon:null, logoText:"US" },
+          { name:"Coyote", flag:"🇺🇸", icon:null, logoText:"CO" },
+        ]},
+        { name:"FedEx", flag:"🇺🇸", icon:null, logoText:"FX", sub:[
+          { name:"TNT",        flag:"🇳🇱", icon:null, logoText:"TN" },
+          { name:"UPS",        flag:"🇺🇸", icon:null, logoText:"UP" },
+          { name:"ShopRunner", flag:"🇺🇸", icon:null, logoText:"SR" },
+        ]},
+        { name:"DHL",   flag:"🇩🇪", icon:null, logoText:"DH", sub:[
+          { name:"Deutsche Post",flag:"🇩🇪", icon:null, logoText:"DP" },
+          { name:"Dachser",      flag:"🇩🇪", icon:null, logoText:"DA" },
+          { name:"Hermes",       flag:"🇩🇪", icon:null, logoText:"HM" },
+        ]},
       ]},
       { name:"AWS-Hardware", emoji:"🖥️", companies:[
-        { name:"Intel",  flag:"🇺🇸", icon:"intel",  logoText:"IN" },
-        { name:"AMD",    flag:"🇺🇸", icon:"amd",    logoText:"AM" },
-        { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV" },
+        { name:"Intel",  flag:"🇺🇸", icon:"intel",  logoText:"IN", sub:[
+          { name:"AMD",    flag:"🇺🇸", icon:"amd",  logoText:"AM" },
+          { name:"TSMC",   flag:"🇹🇼", icon:"tsmc", logoText:"TS" },
+          { name:"Altera", flag:"🇺🇸", icon:null,   logoText:"AL" },
+        ]},
+        { name:"AMD",    flag:"🇺🇸", icon:"amd",    logoText:"AM", sub:[
+          { name:"TSMC",   flag:"🇹🇼", icon:"tsmc",  logoText:"TS" },
+          { name:"Xilinx", flag:"🇺🇸", icon:null,    logoText:"XI" },
+          { name:"Intel",  flag:"🇺🇸", icon:"intel", logoText:"IN" },
+        ]},
+        { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV", sub:[
+          { name:"TSMC",     flag:"🇹🇼", icon:"tsmc", logoText:"TS" },
+          { name:"ARM",      flag:"🇬🇧", icon:"arm",  logoText:"AR" },
+          { name:"Mellanox", flag:"🇮🇱", icon:null,   logoText:"ML" },
+        ]},
       ]},
       { name:"Marken-Partner", emoji:"🛍️", companies:[
-        { name:"P&G",      flag:"🇺🇸", icon:null, logoText:"PG" },
-        { name:"Unilever", flag:"🇬🇧", icon:null, logoText:"UN" },
-        { name:"L'Oréal",  flag:"🇫🇷", icon:null, logoText:"LO" },
+        { name:"P&G",      flag:"🇺🇸", icon:null, logoText:"PG", sub:[
+          { name:"Gillette",flag:"🇺🇸", icon:null, logoText:"GI" },
+          { name:"Pampers", flag:"🇺🇸", icon:null, logoText:"PA" },
+          { name:"Tide",    flag:"🇺🇸", icon:null, logoText:"TI" },
+        ]},
+        { name:"Unilever", flag:"🇬🇧", icon:null, logoText:"UN", sub:[
+          { name:"Dove",       flag:"🇬🇧", icon:null, logoText:"DV" },
+          { name:"Lipton",     flag:"🇬🇧", icon:null, logoText:"LP" },
+          { name:"Ben&Jerry's",flag:"🇺🇸", icon:null, logoText:"BJ" },
+        ]},
+        { name:"L'Oréal",  flag:"🇫🇷", icon:null, logoText:"LO", sub:[
+          { name:"Lancôme",   flag:"🇫🇷", icon:null, logoText:"LC" },
+          { name:"Maybelline",flag:"🇺🇸", icon:null, logoText:"MB" },
+          { name:"Garnier",   flag:"🇫🇷", icon:null, logoText:"GA" },
+        ]},
       ]},
     ],
   },
@@ -236,19 +416,55 @@ const diveData = {
     name:"TSMC", flag:"🇹🇼", icon:"tsmc", logoText:"TS",
     categories:[
       { name:"Maschinen", emoji:"⚙️", companies:[
-        { name:"ASML",              flag:"🇳🇱", icon:"asml", logoText:"AS" },
-        { name:"Applied Materials", flag:"🇺🇸", icon:null,   logoText:"AP" },
-        { name:"Tokyo Electron",    flag:"🇯🇵", icon:null,   logoText:"TE" },
+        { name:"ASML",              flag:"🇳🇱", icon:"asml", logoText:"AS", sub:[
+          { name:"Zeiss",          flag:"🇩🇪", icon:null,  logoText:"ZE" },
+          { name:"IMEC",           flag:"🇧🇪", icon:null,  logoText:"IM" },
+          { name:"Applied Matls.", flag:"🇺🇸", icon:null,  logoText:"AM" },
+        ]},
+        { name:"Applied Materials", flag:"🇺🇸", icon:null,   logoText:"AP", sub:[
+          { name:"Lam Research",flag:"🇺🇸", icon:null,   logoText:"LM" },
+          { name:"KLA",         flag:"🇺🇸", icon:null,   logoText:"KL" },
+          { name:"TSMC",        flag:"🇹🇼", icon:"tsmc", logoText:"TS" },
+        ]},
+        { name:"Tokyo Electron",    flag:"🇯🇵", icon:null,   logoText:"TE", sub:[
+          { name:"ASML",    flag:"🇳🇱", icon:"asml",    logoText:"AS" },
+          { name:"Samsung", flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+          { name:"Toshiba", flag:"🇯🇵", icon:null,      logoText:"TO" },
+        ]},
       ]},
       { name:"Chemikalien", emoji:"🧪", companies:[
-        { name:"Air Products", flag:"🇺🇸", icon:null, logoText:"AI" },
-        { name:"Shin-Etsu",    flag:"🇯🇵", icon:null, logoText:"SE" },
-        { name:"Merck KGaA",   flag:"🇩🇪", icon:null, logoText:"MK" },
+        { name:"Air Products", flag:"🇺🇸", icon:null, logoText:"AI", sub:[
+          { name:"Linde",      flag:"🇩🇪", icon:null, logoText:"LI" },
+          { name:"Air Liquide",flag:"🇫🇷", icon:null, logoText:"AL" },
+          { name:"Praxair",    flag:"🇺🇸", icon:null, logoText:"PR" },
+        ]},
+        { name:"Shin-Etsu",    flag:"🇯🇵", icon:null, logoText:"SE", sub:[
+          { name:"Dow",      flag:"🇺🇸", icon:null, logoText:"DW" },
+          { name:"Wacker",   flag:"🇩🇪", icon:null, logoText:"WA" },
+          { name:"Sumitomo", flag:"🇯🇵", icon:null, logoText:"SU" },
+        ]},
+        { name:"Merck KGaA",   flag:"🇩🇪", icon:null, logoText:"MK", sub:[
+          { name:"BASF",   flag:"🇩🇪", icon:null, logoText:"BA" },
+          { name:"Evonik", flag:"🇩🇪", icon:null, logoText:"EV" },
+          { name:"Lanxess",flag:"🇩🇪", icon:null, logoText:"LX" },
+        ]},
       ]},
       { name:"Kunden", emoji:"🤝", companies:[
-        { name:"Apple",  flag:"🇺🇸", icon:"apple",  logoText:"AP" },
-        { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV" },
-        { name:"AMD",    flag:"🇺🇸", icon:"amd",    logoText:"AM" },
+        { name:"Apple",  flag:"🇺🇸", icon:"apple",  logoText:"AP", sub:[
+          { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm",logoText:"QC" },
+          { name:"Samsung",  flag:"🇰🇷", icon:"samsung", logoText:"SA" },
+          { name:"Google",   flag:"🇺🇸", icon:"google",  logoText:"GO" },
+        ]},
+        { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia", logoText:"NV", sub:[
+          { name:"AMD",   flag:"🇺🇸", icon:"amd",   logoText:"AM" },
+          { name:"Intel", flag:"🇺🇸", icon:"intel", logoText:"IN" },
+          { name:"Tesla", flag:"🇺🇸", icon:"tesla", logoText:"TE" },
+        ]},
+        { name:"AMD",    flag:"🇺🇸", icon:"amd",    logoText:"AM", sub:[
+          { name:"NVIDIA", flag:"🇺🇸", icon:"nvidia",logoText:"NV" },
+          { name:"Intel",  flag:"🇺🇸", icon:"intel", logoText:"IN" },
+          { name:"Xilinx", flag:"🇺🇸", icon:null,    logoText:"XI" },
+        ]},
       ]},
     ],
   },
@@ -256,19 +472,55 @@ const diveData = {
     name:"SAP SE", flag:"🇩🇪", icon:"sap", logoText:"SAP",
     categories:[
       { name:"Implementierungspartner", emoji:"🤝", companies:[
-        { name:"Accenture", flag:"🇮🇪", icon:null,   logoText:"AC" },
-        { name:"Deloitte",  flag:"🇺🇸", icon:null,   logoText:"DE" },
-        { name:"IBM",       flag:"🇺🇸", icon:"ibm",  logoText:"IB" },
+        { name:"Accenture", flag:"🇮🇪", icon:null,  logoText:"AC", sub:[
+          { name:"McKinsey",  flag:"🇺🇸", icon:null, logoText:"MC" },
+          { name:"IBM",       flag:"🇺🇸", icon:"ibm",logoText:"IB" },
+          { name:"Capgemini", flag:"🇫🇷", icon:null, logoText:"CA" },
+        ]},
+        { name:"Deloitte",  flag:"🇺🇸", icon:null,  logoText:"DE", sub:[
+          { name:"KPMG",flag:"🇳🇱", icon:null, logoText:"KP" },
+          { name:"PwC", flag:"🇬🇧", icon:null, logoText:"PW" },
+          { name:"EY",  flag:"🇬🇧", icon:null, logoText:"EY" },
+        ]},
+        { name:"IBM",       flag:"🇺🇸", icon:"ibm", logoText:"IB", sub:[
+          { name:"Red Hat",   flag:"🇺🇸", icon:null, logoText:"RH" },
+          { name:"Kyndryl",   flag:"🇺🇸", icon:null, logoText:"KY" },
+          { name:"Consulting",flag:"🇺🇸", icon:null, logoText:"CO" },
+        ]},
       ]},
       { name:"Cloud-Infra", emoji:"☁️", companies:[
-        { name:"Azure",        flag:"🇺🇸", icon:null,     logoText:"AZ" },
-        { name:"AWS",          flag:"🇺🇸", icon:null,     logoText:"AW" },
-        { name:"Google Cloud", flag:"🇺🇸", icon:"google", logoText:"GC" },
+        { name:"Azure",        flag:"🇺🇸", icon:null,     logoText:"AZ", sub:[
+          { name:"Microsoft", flag:"🇺🇸", icon:null,     logoText:"MS" },
+          { name:"GitHub",    flag:"🇺🇸", icon:"github", logoText:"GH" },
+          { name:"LinkedIn",  flag:"🇺🇸", icon:null,     logoText:"LI" },
+        ]},
+        { name:"AWS",          flag:"🇺🇸", icon:null,     logoText:"AW", sub:[
+          { name:"Amazon",     flag:"🇺🇸", icon:null,     logoText:"AM" },
+          { name:"Twitch",     flag:"🇺🇸", icon:"twitch", logoText:"TW" },
+          { name:"Whole Foods",flag:"🇺🇸", icon:null,     logoText:"WF" },
+        ]},
+        { name:"Google Cloud", flag:"🇺🇸", icon:"google", logoText:"GC", sub:[
+          { name:"DeepMind", flag:"🇬🇧", icon:null,     logoText:"DM" },
+          { name:"YouTube",  flag:"🇺🇸", icon:"youtube",logoText:"YT" },
+          { name:"Waymo",    flag:"🇺🇸", icon:null,     logoText:"WM" },
+        ]},
       ]},
       { name:"Wettbewerber", emoji:"⚔️", companies:[
-        { name:"Oracle",      flag:"🇺🇸", icon:null, logoText:"OR" },
-        { name:"Salesforce",  flag:"🇺🇸", icon:null, logoText:"SF" },
-        { name:"ServiceNow",  flag:"🇺🇸", icon:null, logoText:"SN" },
+        { name:"Oracle",      flag:"🇺🇸", icon:null, logoText:"OR", sub:[
+          { name:"Java",     flag:"🇺🇸", icon:null, logoText:"JV" },
+          { name:"MySQL",    flag:"🇺🇸", icon:null, logoText:"MY" },
+          { name:"NetSuite", flag:"🇺🇸", icon:null, logoText:"NS" },
+        ]},
+        { name:"Salesforce",  flag:"🇺🇸", icon:null, logoText:"SF", sub:[
+          { name:"Slack",    flag:"🇺🇸", icon:null, logoText:"SL" },
+          { name:"Tableau",  flag:"🇺🇸", icon:null, logoText:"TB" },
+          { name:"MuleSoft", flag:"🇺🇸", icon:null, logoText:"ML" },
+        ]},
+        { name:"ServiceNow",  flag:"🇺🇸", icon:null, logoText:"SN", sub:[
+          { name:"Workflow", flag:"🇺🇸", icon:null,     logoText:"WF" },
+          { name:"NVIDIA",   flag:"🇺🇸", icon:"nvidia", logoText:"NV" },
+          { name:"Microsoft",flag:"🇺🇸", icon:null,     logoText:"MS" },
+        ]},
       ]},
     ],
   },
@@ -276,19 +528,55 @@ const diveData = {
     name:"Rheinmetall", flag:"🇩🇪", icon:null, logoText:"RM",
     categories:[
       { name:"Rüstungs-Zulieferer", emoji:"🛡️", companies:[
-        { name:"Hensoldt",      flag:"🇩🇪", icon:null, logoText:"HS" },
-        { name:"Diehl Defence", flag:"🇩🇪", icon:null, logoText:"DD" },
-        { name:"MBDA",          flag:"🇫🇷", icon:null, logoText:"MB" },
+        { name:"Hensoldt",      flag:"🇩🇪", icon:null, logoText:"HS", sub:[
+          { name:"Airbus",   flag:"🇫🇷", icon:"airbus",logoText:"AB" },
+          { name:"KfW",      flag:"🇩🇪", icon:null,    logoText:"KF" },
+          { name:"Leonardo", flag:"🇮🇹", icon:null,    logoText:"LE" },
+        ]},
+        { name:"Diehl Defence", flag:"🇩🇪", icon:null, logoText:"DD", sub:[
+          { name:"Diehl Stiftung",flag:"🇩🇪", icon:null, logoText:"DS" },
+          { name:"Iris-T SLM",    flag:"🇩🇪", icon:null, logoText:"IT" },
+          { name:"BWB",           flag:"🇩🇪", icon:null, logoText:"BW" },
+        ]},
+        { name:"MBDA",          flag:"🇫🇷", icon:null, logoText:"MB", sub:[
+          { name:"Airbus",    flag:"🇫🇷", icon:"airbus",logoText:"AB" },
+          { name:"BAE Systems",flag:"🇬🇧", icon:null,   logoText:"BA" },
+          { name:"Leonardo",  flag:"🇮🇹", icon:null,    logoText:"LE" },
+        ]},
       ]},
       { name:"Rohstoffe / Material", emoji:"⚒️", companies:[
-        { name:"ThyssenKrupp", flag:"🇩🇪", icon:null, logoText:"TK" },
-        { name:"SSAB",         flag:"🇸🇪", icon:null, logoText:"SS" },
-        { name:"Voestalpine",  flag:"🇦🇹", icon:null, logoText:"VA" },
+        { name:"ThyssenKrupp", flag:"🇩🇪", icon:null, logoText:"TK", sub:[
+          { name:"TKMS",        flag:"🇩🇪", icon:null, logoText:"TM" },
+          { name:"Nucera",      flag:"🇩🇪", icon:null, logoText:"NU" },
+          { name:"Marine Sys.", flag:"🇩🇪", icon:null, logoText:"MS" },
+        ]},
+        { name:"SSAB",         flag:"🇸🇪", icon:null, logoText:"SS", sub:[
+          { name:"LKAB",   flag:"🇸🇪", icon:null, logoText:"LK" },
+          { name:"HYBRIT", flag:"🇸🇪", icon:null, logoText:"HY" },
+          { name:"Ruukki", flag:"🇫🇮", icon:null, logoText:"RU" },
+        ]},
+        { name:"Voestalpine",  flag:"🇦🇹", icon:null, logoText:"VA", sub:[
+          { name:"Böhler",       flag:"🇦🇹", icon:null, logoText:"BO" },
+          { name:"ArcelorMittal",flag:"🇱🇺", icon:null, logoText:"AM" },
+          { name:"Berndorf",     flag:"🇦🇹", icon:null, logoText:"BE" },
+        ]},
       ]},
       { name:"Software / Elektronik", emoji:"💻", companies:[
-        { name:"Elbit Systems", flag:"🇮🇱", icon:null, logoText:"EL" },
-        { name:"Leonardo",      flag:"🇮🇹", icon:null, logoText:"LE" },
-        { name:"Thales",        flag:"🇫🇷", icon:null, logoText:"TH" },
+        { name:"Elbit Systems", flag:"🇮🇱", icon:null, logoText:"EL", sub:[
+          { name:"IAI",     flag:"🇮🇱", icon:null, logoText:"IA" },
+          { name:"Rafael",  flag:"🇮🇱", icon:null, logoText:"RA" },
+          { name:"Elbit USA",flag:"🇺🇸", icon:null, logoText:"EU" },
+        ]},
+        { name:"Leonardo",      flag:"🇮🇹", icon:null, logoText:"LE", sub:[
+          { name:"DRS Tech.",      flag:"🇺🇸", icon:null, logoText:"DR" },
+          { name:"Finmeccanica",   flag:"🇮🇹", icon:null, logoText:"FM" },
+          { name:"AgustaWestland", flag:"🇮🇹", icon:null, logoText:"AW" },
+        ]},
+        { name:"Thales",        flag:"🇫🇷", icon:null, logoText:"TH", sub:[
+          { name:"Thales Alenia",flag:"🇫🇷", icon:null, logoText:"TA" },
+          { name:"Gemalto",      flag:"🇳🇱", icon:null, logoText:"GE" },
+          { name:"Safran",       flag:"🇫🇷", icon:null, logoText:"SA" },
+        ]},
       ]},
     ],
   },
@@ -296,19 +584,55 @@ const diveData = {
     name:"Volkswagen", flag:"🇩🇪", icon:"volkswagen", logoText:"VW",
     categories:[
       { name:"Batterien", emoji:"🔋", companies:[
-        { name:"Northvolt",   flag:"🇸🇪", icon:null,      logoText:"NV" },
-        { name:"CATL",        flag:"🇨🇳", icon:null,      logoText:"CA" },
-        { name:"Samsung SDI", flag:"🇰🇷", icon:"samsung", logoText:"SD" },
+        { name:"Northvolt",   flag:"🇸🇪", icon:null,      logoText:"NV", sub:[
+          { name:"BMW",          flag:"🇩🇪", icon:null, logoText:"BM" },
+          { name:"Goldman Sachs",flag:"🇺🇸", icon:null, logoText:"GS" },
+          { name:"PowerCo",      flag:"🇩🇪", icon:null, logoText:"PC" },
+        ]},
+        { name:"CATL",        flag:"🇨🇳", icon:null,      logoText:"CA", sub:[
+          { name:"BYD",   flag:"🇨🇳", icon:null, logoText:"BY" },
+          { name:"BMW",   flag:"🇩🇪", icon:null, logoText:"BM" },
+          { name:"SVOLT", flag:"🇨🇳", icon:null, logoText:"SV" },
+        ]},
+        { name:"Samsung SDI", flag:"🇰🇷", icon:"samsung", logoText:"SD", sub:[
+          { name:"Samsung",    flag:"🇰🇷", icon:"samsung",logoText:"SA" },
+          { name:"Stellantis", flag:"🇮🇹", icon:null,     logoText:"ST" },
+          { name:"BMW",        flag:"🇩🇪", icon:null,     logoText:"BM" },
+        ]},
       ]},
       { name:"Software / Cariad", emoji:"💻", companies:[
-        { name:"Google",   flag:"🇺🇸", icon:"google",   logoText:"GO" },
-        { name:"Bosch",    flag:"🇩🇪", icon:"bosch",    logoText:"BO" },
-        { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm", logoText:"QC" },
+        { name:"Google",   flag:"🇺🇸", icon:"google",   logoText:"GO", sub:[
+          { name:"Waymo",       flag:"🇺🇸", icon:null,     logoText:"WM" },
+          { name:"Android Auto",flag:"🇺🇸", icon:null,     logoText:"AA" },
+          { name:"YouTube",     flag:"🇺🇸", icon:"youtube",logoText:"YT" },
+        ]},
+        { name:"Bosch",    flag:"🇩🇪", icon:"bosch",    logoText:"BO", sub:[
+          { name:"ZF",         flag:"🇩🇪", icon:null,     logoText:"ZF" },
+          { name:"Continental",flag:"🇩🇪", icon:null,     logoText:"CO" },
+          { name:"Siemens",    flag:"🇩🇪", icon:"siemens",logoText:"SI" },
+        ]},
+        { name:"Qualcomm", flag:"🇺🇸", icon:"qualcomm", logoText:"QC", sub:[
+          { name:"Snapdragon",flag:"🇺🇸", icon:null,     logoText:"SD" },
+          { name:"ARM",       flag:"🇬🇧", icon:"arm",    logoText:"AR" },
+          { name:"Samsung",   flag:"🇰🇷", icon:"samsung",logoText:"SA" },
+        ]},
       ]},
       { name:"Komponenten", emoji:"⚙️", companies:[
-        { name:"Schaeffler",  flag:"🇩🇪", icon:null, logoText:"SC" },
-        { name:"ZF",          flag:"🇩🇪", icon:null, logoText:"ZF" },
-        { name:"Continental", flag:"🇩🇪", icon:null, logoText:"CO" },
+        { name:"Schaeffler",  flag:"🇩🇪", icon:null, logoText:"SC", sub:[
+          { name:"FAG",       flag:"🇩🇪", icon:null, logoText:"FA" },
+          { name:"INA",       flag:"🇩🇪", icon:null, logoText:"IN" },
+          { name:"Continental",flag:"🇩🇪", icon:null, logoText:"CO" },
+        ]},
+        { name:"ZF",          flag:"🇩🇪", icon:null, logoText:"ZF", sub:[
+          { name:"TRW",  flag:"🇺🇸", icon:null,    logoText:"TR" },
+          { name:"Wabco",flag:"🇧🇪", icon:null,    logoText:"WA" },
+          { name:"Bosch",flag:"🇩🇪", icon:"bosch", logoText:"BO" },
+        ]},
+        { name:"Continental", flag:"🇩🇪", icon:null, logoText:"CO", sub:[
+          { name:"Goodyear",flag:"🇺🇸", icon:null,    logoText:"GO" },
+          { name:"Michelin",flag:"🇫🇷", icon:null,    logoText:"MI" },
+          { name:"Bosch",   flag:"🇩🇪", icon:"bosch", logoText:"BO" },
+        ]},
       ]},
     ],
   },
@@ -316,19 +640,55 @@ const diveData = {
     name:"Siemens", flag:"🇩🇪", icon:"siemens", logoText:"SI",
     categories:[
       { name:"Energie", emoji:"⚡", companies:[
-        { name:"Siemens Energy", flag:"🇩🇪", icon:null, logoText:"SE" },
-        { name:"Vestas",         flag:"🇩🇰", icon:null, logoText:"VE" },
-        { name:"GE Vernova",     flag:"🇺🇸", icon:null, logoText:"GV" },
+        { name:"Siemens Energy", flag:"🇩🇪", icon:null, logoText:"SE", sub:[
+          { name:"Gamesa",   flag:"🇪🇸", icon:null,     logoText:"GA" },
+          { name:"Siemens",  flag:"🇩🇪", icon:"siemens",logoText:"SI" },
+          { name:"Iberdrola",flag:"🇪🇸", icon:null,     logoText:"IB" },
+        ]},
+        { name:"Vestas",         flag:"🇩🇰", icon:null, logoText:"VE", sub:[
+          { name:"Ørsted",         flag:"🇩🇰", icon:null, logoText:"OR" },
+          { name:"Siemens Gamesa", flag:"🇩🇪", icon:null, logoText:"SG" },
+          { name:"Nordex",         flag:"🇩🇪", icon:null, logoText:"ND" },
+        ]},
+        { name:"GE Vernova",     flag:"🇺🇸", icon:null, logoText:"GV", sub:[
+          { name:"GE",     flag:"🇺🇸", icon:null, logoText:"GE" },
+          { name:"Alstom", flag:"🇫🇷", icon:null, logoText:"AL" },
+          { name:"Vestas", flag:"🇩🇰", icon:null, logoText:"VE" },
+        ]},
       ]},
       { name:"Automatisierung", emoji:"🦾", companies:[
-        { name:"ABB",      flag:"🇨🇭", icon:"abb",  logoText:"AB" },
-        { name:"Rockwell", flag:"🇺🇸", icon:null,   logoText:"RK" },
-        { name:"Fanuc",    flag:"🇯🇵", icon:null,   logoText:"FA" },
+        { name:"ABB",      flag:"🇨🇭", icon:"abb", logoText:"AB", sub:[
+          { name:"Hitachi",flag:"🇯🇵", icon:null, logoText:"HI" },
+          { name:"KUKA",   flag:"🇩🇪", icon:null, logoText:"KU" },
+          { name:"Fanuc",  flag:"🇯🇵", icon:null, logoText:"FA" },
+        ]},
+        { name:"Rockwell", flag:"🇺🇸", icon:null,  logoText:"RK", sub:[
+          { name:"Plex Systems",flag:"🇺🇸", icon:null, logoText:"PL" },
+          { name:"Cisco",       flag:"🇺🇸", icon:null, logoText:"CI" },
+          { name:"Encompass",   flag:"🇺🇸", icon:null, logoText:"EN" },
+        ]},
+        { name:"Fanuc",    flag:"🇯🇵", icon:null,  logoText:"FA", sub:[
+          { name:"Toyota", flag:"🇯🇵", icon:null, logoText:"TO" },
+          { name:"Honda",  flag:"🇯🇵", icon:null, logoText:"HO" },
+          { name:"KUKA",   flag:"🇩🇪", icon:null, logoText:"KU" },
+        ]},
       ]},
       { name:"Industrie-Software", emoji:"💾", companies:[
-        { name:"PTC",               flag:"🇺🇸", icon:null, logoText:"PT" },
-        { name:"Dassault Systèmes", flag:"🇫🇷", icon:null, logoText:"DS" },
-        { name:"Ansys",             flag:"🇺🇸", icon:null, logoText:"AN" },
+        { name:"PTC",               flag:"🇺🇸", icon:null, logoText:"PT", sub:[
+          { name:"Windchill", flag:"🇺🇸", icon:null, logoText:"WC" },
+          { name:"ThingWorx", flag:"🇺🇸", icon:null, logoText:"TW" },
+          { name:"Rockwell",  flag:"🇺🇸", icon:null, logoText:"RK" },
+        ]},
+        { name:"Dassault Systèmes", flag:"🇫🇷", icon:null, logoText:"DS", sub:[
+          { name:"CATIA",     flag:"🇫🇷", icon:null, logoText:"CA" },
+          { name:"SOLIDWORKS",flag:"🇫🇷", icon:null, logoText:"SW" },
+          { name:"ENOVIA",    flag:"🇫🇷", icon:null, logoText:"EN" },
+        ]},
+        { name:"Ansys",             flag:"🇺🇸", icon:null, logoText:"AN", sub:[
+          { name:"Fluent",    flag:"🇺🇸", icon:null, logoText:"FL" },
+          { name:"Mechanical",flag:"🇺🇸", icon:null, logoText:"MC" },
+          { name:"Discovery", flag:"🇺🇸", icon:null, logoText:"DI" },
+        ]},
       ]},
     ],
   },
@@ -336,19 +696,55 @@ const diveData = {
     name:"Airbus", flag:"🇫🇷", icon:"airbus", logoText:"AB",
     categories:[
       { name:"Triebwerke", emoji:"✈️", companies:[
-        { name:"Rolls-Royce",       flag:"🇬🇧", icon:null, logoText:"RR" },
-        { name:"CFM International", flag:"🇫🇷", icon:null, logoText:"CF" },
-        { name:"Pratt & Whitney",   flag:"🇺🇸", icon:null, logoText:"PW" },
+        { name:"Rolls-Royce",       flag:"🇬🇧", icon:null, logoText:"RR", sub:[
+          { name:"Trent XWB",        flag:"🇬🇧", icon:null, logoText:"TX" },
+          { name:"BMW",              flag:"🇩🇪", icon:null, logoText:"BM" },
+          { name:"Singapore Airl.",  flag:"🇸🇬", icon:null, logoText:"SA" },
+        ]},
+        { name:"CFM International", flag:"🇫🇷", icon:null, logoText:"CF", sub:[
+          { name:"GE",     flag:"🇺🇸", icon:null, logoText:"GE" },
+          { name:"Safran", flag:"🇫🇷", icon:null, logoText:"SF" },
+          { name:"LEAP-1A",flag:"🇺🇸", icon:null, logoText:"LA" },
+        ]},
+        { name:"Pratt & Whitney",   flag:"🇺🇸", icon:null, logoText:"PW", sub:[
+          { name:"RTX",             flag:"🇺🇸", icon:null, logoText:"RT" },
+          { name:"Collins Aerosp.", flag:"🇺🇸", icon:null, logoText:"CA" },
+          { name:"Raytheon",        flag:"🇺🇸", icon:null, logoText:"RA" },
+        ]},
       ]},
       { name:"Materialien", emoji:"🔩", companies:[
-        { name:"Hexcel",             flag:"🇺🇸", icon:null, logoText:"HX" },
-        { name:"Toray",              flag:"🇯🇵", icon:null, logoText:"TR" },
-        { name:"Spirit AeroSystems", flag:"🇺🇸", icon:null, logoText:"SA" },
+        { name:"Hexcel",             flag:"🇺🇸", icon:null, logoText:"HX", sub:[
+          { name:"Cytec", flag:"🇺🇸", icon:null, logoText:"CY" },
+          { name:"Toray", flag:"🇯🇵", icon:null, logoText:"TR" },
+          { name:"Solvay",flag:"🇧🇪", icon:null, logoText:"SV" },
+        ]},
+        { name:"Toray",              flag:"🇯🇵", icon:null, logoText:"TR", sub:[
+          { name:"Hexcel",        flag:"🇺🇸", icon:null, logoText:"HX" },
+          { name:"Teijin",        flag:"🇯🇵", icon:null, logoText:"TE" },
+          { name:"Mitsubishi Ch.",flag:"🇯🇵", icon:null, logoText:"MC" },
+        ]},
+        { name:"Spirit AeroSystems", flag:"🇺🇸", icon:null, logoText:"SA", sub:[
+          { name:"Boeing",     flag:"🇺🇸", icon:null,     logoText:"BO" },
+          { name:"Airbus",     flag:"🇫🇷", icon:"airbus", logoText:"AB" },
+          { name:"Rolls-Royce",flag:"🇬🇧", icon:null,     logoText:"RR" },
+        ]},
       ]},
       { name:"Avionik / Software", emoji:"📡", companies:[
-        { name:"Thales",            flag:"🇫🇷", icon:null, logoText:"TH" },
-        { name:"Honeywell",         flag:"🇺🇸", icon:null, logoText:"HW" },
-        { name:"Collins Aerospace", flag:"🇺🇸", icon:null, logoText:"CA" },
+        { name:"Thales",            flag:"🇫🇷", icon:null, logoText:"TH", sub:[
+          { name:"Thales Alenia",flag:"🇫🇷", icon:null, logoText:"TA" },
+          { name:"Gemalto",      flag:"🇳🇱", icon:null, logoText:"GE" },
+          { name:"Safran",       flag:"🇫🇷", icon:null, logoText:"SA" },
+        ]},
+        { name:"Honeywell",         flag:"🇺🇸", icon:null, logoText:"HW", sub:[
+          { name:"Garrett Motion",flag:"🇺🇸", icon:null, logoText:"GM" },
+          { name:"UOP",           flag:"🇺🇸", icon:null, logoText:"UO" },
+          { name:"Resideo",       flag:"🇺🇸", icon:null, logoText:"RE" },
+        ]},
+        { name:"Collins Aerospace", flag:"🇺🇸", icon:null, logoText:"CA", sub:[
+          { name:"RTX",          flag:"🇺🇸", icon:null, logoText:"RT" },
+          { name:"Pratt&Whitney",flag:"🇺🇸", icon:null, logoText:"PW" },
+          { name:"Raytheon",     flag:"🇺🇸", icon:null, logoText:"RA" },
+        ]},
       ]},
     ],
   },
@@ -763,22 +1159,64 @@ function renderDiveTree(key) {
 function renderDiveCompanies(cat, panel, activeBtn) {
   panel.innerHTML = `
     <div class="dt-connector-v" id="dtCatConnector"></div>
-    <div class="dt-companies-row">
+    <div class="dt-companies-row" id="dtCompRow">
       ${cat.companies.map((c, i) => `
-        <div class="dt-company-card" style="animation-delay:${i * 0.07}s">
+        <div class="dt-company-card" data-compidx="${i}" style="animation-delay:${i * 0.07}s">
           <div class="dt-company-logo">${diveMakeLogoHTML(c.icon, c.logoText)}</div>
           <span class="dt-company-name">${c.name}</span>
           <span class="dt-company-flag">${c.flag}</span>
         </div>
       `).join("")}
     </div>
+    <div class="dt-sublevel-panel" id="dtSubPanel"></div>
   `;
 
   // Align connector with the horizontal center of the active category button
   const connector = document.getElementById("dtCatConnector");
-  const wrapRect  = panel.parentElement.getBoundingClientRect();
+  const wrapRect  = document.getElementById("diveTreeWrap").getBoundingClientRect();
   const btnRect   = activeBtn.getBoundingClientRect();
   const centerX   = Math.round(btnRect.left + btnRect.width / 2 - wrapRect.left - 1);
+  connector.style.margin     = "0";
+  connector.style.marginLeft = centerX + "px";
+
+  // Level-4: click a company card to expand its sub-companies
+  panel.querySelectorAll(".dt-company-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const idx      = parseInt(card.dataset.compidx);
+      const isActive = card.classList.contains("active");
+      const subPanel = document.getElementById("dtSubPanel");
+
+      panel.querySelectorAll(".dt-company-card").forEach(c => c.classList.remove("active"));
+      subPanel.innerHTML = "";
+
+      if (!isActive) {
+        card.classList.add("active");
+        renderDiveSubLevel(cat.companies[idx].sub || [], subPanel, card);
+      }
+    });
+  });
+}
+
+function renderDiveSubLevel(sub, panel, activeCard) {
+  if (!sub.length) return;
+  panel.innerHTML = `
+    <div class="dt-connector-v" id="dtSubConnector"></div>
+    <div class="dt-companies-row">
+      ${sub.map((s, i) => `
+        <div class="dt-company-card dt-subcard" style="animation-delay:${i * 0.07}s">
+          <div class="dt-company-logo">${diveMakeLogoHTML(s.icon, s.logoText)}</div>
+          <span class="dt-company-name">${s.name}</span>
+          <span class="dt-company-flag">${s.flag}</span>
+        </div>
+      `).join("")}
+    </div>
+  `;
+
+  // Align sub-connector with center of the clicked company card
+  const connector = document.getElementById("dtSubConnector");
+  const wrapRect  = document.getElementById("diveTreeWrap").getBoundingClientRect();
+  const cardRect  = activeCard.getBoundingClientRect();
+  const centerX   = Math.round(cardRect.left + cardRect.width / 2 - wrapRect.left - 1);
   connector.style.margin     = "0";
   connector.style.marginLeft = centerX + "px";
 }

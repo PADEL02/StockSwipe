@@ -638,9 +638,27 @@ body {
   padding: 12px 6px; border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
-  text-align: center;
+  text-align: center; cursor: pointer;
   animation: dtFadeUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: background 0.18s, border-color 0.18s;
 }
+.dt-company-card:hover  { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
+.dt-company-card.active { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.22); }
+
+/* ── Level 4: Sub-companies ──────────────────────────────────────────────────── */
+.dt-sublevel-panel { display: flex; flex-direction: column; gap: 0; }
+.dt-subcard {
+  padding: 10px 4px !important;
+  border-color: rgba(255,255,255,0.05) !important;
+  background: rgba(255,255,255,0.01) !important;
+  cursor: default !important;
+}
+.dt-subcard:hover { background: rgba(255,255,255,0.03) !important; }
+.dt-subcard .dt-company-logo { width: 34px !important; height: 34px !important; border-radius: 10px !important; }
+.dt-subcard .dt-company-logo img  { width: 18px !important; height: 18px !important; }
+.dt-subcard .dt-company-logo span { font-size: 10px !important; }
+.dt-subcard .dt-company-name { font-size: 10px !important; }
+.dt-subcard .dt-company-flag { font-size: 13px !important; }
 .dt-company-logo {
   width: 42px; height: 42px; border-radius: 13px;
   background: rgba(255,255,255,0.06);
