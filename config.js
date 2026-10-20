@@ -17,7 +17,7 @@ const APP_CONFIG = {
   // So lässt er sich jederzeit umlegen, ohne die App neu zu veröffentlichen.
   // Solange er aus ist, zeigt die App Beispieldaten – es entstehen keine Kosten.
   ai: {
-    endpoint: "",
+    endpoint: "https://stockswipe-api.scheko2002.workers.dev",
   },
 
   // ── Bezahlmodell ──────────────────────────────────────────────────────────

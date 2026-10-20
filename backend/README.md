@@ -24,7 +24,7 @@ Da der Schalter im Backend liegt, kannst du ihn jederzeit umlegen, auch wenn die
 - **Keine Doppelkosten:** Fragen zwei Nutzer gleichzeitig dasselbe an, läuft die KI nur einmal.
 - **Zusätzlich empfohlen:** Im Anthropic-Konto ein monatliches Ausgabelimit setzen. Das greift unabhängig von diesem Code.
 
-Aktueller Stand jederzeit unter `https://<deine-worker-adresse>/status` (KI an/aus, heute ausgegeben, Rest-Budget).
+Aktueller Stand jederzeit unter `https://stockswipe-api.scheko2002.workers.dev/status` (KI an/aus, heute ausgegeben, Rest-Budget).
 
 ## Schutz vor falschen Daten
 
