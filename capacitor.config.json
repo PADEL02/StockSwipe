@@ -1,0 +1,13 @@
+{
+  "appId": "com.stockswipe.app",
+  "appName": "StockSwipe",
+  "webDir": "www",
+  "backgroundColor": "#05070A",
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#05070A"
+  },
+  "android": {
+    "backgroundColor": "#05070A"
+  }
+}

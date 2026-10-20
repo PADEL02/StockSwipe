@@ -1,0 +1,13 @@
+{
+  "name": "stockswipe",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Aktien-Discovery-App (Swipe, Dive, ETF-Builder) – Web + iOS/Android über Capacitor",
+  "scripts": {
+    "build": "node scripts/build-web.mjs",
+    "sync": "npm run build && npx cap sync",
+    "ios": "npm run sync && npx cap open ios",
+    "android": "npm run sync && npx cap open android",
+    "serve": "npx --yes http-server www -p 8080 -c-1"
+  }
+}
