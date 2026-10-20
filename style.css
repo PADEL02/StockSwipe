@@ -10,6 +10,15 @@
   --shadow-lux: 0 30px 60px -10px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
   --radius:     32px;
   --font:       'Plus Jakarta Sans', sans-serif;
+
+  /* Dive-Mindmap: zwei klar getrennte Farben */
+  --node-industry: #C5A059;   /* Branchen  – Gold  */
+  --node-supplier: #60A5FA;   /* Zulieferer – Blau */
+  --node-line:     rgba(255,255,255,0.14);
+
+  /* Sichere Bereiche (Notch, Home-Indikator) in der nativen App */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * { box-sizing: border-box; }
@@ -30,7 +39,7 @@ body {
 .app {
   height: 100%;
   display: flex; flex-direction: column; align-items: center;
-  padding: 18px 14px 90px; gap: 14px; position: relative;
+  padding: calc(18px + var(--safe-top)) 14px calc(90px + var(--safe-bottom)); gap: 14px; position: relative;
 }
 
 /* ── Topbar ──────────────────────────────────────────────────────────────────── */
@@ -72,7 +81,7 @@ body {
 .page        { width: min(420px, 100%); flex: 1; display: none; overflow: hidden; }
 .page.active { display: flex; flex-direction: column; gap: 14px; }
 #pageEtf.active  { overflow-y: auto; padding-bottom: 8px; }
-#pageDive.active { overflow-y: auto; padding-bottom: 8px; }
+#pageDive.active { overflow: hidden; padding-bottom: 8px; }
 
 /* ── Deck ────────────────────────────────────────────────────────────────────── */
 .deck {
@@ -343,7 +352,7 @@ body {
 
 /* ── Bottom Nav ──────────────────────────────────────────────────────────────── */
 .bottom-nav {
-  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  position: fixed; left: 50%; bottom: calc(20px + var(--safe-bottom)); transform: translateX(-50%);
   width: calc(100% - 40px); max-width: 380px;
   display: flex; gap: 8px; padding: 8px;
   border-radius: 24px; border: 1px solid rgba(255,255,255,0.08);
@@ -444,6 +453,12 @@ body {
 .perf-pos { color: var(--like); }
 .perf-neg { color: var(--nope); }
 .perf-neu { color: var(--muted); }
+.lb-example {
+  font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
+  background: rgba(255,255,255,0.06); color: var(--muted);
+  border: 1px solid var(--line);
+}
+.lb-note { margin: -4px 0 12px; font-size: 11px; font-weight: 600; color: var(--muted); line-height: 1.5; }
 .lb-you   {
   font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px;
   background: rgba(197,160,89,0.15); color: var(--super);
@@ -491,7 +506,7 @@ body {
 .wl-info strong   { font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wl-info small    { font-size: 11px; color: var(--muted); font-weight: 600; }
 .wl-right         { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-.wl-price         { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.wl-sector        { font-size: 11px; font-weight: 700; color: var(--muted); }
 .wl-super         { color: var(--super); font-size: 13px; line-height: 1; }
 .wl-remove {
   background: none; border: none; cursor: pointer;
@@ -503,7 +518,7 @@ body {
 
 /* ── Toast ───────────────────────────────────────────────────────────────────── */
 .toast {
-  position: fixed; bottom: 100px; left: 50%;
+  position: fixed; bottom: calc(100px + var(--safe-bottom)); left: 50%;
   transform: translateX(-50%) translateY(16px); opacity: 0;
   padding: 11px 22px; border-radius: 99px;
   background: rgba(255,255,255,0.92); color: #000;
@@ -521,7 +536,6 @@ body {
   top: 0;
   z-index: 5;
   padding-bottom: 4px;
-  background: var(--bg);
 }
 .dive-input-row {
   display: flex; align-items: center; gap: 10px;
@@ -566,120 +580,162 @@ body {
 .dive-chip:hover  { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
 .dive-chip:active { transform: scale(0.94); }
 
-/* ── Dive: Tree Wrapper ───────────────────────────────────────────────────────── */
-.dive-tree-wrap {
-  display: flex; flex-direction: column; gap: 0;
-}
-
-/* ── Dive: Root Node ─────────────────────────────────────────────────────────── */
-.dt-root-card {
-  display: flex; align-items: center; gap: 14px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 20px; padding: 16px 20px;
-}
-.dt-root-logo {
-  width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  display: grid; place-items: center; overflow: hidden;
-}
-.dt-root-logo img { width: 30px; height: 30px; object-fit: contain; }
-.dt-root-logo span { font-weight: 800; font-size: 14px; color: var(--text); }
-.dt-root-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.dt-root-info strong { font-size: 19px; font-weight: 800; }
-.dt-root-info small  { font-size: 12px; color: var(--muted); font-weight: 600; }
-.dt-root-flag { font-size: 26px; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
-
-/* ── Dive: Vertical Connector ────────────────────────────────────────────────── */
-.dt-connector-v {
-  width: 2px; height: 22px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
-  border-radius: 1px; margin: 0 auto; flex-shrink: 0;
-}
-
-/* ── Dive: Category Buttons ──────────────────────────────────────────────────── */
-.dt-cats-row {
-  display: flex; gap: 8px;
-}
-.dt-cat-btn {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 5px;
-  padding: 12px 6px; border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
-  color: var(--text); font-family: var(--font);
-  cursor: pointer; text-align: center;
-  transition: all 0.2s;
-}
-.dt-cat-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); }
-.dt-cat-btn.active {
-  background: rgba(255,255,255,0.09);
-  border-color: rgba(255,255,255,0.22);
-  box-shadow: 0 0 18px rgba(255,255,255,0.04);
-}
-.dt-cat-emoji { font-size: 22px; line-height: 1; }
-.dt-cat-label {
-  font-size: 10px; font-weight: 700; color: var(--muted);
-  line-height: 1.3; word-break: break-word;
-}
-.dt-cat-btn.active .dt-cat-label { color: var(--text); }
-
-/* ── Dive: Companies Panel ───────────────────────────────────────────────────── */
-.dt-companies-panel {
-  display: flex; flex-direction: column; gap: 0;
-}
-.dt-companies-row {
-  display: flex; gap: 8px;
-}
-.dt-company-card {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 6px;
-  padding: 12px 6px; border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.02);
-  text-align: center; cursor: pointer;
-  animation: dtFadeUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
-  transition: background 0.18s, border-color 0.18s;
-}
-.dt-company-card:hover  { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
-.dt-company-card.active { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.22); }
-
-/* ── Level 4: Sub-companies ──────────────────────────────────────────────────── */
-.dt-sublevel-panel { display: flex; flex-direction: column; gap: 0; }
-.dt-subcard {
-  padding: 10px 4px !important;
-  border-color: rgba(255,255,255,0.05) !important;
-  background: rgba(255,255,255,0.01) !important;
-  cursor: default !important;
-}
-.dt-subcard:hover { background: rgba(255,255,255,0.03) !important; }
-.dt-subcard .dt-company-logo { width: 34px !important; height: 34px !important; border-radius: 10px !important; }
-.dt-subcard .dt-company-logo img  { width: 18px !important; height: 18px !important; }
-.dt-subcard .dt-company-logo span { font-size: 10px !important; }
-.dt-subcard .dt-company-name { font-size: 10px !important; }
-.dt-subcard .dt-company-flag { font-size: 13px !important; }
-.dt-company-logo {
-  width: 42px; height: 42px; border-radius: 13px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  display: grid; place-items: center; overflow: hidden;
-}
-.dt-company-logo img  { width: 24px; height: 24px; object-fit: contain; }
-.dt-company-logo span { font-weight: 800; font-size: 11px; color: var(--text); }
-.dt-company-name {
-  font-size: 11px; font-weight: 700; color: var(--text);
-  line-height: 1.25; word-break: break-word;
-}
-.dt-company-flag { font-size: 15px; line-height: 1; }
-
-@keyframes dtFadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 /* ── Helpers ─────────────────────────────────────────────────────────────────── */
 .empty-hint {
   color: var(--muted); font-size: 13px; font-weight: 600;
   text-align: center; padding: 18px 0; margin: 0;
 }
+
+/* ── Datenkennzeichnung (Beispieldaten / KI-generiert) ───────────────────────── */
+.data-label {
+  align-self: flex-start;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+  color: rgba(255,255,255,0.55);
+  padding: 2px 8px; border-radius: 6px;
+  background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ── Tooltips: Werte gedrückt halten / hovern ────────────────────────────────── */
+[data-tip] {
+  pointer-events: auto;          /* auch auf der Kartenvorderseite erreichbar */
+  -webkit-touch-callout: none; user-select: none; -webkit-user-select: none;
+  cursor: help;
+}
+.tip-bubble {
+  position: fixed; z-index: 200; max-width: 260px;
+  padding: 10px 14px; border-radius: 14px;
+  background: rgba(18,22,30,0.97); color: var(--text);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+  font-size: 13px; font-weight: 600; line-height: 1.45;
+  opacity: 0; transform: translateY(4px); pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.tip-bubble.show { opacity: 1; transform: translateY(0); }
+
+/* ── Karte kurz hervorheben, wenn sie aus Dive geöffnet wird ─────────────────── */
+@keyframes cardPop {
+  0%   { box-shadow: var(--shadow-lux), 0 0 0 0 rgba(96,165,250,0.0); }
+  30%  { box-shadow: var(--shadow-lux), 0 0 0 4px rgba(96,165,250,0.55); }
+  100% { box-shadow: var(--shadow-lux), 0 0 0 0 rgba(96,165,250,0.0); }
+}
+.card.card-pop { animation: cardPop 0.9s ease-out; }
+
+/* ── Dive: Intro ─────────────────────────────────────────────────────────────── */
+.dive-intro {
+  margin: 0; font-size: 13px; font-weight: 600; line-height: 1.55; color: var(--muted);
+}
+
+/* ── Dive: Mindmap ───────────────────────────────────────────────────────────── */
+.dive-map {
+  position: relative; flex: 1; min-height: 0;
+  border-radius: 24px; overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.035) 0%, transparent 65%),
+    rgba(255,255,255,0.015);
+  border: 1px solid var(--line);
+  touch-action: none; user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: grab;
+}
+.dive-map:active { cursor: grabbing; }
+.dive-world {
+  position: absolute; left: 50%; top: 50%;
+  width: 0; height: 0; transform-origin: 0 0;
+}
+.dive-lines {
+  position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible;
+}
+.mm-line {
+  stroke: var(--node-line); stroke-width: 1.5; stroke-linecap: round;
+  transition: stroke 0.25s;
+}
+.mm-line.is-path { stroke: rgba(255,255,255,0.32); }
+
+.mm-node {
+  position: absolute; left: 0; top: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; will-change: transform, opacity;
+}
+
+/* Logos (Wurzel + Zulieferer) */
+.mm-logo {
+  display: grid; place-items: center; overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a1f29, #0d1118);
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+.mm-logo img { width: 52%; height: 52%; object-fit: contain; pointer-events: none; }
+.mm-logo .brand-fallback { font-size: 12px; }
+.mm-name {
+  max-width: 104px; text-align: center;
+  font-size: 11px; font-weight: 700; line-height: 1.25; color: var(--text);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+.mm-flag { font-size: 11px; }
+
+.mm-root .mm-logo {
+  width: 78px; height: 78px;
+  border: 2px solid rgba(255,255,255,0.35);
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.04), 0 10px 30px rgba(0,0,0,0.6);
+}
+.mm-root .mm-logo .brand-fallback { font-size: 18px; }
+.mm-root .mm-name { font-size: 15px; font-weight: 800; max-width: 140px; }
+
+.mm-supplier .mm-logo {
+  width: 48px; height: 48px;
+  border: 2px solid var(--node-supplier);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+.mm-supplier.is-expanded .mm-logo,
+.mm-root.is-expanded .mm-logo { box-shadow: 0 0 0 5px rgba(96,165,250,0.18), 0 4px 16px rgba(0,0,0,0.5); }
+.mm-root.is-expanded .mm-logo { box-shadow: 0 0 0 6px rgba(255,255,255,0.06), 0 10px 30px rgba(0,0,0,0.6); }
+
+/* Branchen als Pillen */
+.mm-industry {
+  flex-direction: row; gap: 6px;
+  padding: 7px 12px 7px 10px; border-radius: 999px;
+  background: rgba(197,160,89,0.12);
+  border: 1.5px solid var(--node-industry);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+.mm-industry .mm-emoji { font-size: 14px; line-height: 1; }
+.mm-industry .mm-label { font-size: 12px; font-weight: 800; color: #E9D5A6; }
+.mm-industry.is-expanded { background: rgba(197,160,89,0.26); box-shadow: 0 0 0 4px rgba(197,160,89,0.15), 0 4px 14px rgba(0,0,0,0.45); }
+
+/* Laden & „keine Daten“ */
+.mm-node.is-loading .mm-logo { animation: mmPulse 0.9s ease-in-out infinite; }
+@keyframes mmPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(96,165,250,0.45); }
+  50%      { box-shadow: 0 0 0 10px rgba(96,165,250,0); }
+}
+.mm-node.mm-nudge > :first-child { animation: mmNudge 0.4s ease; }
+@keyframes mmNudge {
+  0%, 100% { translate: 0 0; }
+  25% { translate: -4px 0; } 75% { translate: 4px 0; }
+}
+
+/* Legende, Zentrieren-Knopf, Datenhinweis */
+.dive-legend {
+  position: absolute; left: 12px; top: 12px;
+  display: flex; gap: 12px;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  padding: 6px 10px; border-radius: 10px;
+  background: rgba(5,7,10,0.7); border: 1px solid var(--line);
+  pointer-events: none;
+}
+.dive-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lg-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.lg-industry { background: var(--node-industry); }
+.lg-supplier { background: var(--node-supplier); }
+.dive-recenter {
+  position: absolute; right: 12px; top: 12px;
+  width: 38px; height: 38px; border-radius: 12px;
+  border: 1px solid var(--line); background: rgba(5,7,10,0.7);
+  color: var(--text); font-size: 18px; cursor: pointer;
+  display: grid; place-items: center; font-family: var(--font);
+}
+.dive-recenter:hover { background: rgba(255,255,255,0.08); }
+.dive-data-label { position: absolute; left: 12px; bottom: 12px; pointer-events: none; }

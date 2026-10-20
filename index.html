@@ -2,8 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>StockSwipe – Clean Luxury</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#05070A" />
+  <title>StockSwipe</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,9 +16,9 @@
   <div class="app">
     <header class="topbar" aria-label="App Kopfzeile">
       <div class="brand">
-        <div class="brand-badge" aria-hidden="true"><span>SS</span></div>
+        <div class="brand-badge" aria-hidden="true"><span id="brandBadge"></span></div>
         <div class="brand-title">
-          <strong>StockSwipe</strong>
+          <strong id="brandName"></strong>
           <small id="pageSubtitle">Swipe dich durch Aktien</small>
         </div>
       </div>
@@ -45,20 +46,21 @@
               <!-- Oben: Logo + Flagge -->
               <div class="card-top">
                 <div id="logo" class="logo">AP</div>
-                <span id="countryFlag" class="country-flag">🇺🇸</span>
+                <span id="countryFlag" class="country-flag" data-tip="country"></span>
               </div>
 
               <!-- Unten: Name, Fakten, Trend -->
               <div class="card-bottom">
                 <div class="name-ticker-row">
                   <h2 id="companyName">Apple Inc.</h2>
-                  <span id="ticker" class="ticker">AAPL</span>
+                  <span id="ticker" class="ticker" data-tip="ticker">AAPL</span>
                 </div>
                 <div class="card-facts-row">
-                  <div id="dividendInfo" class="dividend-info"></div>
-                  <span id="sectorBadge" class="sector-badge">Technologie</span>
+                  <div id="dividendInfo" class="dividend-info" data-tip="dividend"></div>
+                  <span id="sectorBadge" class="sector-badge" data-tip="sector">Technologie</span>
                 </div>
-                <div id="trendStamp" class="trend-stamp"></div>
+                <div id="trendStamp" class="trend-stamp" data-tip="trend"></div>
+                <span class="data-label" data-source-label></span>
               </div>
             </div>
 
@@ -75,44 +77,41 @@
 
                 <!-- Kennzahlen -->
                 <div class="numbers" aria-label="Kennzahlen">
-                  <div class="pill">
-                    <small>Aktueller Kurs</small>
-                    <strong id="price">–</strong>
-                  </div>
-                  <div class="pill">
-                    <small>Market Cap</small>
+                  <div class="pill" style="grid-column: 1 / -1;" data-tip="mcap">
+                    <small>Unternehmenswert</small>
                     <strong id="mcap">–</strong>
                   </div>
-                  <div class="pill" style="grid-column: 1 / -1;">
+                  <div class="pill" style="grid-column: 1 / -1;" data-tip="perf">
                     <small>Wertentwicklung</small>
                     <div class="trend">
-                      <span class="trend-chip">1W <b id="perfW">–</b></span>
-                      <span class="trend-chip">1M <b id="perfM">–</b></span>
-                      <span class="trend-chip">1Y <b id="perfY">–</b></span>
+                      <span class="trend-chip" data-tip="perfW">1W <b id="perfW">–</b></span>
+                      <span class="trend-chip" data-tip="perfM">1M <b id="perfM">–</b></span>
+                      <span class="trend-chip" data-tip="perfY">1J <b id="perfY">–</b></span>
                     </div>
                   </div>
                 </div>
 
                 <!-- Produkte -->
                 <div class="sheet-section">
-                  <span class="section-label">Produkte</span>
+                  <span class="section-label" data-tip="products">Produkte</span>
                   <div id="productList" class="brand-row"></div>
                 </div>
 
                 <!-- Wettbewerber -->
                 <div class="sheet-section">
-                  <span class="section-label">Wettbewerber</span>
+                  <span class="section-label" data-tip="competitors">Wettbewerber</span>
                   <div id="competitorList" class="brand-row"></div>
                 </div>
 
                 <p id="description" class="desc">–</p>
+                <span class="data-label" data-source-label></span>
 
                 <div class="meta" aria-label="Weitere Werte">
-                  <div class="pill">
+                  <div class="pill" data-tip="sector">
                     <small>Branche</small>
                     <strong id="sector">–</strong>
                   </div>
-                  <div class="pill">
+                  <div class="pill" data-tip="country">
                     <small>Land</small>
                     <strong id="country">–</strong>
                   </div>
@@ -165,6 +164,7 @@
             <button class="lb-filter-btn" data-period="y">1J</button>
           </div>
         </div>
+        <p class="lb-note">Beispieldaten: Die Einträge sind Beispiele, keine echten Nutzer. Deine eigenen ETFs erscheinen mit „Du“.</p>
         <div id="leaderboard" class="list" aria-label="Leaderboard"></div>
       </div>
     </section>
@@ -180,7 +180,20 @@
         </div>
       </div>
       <div id="diveChips" class="dive-chips"></div>
-      <div id="diveTreeWrap" class="dive-tree-wrap" style="display:none;"></div>
+      <p id="diveIntro" class="dive-intro">Wähle ein Unternehmen. Tippe auf eine Branche, um die Zulieferer zu sehen, und auf einen Zulieferer, um tiefer zu tauchen. Gedrückt halten öffnet die Aktienkarte.</p>
+
+      <div id="diveMap" class="dive-map" style="display:none;" aria-label="Lieferketten-Mindmap">
+        <div id="diveWorld" class="dive-world">
+          <svg id="diveLines" class="dive-lines" aria-hidden="true"></svg>
+          <div id="diveNodes"></div>
+        </div>
+        <div class="dive-legend" aria-hidden="true">
+          <span><i class="lg-dot lg-industry"></i>Branche</span>
+          <span><i class="lg-dot lg-supplier"></i>Zulieferer</span>
+        </div>
+        <button id="diveRecenter" class="dive-recenter" type="button" aria-label="Ansicht zentrieren">◎</button>
+        <span class="data-label dive-data-label" data-source-label></span>
+      </div>
     </section>
   </div>
 
@@ -200,6 +213,13 @@
     <button id="tabEtf"   class="tab"        type="button" aria-label="ETF Builder">ETF</button>
   </nav>
 
+  <div id="tipBubble" class="tip-bubble" role="tooltip" aria-hidden="true"></div>
+
+  <script src="config.js"></script>
+  <script src="data/demo-data.js"></script>
+  <script src="data/data-service.js"></script>
+  <script src="tooltips.js"></script>
   <script src="app.js"></script>
+  <script src="dive-mindmap.js"></script>
 </body>
 </html>

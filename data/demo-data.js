@@ -1,0 +1,286 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// BEISPIELDATEN (Demo-Modus)
+// Diese Daten werden nur genutzt, solange APP_CONFIG.ai.enabled = false ist.
+// Sobald die KI scharf geschaltet ist, kommen Karten und Lieferketten vom Backend.
+// Inhalte sind vereinfachte Beispiele und werden in der App so gekennzeichnet.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Swipe-Karten ─────────────────────────────────────────────────────────────
+const DEMO_STOCKS = [
+  {
+    id:"aapl", name:"Apple Inc.", ticker:"AAPL", logoText:"AP", countryFlag:"🇺🇸",
+    marketCap:2680000000000, perf:{ w:1.2, m:-2.7, y:18.4 },
+    sector:"Technologie", country:"USA",
+    description:"Apple entwickelt Consumer-Elektronik, Betriebssysteme und digitale Services. Das Unternehmen ist bekannt für iPhone, Mac und das iOS-Ökosystem.",
+    products:[
+      { name:"iPhone",    short:"iP", icon:"ios"      },
+      { name:"Mac",       short:"MC", icon:"macos"    },
+      { name:"App Store", short:"AS", icon:"appstore"  },
+      { name:"iCloud",    short:"iC", icon:"icloud"   },
+    ],
+    dividend:{ pays:true, amount:"0,24 $", frequency:"quartalsw." },
+    competitors:[
+      { name:"Samsung",   short:"SA", icon:"samsung" },
+      { name:"Google",    short:"GO", icon:"google"  },
+      { name:"Microsoft", short:"MS", icon:null       },
+    ],
+    photo:"https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1d1d1f 0%,#2d2d30 100%)",
+    trend:{ emoji:"📱", label:"Consumer Leader", color:"up" },
+  },
+  {
+    id:"msft", name:"Microsoft", ticker:"MSFT", logoText:"MS", countryFlag:"🇺🇸",
+    marketCap:3050000000000, perf:{ w:-0.6, m:3.1, y:28.9 },
+    sector:"Software", country:"USA",
+    description:"Microsoft bietet Software, Cloud-Services und Produktivitätstools. Azure und Office 365 sind die zentralen Wachstumstreiber.",
+    products:[
+      { name:"Windows", short:"WI", icon:null },
+      { name:"Azure",   short:"AZ", icon:null },
+      { name:"Office",  short:"OF", icon:null },
+      { name:"Teams",   short:"TE", icon:null },
+      { name:"Xbox",    short:"XB", icon:null },
+      { name:"GitHub",  short:"GH", icon:"github" },
+    ],
+    dividend:{ pays:true, amount:"0,75 $", frequency:"quartalsw." },
+    competitors:[
+      { name:"Google", short:"GO", icon:"google" },
+      { name:"Apple",  short:"AP", icon:"apple"  },
+      { name:"Amazon", short:"AM", icon:null      },
+    ],
+    photo:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#001f3d 0%,#0078d4 100%)",
+    trend:{ emoji:"🤖", label:"KI-Pionier", color:"hot" },
+  },
+  {
+    id:"nvda", name:"NVIDIA", ticker:"NVDA", logoText:"NV", countryFlag:"🇺🇸",
+    marketCap:2160000000000, perf:{ w:4.1, m:11.2, y:198.3 },
+    sector:"Halbleiter", country:"USA",
+    description:"NVIDIA dominiert den Markt für KI-Grafikprozessoren. Der H100-Chip ist zum Standard für KI-Training und Inferenz geworden.",
+    products:[
+      { name:"GeForce RTX", short:"GF", icon:null },
+      { name:"CUDA",        short:"CU", icon:null },
+      { name:"H100",        short:"H1", icon:null },
+      { name:"Omniverse",   short:"OV", icon:null },
+    ],
+    dividend:{ pays:true, amount:"0,01 $", frequency:"quartalsw." },
+    competitors:[
+      { name:"AMD",      short:"AM", icon:"amd"      },
+      { name:"Intel",    short:"IN", icon:"intel"    },
+      { name:"Qualcomm", short:"QC", icon:"qualcomm" },
+    ],
+    photo:"https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1a2a00 0%,#76b900 100%)",
+    trend:{ emoji:"🚀", label:"KI-Boom", color:"hot" },
+  },
+  {
+    id:"amzn", name:"Amazon", ticker:"AMZN", logoText:"AM", countryFlag:"🇺🇸",
+    marketCap:1920000000000, perf:{ w:1.8, m:2.4, y:42.1 },
+    sector:"E-Commerce/Cloud", country:"USA",
+    description:"Amazon betreibt die weltgrößte E-Commerce-Plattform und mit AWS den führenden Cloud-Dienst weltweit.",
+    products:[
+      { name:"AWS",    short:"AW", icon:null    },
+      { name:"Prime",  short:"PR", icon:null    },
+      { name:"Alexa",  short:"AL", icon:null    },
+      { name:"Twitch", short:"TW", icon:"twitch" },
+    ],
+    dividend:{ pays:false },
+    competitors:[
+      { name:"Microsoft", short:"MS", icon:null       },
+      { name:"Google",    short:"GO", icon:"google"   },
+      { name:"Walmart",   short:"WM", icon:null        },
+    ],
+    photo:"https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1a0d00 0%,#ff9900 100%)",
+    trend:{ emoji:"☁️", label:"Cloud Giant", color:"up" },
+  },
+  {
+    id:"sap", name:"SAP SE", ticker:"SAP", logoText:"SAP", countryFlag:"🇩🇪",
+    marketCap:225000000000, perf:{ w:0.9, m:6.8, y:31.5 },
+    sector:"Enterprise-SW", country:"Deutschland",
+    description:"SAP entwickelt Unternehmenssoftware für Geschäftsprozesse. Weltmarktführer im ERP-Segment mit starker Cloud-Transformation.",
+    products:[
+      { name:"S/4HANA", short:"S4", icon:null },
+      { name:"ERP",     short:"ER", icon:null },
+      { name:"BTP",     short:"BT", icon:null },
+      { name:"Ariba",   short:"AR", icon:null },
+    ],
+    dividend:{ pays:true, amount:"1,50 €", frequency:"jährlich" },
+    competitors:[
+      { name:"Oracle",     short:"OR", icon:null },
+      { name:"Salesforce", short:"SF", icon:null },
+      { name:"Microsoft",  short:"MS", icon:null },
+    ],
+    photo:"https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#001a40 0%,#0070f2 100%)",
+    trend:{ emoji:"🏭", label:"Enterprise ERP", color:"neutral" },
+  },
+  {
+    id:"tsla", name:"Tesla", ticker:"TSLA", logoText:"T", countryFlag:"🇺🇸",
+    marketCap:596000000000, perf:{ w:2.4, m:-6.2, y:-12.1 },
+    sector:"Automotive", country:"USA",
+    description:"Tesla entwickelt Elektrofahrzeuge und Batteriespeicher. Marktführer bei E-Mobilität mit wachsender Energiesparte.",
+    products:[
+      { name:"Model 3",    short:"M3", icon:null },
+      { name:"Model S",    short:"MS", icon:null },
+      { name:"Powerwall",  short:"PW", icon:null },
+      { name:"Solar Roof", short:"SR", icon:null },
+    ],
+    dividend:{ pays:false },
+    competitors:[
+      { name:"BYD",      short:"BY", icon:null   },
+      { name:"Rivian",   short:"RI", icon:null   },
+      { name:"Mercedes", short:"MB", icon:null   },
+    ],
+    photo:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=600&h=900&q=80",
+    gradient:"linear-gradient(160deg,#1a0000 0%,#cc0000 100%)",
+    trend:{ emoji:"⚡", label:"E-Mobilität", color:"up" },
+  },
+  {
+    id:"tsm", name:"TSMC", ticker:"TSM", logoText:"TS", countryFlag:"🇹🇼",
+    marketCap:1000000000000, perf:null,
+    sector:"Halbleiter", country:"Taiwan",
+    description:"TSMC ist der weltgrößte Auftragsfertiger für Halbleiter. Viele Chipdesigner wie NVIDIA, Apple oder AMD lassen ihre Chips dort produzieren.",
+    products:[
+      { name:"Chip-Fertigung", short:"CF", icon:null },
+      { name:"Advanced Packaging", short:"AP", icon:null },
+    ],
+    dividend:{ pays:true, frequency:"quartalsw." },
+    competitors:[
+      { name:"Samsung", short:"SA", icon:"samsung" },
+      { name:"Intel",   short:"IN", icon:"intel"   },
+    ],
+    photo:null,
+    gradient:"linear-gradient(160deg,#1a0a00 0%,#c4381a 100%)",
+    trend:{ emoji:"🏭", label:"Chip-Fabrik der Welt", color:"up" },
+  },
+  {
+    id:"asml", name:"ASML", ticker:"ASML", logoText:"AS", countryFlag:"🇳🇱",
+    marketCap:300000000000, perf:null,
+    sector:"Halbleiter-Ausrüstung", country:"Niederlande",
+    description:"ASML baut Lithografie-Maschinen, mit denen Chiphersteller Strukturen auf Siliziumscheiben belichten. Bei den modernsten EUV-Maschinen ist ASML der einzige Anbieter.",
+    products:[
+      { name:"EUV-Lithografie", short:"EU", icon:null },
+      { name:"DUV-Lithografie", short:"DU", icon:null },
+    ],
+    dividend:{ pays:true, frequency:"quartalsw." },
+    competitors:[
+      { name:"Nikon", short:"NI", icon:null },
+      { name:"Canon", short:"CA", icon:null },
+    ],
+    photo:null,
+    gradient:"linear-gradient(160deg,#00122e 0%,#0f238c 100%)",
+    trend:{ emoji:"🔬", label:"Monopol bei EUV", color:"neutral" },
+  },
+];
+
+// ── Unternehmen für die Dive-Mindmap ─────────────────────────────────────────
+// listed:false = nicht börsennotiert → wird in der Mindmap ausgeblendet.
+// stockId verweist auf eine Swipe-Karte (für „Gedrückt halten“).
+const DEMO_COMPANIES = {
+  nvda:        { name:"NVIDIA",             flag:"🇺🇸", icon:"nvidia",     logoText:"NV", listed:true, stockId:"nvda" },
+  aapl:        { name:"Apple",              flag:"🇺🇸", icon:"apple",      logoText:"AP", listed:true, stockId:"aapl" },
+  tsla:        { name:"Tesla",              flag:"🇺🇸", icon:"tesla",      logoText:"TE", listed:true, stockId:"tsla" },
+  vw:          { name:"Volkswagen",         flag:"🇩🇪", icon:"volkswagen", logoText:"VW", listed:true },
+  airbus:      { name:"Airbus",             flag:"🇫🇷", icon:"airbus",     logoText:"AI", listed:true },
+  tsm:         { name:"TSMC",               flag:"🇹🇼", icon:null,         logoText:"TS", listed:true, stockId:"tsm" },
+  asml:        { name:"ASML",               flag:"🇳🇱", icon:null,         logoText:"AS", listed:true, stockId:"asml" },
+  samsung:     { name:"Samsung Electronics",flag:"🇰🇷", icon:"samsung",    logoText:"SA", listed:true },
+  skhynix:     { name:"SK Hynix",           flag:"🇰🇷", icon:null,         logoText:"SK", listed:true },
+  micron:      { name:"Micron",             flag:"🇺🇸", icon:null,         logoText:"MU", listed:true },
+  honhai:      { name:"Hon Hai (Foxconn)",  flag:"🇹🇼", icon:null,         logoText:"FX", listed:true },
+  wistron:     { name:"Wistron",            flag:"🇹🇼", icon:null,         logoText:"WI", listed:true },
+  quanta:      { name:"Quanta Computer",    flag:"🇹🇼", icon:null,         logoText:"QC", listed:true },
+  luxshare:    { name:"Luxshare Precision", flag:"🇨🇳", icon:null,         logoText:"LX", listed:true },
+  pegatron:    { name:"Pegatron",           flag:"🇹🇼", icon:null,         logoText:"PG", listed:true },
+  lgdisplay:   { name:"LG Display",         flag:"🇰🇷", icon:null,         logoText:"LG", listed:true },
+  boe:         { name:"BOE Technology",     flag:"🇨🇳", icon:null,         logoText:"BO", listed:true },
+  sony:        { name:"Sony",               flag:"🇯🇵", icon:"sony",       logoText:"SO", listed:true },
+  lginnotek:   { name:"LG Innotek",         flag:"🇰🇷", icon:null,         logoText:"LI", listed:true },
+  qualcomm:    { name:"Qualcomm",           flag:"🇺🇸", icon:"qualcomm",   logoText:"QC", listed:true },
+  broadcom:    { name:"Broadcom",           flag:"🇺🇸", icon:"broadcom",   logoText:"BR", listed:true },
+  panasonic:   { name:"Panasonic",          flag:"🇯🇵", icon:"panasonic",  logoText:"PA", listed:true },
+  lges:        { name:"LG Energy Solution", flag:"🇰🇷", icon:null,         logoText:"LE", listed:true },
+  catl:        { name:"CATL",               flag:"🇨🇳", icon:null,         logoText:"CA", listed:true },
+  albemarle:   { name:"Albemarle",          flag:"🇺🇸", icon:null,         logoText:"AL", listed:true },
+  ganfeng:     { name:"Ganfeng Lithium",    flag:"🇨🇳", icon:null,         logoText:"GF", listed:true },
+  samsungsdi:  { name:"Samsung SDI",        flag:"🇰🇷", icon:null,         logoText:"SD", listed:true },
+  gotion:      { name:"Gotion High-Tech",   flag:"🇨🇳", icon:null,         logoText:"GO", listed:true },
+  continental: { name:"Continental",        flag:"🇩🇪", icon:null,         logoText:"CO", listed:true },
+  schaeffler:  { name:"Schaeffler",         flag:"🇩🇪", icon:null,         logoText:"SC", listed:true },
+  bosch:       { name:"Bosch",              flag:"🇩🇪", icon:null,         logoText:"BO", listed:false },
+  zf:          { name:"ZF Friedrichshafen", flag:"🇩🇪", icon:null,         logoText:"ZF", listed:false },
+  infineon:    { name:"Infineon",           flag:"🇩🇪", icon:null,         logoText:"IF", listed:true },
+  nxp:         { name:"NXP Semiconductors", flag:"🇳🇱", icon:null,         logoText:"NX", listed:true },
+  safran:      { name:"Safran",             flag:"🇫🇷", icon:null,         logoText:"SF", listed:true },
+  rollsroyce:  { name:"Rolls-Royce",        flag:"🇬🇧", icon:null,         logoText:"RR", listed:true },
+  geaero:      { name:"GE Aerospace",       flag:"🇺🇸", icon:null,         logoText:"GE", listed:true },
+  rtx:         { name:"RTX (Pratt & Whitney)", flag:"🇺🇸", icon:null,      logoText:"RT", listed:true },
+  thales:      { name:"Thales",             flag:"🇫🇷", icon:null,         logoText:"TH", listed:true },
+  honeywell:   { name:"Honeywell",          flag:"🇺🇸", icon:"honeywell",  logoText:"HW", listed:true },
+  amat:        { name:"Applied Materials",  flag:"🇺🇸", icon:null,         logoText:"AM", listed:true },
+  lam:         { name:"Lam Research",       flag:"🇺🇸", icon:null,         logoText:"LR", listed:true },
+  tel:         { name:"Tokyo Electron",     flag:"🇯🇵", icon:null,         logoText:"TE", listed:true },
+  kla:         { name:"KLA",                flag:"🇺🇸", icon:null,         logoText:"KL", listed:true },
+  shinetsu:    { name:"Shin-Etsu Chemical", flag:"🇯🇵", icon:null,         logoText:"SE", listed:true },
+  sumco:       { name:"SUMCO",              flag:"🇯🇵", icon:null,         logoText:"SU", listed:true },
+  globalwafers:{ name:"GlobalWafers",       flag:"🇹🇼", icon:null,         logoText:"GW", listed:true },
+  siltronic:   { name:"Siltronic",          flag:"🇩🇪", icon:null,         logoText:"SI", listed:true },
+  zeiss:       { name:"Carl Zeiss SMT",     flag:"🇩🇪", icon:null,         logoText:"ZE", listed:false },
+  trumpf:      { name:"Trumpf",             flag:"🇩🇪", icon:null,         logoText:"TR", listed:false },
+};
+
+// ── Lieferketten: Unternehmen → Branchen → Zulieferer ────────────────────────
+// Nur echte Zulieferer (keine Kunden, Tochterfirmen oder Wettbewerber).
+const DEMO_SUPPLY = {
+  nvda: [
+    { name:"Chipfertigung",   emoji:"🏭", suppliers:["tsm"] },
+    { name:"Speicherchips",   emoji:"💾", suppliers:["skhynix","micron","samsung"] },
+    { name:"Server-Fertigung",emoji:"🖥️", suppliers:["honhai","wistron","quanta"] },
+  ],
+  aapl: [
+    { name:"Chipfertigung",   emoji:"🏭", suppliers:["tsm"] },
+    { name:"Endmontage",      emoji:"🔧", suppliers:["honhai","luxshare","pegatron"] },
+    { name:"Displays",        emoji:"📱", suppliers:["samsung","lgdisplay","boe"] },
+    { name:"Kameras",         emoji:"📷", suppliers:["sony","lginnotek"] },
+    { name:"Funkchips",       emoji:"📡", suppliers:["qualcomm","broadcom"] },
+  ],
+  tsla: [
+    { name:"Batteriezellen",  emoji:"🔋", suppliers:["panasonic","lges","catl"] },
+    { name:"Lithium",         emoji:"⛏️", suppliers:["albemarle","ganfeng"] },
+    { name:"Chips",           emoji:"💾", suppliers:["samsung","tsm"] },
+  ],
+  vw: [
+    { name:"Batteriezellen",  emoji:"🔋", suppliers:["catl","lges","samsungsdi","gotion"] },
+    { name:"Autoteile",       emoji:"⚙️", suppliers:["continental","schaeffler","bosch","zf"] },
+    { name:"Halbleiter",      emoji:"💾", suppliers:["infineon","nxp"] },
+  ],
+  airbus: [
+    { name:"Triebwerke",      emoji:"✈️", suppliers:["safran","rollsroyce","geaero","rtx"] },
+    { name:"Avionik",         emoji:"📡", suppliers:["thales","honeywell"] },
+  ],
+  tsm: [
+    { name:"Lithografie",     emoji:"🔬", suppliers:["asml"] },
+    { name:"Prozessanlagen",  emoji:"⚙️", suppliers:["amat","lam","tel","kla"] },
+    { name:"Siliziumwafer",   emoji:"💿", suppliers:["shinetsu","sumco","globalwafers"] },
+  ],
+  asml: [
+    { name:"Optik",           emoji:"🔭", suppliers:["zeiss"] },
+    { name:"Laser",           emoji:"💡", suppliers:["trumpf"] },
+  ],
+  samsung: [
+    { name:"Lithografie",     emoji:"🔬", suppliers:["asml"] },
+    { name:"Prozessanlagen",  emoji:"⚙️", suppliers:["amat","lam","tel"] },
+  ],
+  skhynix: [
+    { name:"Lithografie",     emoji:"🔬", suppliers:["asml"] },
+    { name:"Prozessanlagen",  emoji:"⚙️", suppliers:["amat","lam","tel"] },
+  ],
+  micron: [
+    { name:"Lithografie",     emoji:"🔬", suppliers:["asml"] },
+    { name:"Prozessanlagen",  emoji:"⚙️", suppliers:["amat","lam","kla"] },
+  ],
+  infineon: [
+    { name:"Siliziumwafer",   emoji:"💿", suppliers:["siltronic","shinetsu","sumco"] },
+    { name:"Prozessanlagen",  emoji:"⚙️", suppliers:["amat"] },
+  ],
+};
