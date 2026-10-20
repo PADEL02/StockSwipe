@@ -262,29 +262,70 @@ function throwCard(dir, velocity) {
   setTimeout(() => { index++; renderStock(); }, duration * 1000);
 }
 
-// ── Sheet Dragging ────────────────────────────────────────────────────────────
-let sheetDragging = false, sheetStartY = 0;
+// ── Infobereich (Sheet) nach unten wegziehen ─────────────────────────────────
+// Funktioniert überall im Infobereich: Ist der Inhalt ganz oben, schließt ein
+// Zug nach unten das Sheet. Ist er weiter unten gescrollt, wird normal gescrollt.
+const sheetContent = sheet.querySelector(".sheet-content");
+let sheetDrag = null; // { startY, lastY, lastT, velocity, active, fromHandle }
 
-document.getElementById("sheetHandle").addEventListener("pointerdown", (e) => {
-  sheetDragging = true;
-  sheetStartY = e.clientY;
-  sheet.style.transition = "none";
-  e.stopPropagation();
-});
+function sheetDragStart(y, fromHandle) {
+  if (!sheet.classList.contains("open")) return;
+  sheetDrag = { startY: y, lastY: y, lastT: performance.now(), velocity: 0, active: false, fromHandle };
+}
 
-window.addEventListener("pointermove", (e) => {
-  if (!sheetDragging) return;
-  sheet.style.transform = `translateY(${Math.max(0, e.clientY - sheetStartY)}px)`;
-});
+function sheetDragMove(y, ev) {
+  if (!sheetDrag) return;
+  const delta = y - sheetDrag.startY;
+  if (!sheetDrag.active) {
+    if (delta > 6 && (sheetDrag.fromHandle || sheetContent.scrollTop <= 0)) {
+      sheetDrag.active = true;
+      sheet.style.transition = "none";
+      Tooltips.hide();
+    } else if (Math.abs(delta) > 6) {
+      sheetDrag = null; // normales Scrollen im Inhalt
+      return;
+    } else return;
+  }
+  if (ev && ev.cancelable) ev.preventDefault(); // Seite nicht mitscrollen lassen
+  const now = performance.now();
+  sheetDrag.velocity = (y - sheetDrag.lastY) / Math.max(1, now - sheetDrag.lastT);
+  sheetDrag.lastY = y; sheetDrag.lastT = now;
+  sheet.style.transform = `translateY(${Math.max(0, delta)}px)`;
+}
 
-window.addEventListener("pointerup", (e) => {
-  if (!sheetDragging) return;
-  sheetDragging = false;
-  const delta = e.clientY - sheetStartY;
+function sheetDragEnd() {
+  if (!sheetDrag) return;
+  const { active, lastY, startY, velocity } = sheetDrag;
+  sheetDrag = null;
+  if (!active) return;
   sheet.style.transition = "transform 0.4s cubic-bezier(0.32, 0.72, 0, 1)";
-  if (delta > 100) { sheet.classList.remove("open"); sheet.style.transform = ""; }
-  else             { sheet.style.transform = "translateY(0)"; }
+  // schließen bei genug Weg oder schnellem Wisch nach unten
+  const moved = lastY - startY;
+  if (moved > 100 || (moved > 25 && velocity > 0.35)) closeSheet();
+  else sheet.style.transform = "translateY(0)";
+}
+
+function closeSheet() {
+  sheet.classList.remove("open");
+  sheet.style.transform = "";
+}
+
+// Touch (Handy): eigene Touch-Events, damit das Scrollen gezielt verhindert werden kann
+sheet.addEventListener("touchstart", e => {
+  if (e.touches.length !== 1) { sheetDrag = null; return; }
+  sheetDragStart(e.touches[0].clientY, !!e.target.closest(".sheet-handle-area"));
+}, { passive: true });
+sheet.addEventListener("touchmove", e => sheetDragMove(e.touches[0].clientY, e), { passive: false });
+sheet.addEventListener("touchend", sheetDragEnd);
+sheet.addEventListener("touchcancel", sheetDragEnd);
+
+// Maus (Computer): am Griff oder im Inhalt ziehen
+sheet.addEventListener("pointerdown", e => {
+  if (e.pointerType !== "mouse" || e.target.closest("button")) return;
+  sheetDragStart(e.clientY, !!e.target.closest(".sheet-handle-area"));
 });
+window.addEventListener("pointermove", e => { if (e.pointerType === "mouse") sheetDragMove(e.clientY, e); });
+window.addEventListener("pointerup",   e => { if (e.pointerType === "mouse") sheetDragEnd(); });
 
 // ── Buttons ───────────────────────────────────────────────────────────────────
 document.getElementById("btnLike").addEventListener("click", () => {
@@ -308,9 +349,7 @@ document.getElementById("btnSuper").addEventListener("click", () => {
   }, 150);
 });
 
-document.getElementById("closeSheetBtn").addEventListener("click", () => {
-  sheet.classList.remove("open");
-});
+document.getElementById("closeSheetBtn").addEventListener("click", closeSheet);
 
 // ── Watchlist ─────────────────────────────────────────────────────────────────
 // Die Watchlist wird dauerhaft auf dem Gerät gespeichert (nur IDs + Superlike).
