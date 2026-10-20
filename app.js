@@ -43,17 +43,15 @@ function brandIconError(img) {
   img.parentElement.innerHTML = `<span class="brand-fallback">${esc(fb)}</span>`;
 }
 
+// Firmenlogo (über das eigene Backend) – fehlt es, erscheint das Kürzel
+function logoMarkup(domain, logoText) {
+  const url = DataService.logoUrl(domain);
+  if (!url) return `<span class="brand-fallback">${esc(logoText)}</span>`;
+  return `<img class="co-logo" src="${esc(url)}" alt="" loading="lazy" data-fallback="${esc(logoText)}" onerror="brandIconError(this)">`;
+}
+
 function renderBrandRow(container, items) {
-  if (!items || !items.length) { container.innerHTML = ""; return; }
-  container.innerHTML = items.map(item => {
-    if (item.icon) {
-      return `<div class="brand-icon" title="${esc(item.name)}">` +
-        `<img src="https://cdn.simpleicons.org/${esc(item.icon)}/ffffff" alt="${esc(item.name)}"` +
-        ` data-fallback="${esc(item.short)}" onerror="brandIconError(this)">` +
-        `</div>`;
-    }
-    return `<span class="brand-chip">${esc(item.name)}</span>`;
-  }).join("");
+  container.innerHTML = (items || []).map(item => `<span class="brand-chip">${esc(item.name)}</span>`).join("");
 }
 
 function renderDividendInfo(el, div) {
@@ -160,7 +158,7 @@ function fillCard(s) {
   cardBg.style.backgroundSize   = "cover";
   cardBg.style.backgroundPosition = "center";
 
-  document.getElementById("logo").textContent        = s.logoText;
+  document.getElementById("logo").innerHTML          = logoMarkup(s.domain, s.logoText);
   document.getElementById("companyName").textContent = s.name;
   document.getElementById("ticker").textContent      = s.ticker;
   document.getElementById("ticker").hidden           = !s.ticker;
@@ -364,7 +362,7 @@ function loadWatchlist() {
     // ältere Version speicherte nur { id, superliked } → mit Demo-Daten ergänzen
     const demo = item.name ? null : DataService.getDemoCard(item.id);
     const s = demo ? { id: demo.id, name: demo.name, ticker: demo.ticker, country: demo.country,
-                       sector: demo.sector, logoText: demo.logoText, superliked: !!item.superliked } : item;
+                       sector: demo.sector, logoText: demo.logoText, domain: demo.domain, superliked: !!item.superliked } : item;
     if (s.name) watchlist.set(s.id, s);
   });
   updateWatchlistBadge();
@@ -377,6 +375,7 @@ function saveToWatchlist(superliked = false) {
   watchlist.set(entry.id, {
     id: entry.id, name: c.name || entry.name, ticker: c.ticker || entry.ticker || "",
     country: c.country || "", sector: c.sector || "", logoText: c.logoText || DataService.initials(entry.name),
+    domain: c.domain || entry.domain || null,
     superliked,
   });
   persistWatchlist();
@@ -404,7 +403,7 @@ function renderWatchlistItems() {
   }
   list.innerHTML = [...watchlist.values()].map(s => `
     <div class="wl-item">
-      <div class="wl-logo">${esc(s.logoText)}</div>
+      <div class="wl-logo">${logoMarkup(s.domain, s.logoText)}</div>
       <div class="wl-info">
         <strong>${esc(s.name)}</strong>
         <small>${[s.ticker, s.country].filter(Boolean).map(esc).join(" &middot; ")}</small>

@@ -23,6 +23,12 @@ function companySlug(name) {
 const DataService = (() => {
   const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const endpoint = () => (APP_CONFIG.ai.endpoint || "").replace(/\/+$/, "");
+  const headers  = () => (APP_CONFIG.ai.appKey ? { "X-App-Key": APP_CONFIG.ai.appKey } : {});
+
+  // Firmenlogo über das eigene Backend (nie direkt vom Logo-Dienst)
+  function logoUrl(domain) {
+    return endpoint() && domain ? `${endpoint()}/logo?domain=${encodeURIComponent(domain)}` : null;
+  }
 
   // ── Hilfen für die Darstellung ─────────────────────────────────────────────
   const regionNames = (() => { try { return new Intl.DisplayNames(["de"], { type: "region" }); } catch { return null; } })();
@@ -61,7 +67,7 @@ const DataService = (() => {
       };
     }
     return {
-      id: c.id, name: c.name, ticker: c.ticker || "", exchange: c.exchange || null,
+      id: c.id, name: c.name, ticker: c.ticker || "", exchange: c.exchange || null, domain: c.domain || null,
       logoText: initials(c.name), countryFlag: flagFor(c.country_iso),
       marketCap: c.market_cap?.value ?? null, marketCapCurrency: c.market_cap?.currency || null,
       marketCapAsOf: c.market_cap?.as_of || null,
@@ -78,7 +84,7 @@ const DataService = (() => {
   function mapCompany(c) {
     return {
       id: c.id || companySlug(c.name), name: c.name,
-      ticker: c.ticker || null, exchange: c.exchange || null,
+      ticker: c.ticker || null, exchange: c.exchange || null, domain: c.domain || null,
       flag: flagFor(c.country_iso), icon: null, logoText: initials(c.name), listed: true,
     };
   }
@@ -86,7 +92,7 @@ const DataService = (() => {
   // ── Backend-Aufruf mit Warten bei „wird gerade erzeugt“ ────────────────────
   async function api(path, { retries = 12 } = {}) {
     for (let i = 0; ; i++) {
-      const res = await fetch(endpoint() + path);
+      const res = await fetch(endpoint() + path, { headers: headers() });
       const body = await res.json().catch(() => ({}));
       if (res.status === 202 && i < retries) { await wait((body.retry_after || 5) * 1000); continue; }
       if (!res.ok || body.error) {
@@ -115,7 +121,7 @@ const DataService = (() => {
   }
 
   return {
-    flagFor, initials, messageFor,
+    flagFor, initials, messageFor, logoUrl,
 
     /** Beim Start: Ist ein Backend eingetragen und die KI dort eingeschaltet? */
     async init() {
@@ -123,7 +129,7 @@ const DataService = (() => {
       try {
         const ctrl = new AbortController();
         const t = setTimeout(() => ctrl.abort(), 4000);
-        const res = await fetch(endpoint() + "/status", { signal: ctrl.signal });
+        const res = await fetch(endpoint() + "/status", { signal: ctrl.signal, headers: headers() });
         clearTimeout(t);
         const s = await res.json();
         AI_STATE.active = s.ai_enabled === true;
@@ -151,7 +157,7 @@ const DataService = (() => {
 
     /** Karte für einen Eintrag laden (KI-Modus; nutzt das Archiv, wenn vorhanden). */
     async loadCard(entry) {
-      const r = await api(`/card?${query({ company: entry.id, name: entry.name, ticker: entry.ticker, exchange: entry.exchange })}`);
+      const r = await api(`/card?${query({ company: entry.id, name: entry.name, ticker: entry.ticker, exchange: entry.exchange, domain: entry.domain })}`);
       return mapCard(r);
     },
 
@@ -166,9 +172,10 @@ const DataService = (() => {
         return Object.keys(DEMO_SUPPLY).map(id => ({ id, ...DEMO_COMPANIES[id] })).filter(c => c.listed);
       }
       return [
-        ["Apple", "AAPL", "US"], ["NVIDIA", "NVDA", "US"], ["Tesla", "TSLA", "US"], ["Volkswagen", "VOW3", "DE"],
-        ["Airbus", "AIR", "FR"], ["SAP", "SAP", "DE"], ["TSMC", "2330", "TW"], ["ASML", "ASML", "NL"],
-      ].map(([name, ticker, iso]) => mapCompany({ name, ticker, country_iso: iso }));
+        ["Apple", "AAPL", "US", "apple.com"], ["NVIDIA", "NVDA", "US", "nvidia.com"], ["Tesla", "TSLA", "US", "tesla.com"],
+        ["Volkswagen", "VOW3", "DE", "volkswagen-group.com"], ["Airbus", "AIR", "FR", "airbus.com"], ["SAP", "SAP", "DE", "sap.com"],
+        ["TSMC", "2330", "TW", "tsmc.com"], ["ASML", "ASML", "NL", "asml.com"],
+      ].map(([name, ticker, iso, domain]) => mapCompany({ name, ticker, country_iso: iso, domain }));
     },
 
     /** Freitext-Suche (KI-Modus): findet ein börsennotiertes Unternehmen. */

@@ -8,6 +8,8 @@ const APP_CONFIG = {
   name:      "StockSwipe",
   // Kürzel im Logo-Badge oben links. Bewusst NICHT „SS“.
   badge:     "S",
+  // Versionsnummer (erscheint unter „Über die App“)
+  version:   "0.3.0",
 
   // ── KI / Datenquelle ──────────────────────────────────────────────────────
   // Adresse des Backends (Cloudflare Worker), z. B.
@@ -18,6 +20,8 @@ const APP_CONFIG = {
   // Solange er aus ist, zeigt die App Beispieldaten – es entstehen keine Kosten.
   ai: {
     endpoint: "https://stockswipe-api.scheko2002.workers.dev",
+    // Kennung für das Backend (muss zu APP_KEY in backend/wrangler.toml passen)
+    appKey:   "sw-be4fe0029d6db9cfd8688ded",
   },
 
   // ── Bezahlmodell ──────────────────────────────────────────────────────────

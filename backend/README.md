@@ -76,4 +76,11 @@ Danach läuft alles, aber **die KI ist noch aus**. Erst wenn du den Schalter auf
   ```
   Schlüssel: `sc:<id>` für Lieferketten, `card:<id>` für Karten.
 - **Startliste erweitern:** `src/starter-list.js` ergänzen und neu deployen.
+- **Einstellungen ändern** (Tageslimit, Modelle, Archivzeiten): im Cloudflare-Dashboard unter *Settings → Variables and Secrets*. Welche Variablen es gibt und welche Standardwerte gelten, steht oben in `wrangler.toml`. Ein neues Deploy überschreibt deine Einstellungen nicht.
+
+## Datenschutz und Zugang
+
+- **IP-Adressen** werden nie gespeichert, nur ein nicht umkehrbarer Hash für die laufende Stunde (Limit pro Gerät). Optional macht ein Secret `IP_SALT` (beliebiger Zufallstext) die Hashes noch sicherer.
+- **App-Kennung:** Das Backend beantwortet nur Anfragen mit der Kennung `APP_KEY` (steht in `wrangler.toml` und `config.js`) und von erlaubten Herkünften (deine Web-App, die nativen Apps). Das hält Gelegenheitsnutzer und Scanner fern; gegen gezielten Missbrauch schützen zusätzlich Tagesbudget und Limits. Eine stärkere Prüfung über Apple App Attest / Google Play Integrity folgt mit den nativen Apps.
+- **Logos** laufen über `/logo`: Das Backend holt das Website-Symbol (Apple-Touch-Icon bzw. Favicon) einmalig von der offiziellen Website des Unternehmens, prüft, dass es wirklich ein Bild ist (max. 150 KB), und speichert es 30 Tage in der Datenbank. Kostenlos, ohne fremden Logo-Dienst, die Geräte der Nutzer sprechen nie mit fremden Servern. Findet sich kein Logo, zeigt die App das Kürzel. Neue Logo-Abrufe sind auf 150 pro Gerät und Stunde begrenzt (`LOGO_LIMIT_PER_HOUR`).
 - **Tests** (mit simulierter KI, kostenlos): `npm test`

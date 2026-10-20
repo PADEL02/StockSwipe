@@ -40,7 +40,11 @@ npm run build
 npx cap add ios
 npx cap add android
 
-# 4. Projekt öffnen (kopiert vorher automatisch den aktuellen Stand)
+# 4. App-Icon und Startbildschirm für iOS und Android erzeugen
+#    (Vorlagen liegen in resources/: Icon, Android-Ebenen, Startbildschirm)
+npx @capacitor/assets generate --assetPath resources --iconBackgroundColor '#05070A' --splashBackgroundColor '#05070A'
+
+# 5. Projekt öffnen (kopiert vorher automatisch den aktuellen Stand)
 npm run ios        # öffnet Xcode
 npm run android    # öffnet Android Studio
 ```
@@ -48,3 +52,13 @@ npm run android    # öffnet Android Studio
 Nach jeder Änderung an der Web-App reicht `npm run sync`.
 
 **Vor der ersten Store-Einreichung festlegen:** `appId` in `capacitor.config.json` (aktuell Platzhalter `com.stockswipe.app`). Sie lässt sich nach der Veröffentlichung nicht mehr ändern, sollte also zum endgültigen Namen passen.
+
+## Rechtstexte
+
+Impressum, Datenschutzerklärung und Hinweise stehen in `legal/legal-texts.js`. Die App zeigt sie im Info-Bereich (ⓘ oben rechts), zusätzlich gibt es sie als eigene Seiten `impressum.html` und `datenschutz.html` (für den Store-Eintrag). **Alles in [ECKIGEN KLAMMERN] vor dem Launch ausfüllen und rechtlich prüfen lassen.**
+
+## Datenschutz-Technik
+
+- Schrift liegt lokal in `assets/fonts/` (Open Font License, siehe `OFL.txt`), keine Verbindung zu Google.
+- Firmenlogos lädt die App nur über das eigene Backend (`/logo`). Das Backend holt das Website-Symbol einmalig von der offiziellen Website des Unternehmens und speichert es in der eigenen Datenbank; kein fremder Logo-Dienst, keine IP-Weitergabe.
+- Keine Fotos oder Icons von fremden Servern.

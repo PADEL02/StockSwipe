@@ -15,7 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { askClaude, worstCaseUsd } from "./anthropic.js";
 import { searchPrompt, supplyChainPrompt, cardPrompt, financialsPrompt } from "./prompts.js";
-import { validateCompany, validateSupplyChain, validateCard, validateFinancials, slug, today } from "./validate.js";
+import { validateCompany, validateSupplyChain, validateCard, validateFinancials, slug, today, cleanDomain } from "./validate.js";
 import { STARTER_LIST } from "./starter-list.js";
 
 const DAY_MS = 86_400_000;
@@ -28,6 +28,7 @@ function settings(env) {
     budgetEur:       num(env.DAILY_BUDGET_EUR, 5),
     usdPerEur:       num(env.USD_PER_EUR, 1.15),
     ratePerHour:     num(env.RATE_LIMIT_PER_HOUR, 30),
+    logoPerHour:     num(env.LOGO_LIMIT_PER_HOUR, 150),
     modelDive:       env.MODEL_DIVE || "claude-sonnet-5-5",
     modelCard:       env.MODEL_CARD || "claude-haiku-5-5",
     modelSearch:     env.MODEL_SEARCH || "claude-haiku-5-5",
@@ -51,7 +52,7 @@ function corsHeaders(request, env) {
   return {
     "Access-Control-Allow-Origin": allowed.includes(origin) ? origin : allowed[0],
     "Access-Control-Allow-Methods": "GET, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-App-Key",
     "Vary": "Origin",
   };
 }
@@ -132,18 +133,169 @@ async function settleBudget(env, reservedUsd, actualUsd) {
 }
 
 // ── Missbrauchsschutz: begrenzte Anzahl neuer KI-Anfragen pro Gerät/Stunde ──
-async function rateLimitOk(env, s, request) {
-  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+// Datenschutz: Die IP-Adresse wird nie gespeichert, nur ein nicht umkehrbarer
+// Hash davon – und auch der wird nach Ablauf der Stunde gelöscht.
+async function hashIp(env, ip) {
+  const data = new TextEncoder().encode(`${env.IP_SALT || "stockswipe"}|${ip}`);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)].slice(0, 16).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function rateLimitOk(env, s, request, kind = "ai", limit = s.ratePerHour) {
   const hour = new Date().toISOString().slice(0, 13);
-  const key = `${ip}|${hour}`;
+  const key = `${hour}|${kind}|${await hashIp(env, request.headers.get("CF-Connecting-IP") || "unknown")}`;
+  // Einträge vergangener Stunden löschen
+  await env.DB.prepare("DELETE FROM ratelimit WHERE key < ?").bind(`${hour}|`).run();
   await env.DB.prepare("INSERT OR IGNORE INTO ratelimit (key, count) VALUES (?, 0)").bind(key).run();
   const res = await env.DB.prepare("UPDATE ratelimit SET count = count + 1 WHERE key = ? AND count < ?")
-    .bind(key, s.ratePerHour).run();
-  if (Math.random() < 0.02) {
-    // gelegentlich alte Einträge aufräumen
-    await env.DB.prepare("DELETE FROM ratelimit WHERE substr(key, -13) < ?").bind(hour).run();
-  }
+    .bind(key, limit).run();
   return (res.meta?.changes || 0) > 0;
+}
+
+// ── Zugangsprüfung: Nur die eigene App (Kennung + erlaubte Herkunft) ─────────
+// Hält Gelegenheitsnutzer und automatische Scanner fern. Ein echter Schutz gegen
+// gezielte Angriffe ist das nicht – dafür sorgen zusätzlich Tagesbudget und Limits.
+function appAllowed(request, env) {
+  const origin = request.headers.get("Origin");
+  const allowed = env.ALLOWED_ORIGINS ? env.ALLOWED_ORIGINS.split(",").map(s => s.trim()) : DEFAULT_ORIGINS;
+  if (origin && !allowed.includes(origin)) return false;
+  if (env.APP_KEY && request.headers.get("X-App-Key") !== env.APP_KEY) return false;
+  return true;
+}
+
+// ── Firmenlogos ──────────────────────────────────────────────────────────────
+// Kein fremder Logo-Dienst: Das Backend holt das Website-Symbol (Apple-Touch-Icon
+// bzw. Favicon) einmalig von der offiziellen Website des Unternehmens und legt es
+// in der eigenen Datenbank ab. Die Geräte der Nutzer sprechen nie mit fremden
+// Servern – nur mit diesem Backend.
+const LOGO_TTL_MS      = 30 * DAY_MS;   // gefundene Logos 30 Tage behalten
+const LOGO_MISS_TTL_MS = 7 * DAY_MS;    // „kein Logo“ nach 7 Tagen neu versuchen
+const LOGO_MAX_BYTES   = 150_000;
+
+async function fetchLimited(target, maxBytes, timeoutMs = 5000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(target, {
+      signal: ctrl.signal, redirect: "follow",
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; StockSwipeLogoBot/1.0)", "Accept": "text/html,image/*;q=0.9,*/*;q=0.5" },
+    });
+    if (!res.ok || !res.body) return null;
+    if (!String(res.url || target).startsWith("https://")) return null;
+    const reader = res.body.getReader();
+    const chunks = []; let size = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > maxBytes) { try { await reader.cancel(); } catch {} return null; }
+      chunks.push(value);
+    }
+    const bytes = new Uint8Array(size); let off = 0;
+    for (const c of chunks) { bytes.set(c, off); off += c.byteLength; }
+    return { bytes, type: (res.headers.get("content-type") || "").split(";")[0].trim().toLowerCase(), url: res.url || target };
+  } catch { return null; } finally { clearTimeout(t); }
+}
+
+// Mögliche Symbole aus dem HTML der Startseite lesen (größtes Apple-Touch-Icon zuerst)
+function iconCandidates(html, baseUrl) {
+  const out = [];
+  for (const m of html.matchAll(/<link\b[^>]*>/gi)) {
+    const tag = m[0];
+    const rel = (tag.match(/\brel\s*=\s*["']?([^"'>]+)/i) || [])[1]?.toLowerCase() || "";
+    const href = (tag.match(/\bhref\s*=\s*["']([^"']+)["']/i) || tag.match(/\bhref\s*=\s*([^\s>]+)/i) || [])[1];
+    if (!href || !/icon/.test(rel) || /mask-icon/.test(rel)) continue;
+    const size = Math.max(0, ...((tag.match(/\bsizes\s*=\s*["']?([^"'>]+)/i) || [])[1] || "")
+      .split(/\s+/).map(v => parseInt(v, 10) || 0));
+    let abs; try { abs = new URL(href.replace(/&amp;/g, "&"), baseUrl).href; } catch { continue; }
+    if (!abs.startsWith("https://")) continue;
+    const score = (/apple-touch-icon/.test(rel) ? 1000 : 0) + Math.min(size || (/\.svg/i.test(abs) ? 256 : 32), 512);
+    out.push({ url: abs, score });
+  }
+  return out.sort((a, b) => b.score - a.score).map(c => c.url);
+}
+
+function sniffImageType(bytes) {
+  const b = bytes;
+  if (b[0] === 0x89 && b[1] === 0x50) return "image/png";
+  if (b[0] === 0xFF && b[1] === 0xD8) return "image/jpeg";
+  if (b[0] === 0x47 && b[1] === 0x49) return "image/gif";
+  if (b[0] === 0x00 && b[1] === 0x00 && b[2] === 0x01 && b[3] === 0x00) return "image/x-icon";
+  if (b[0] === 0x52 && b[1] === 0x49 && b[8] === 0x57 && b[9] === 0x45) return "image/webp";
+  const head = new TextDecoder().decode(b.slice(0, 300)).toLowerCase();
+  if (head.includes("<svg")) return "image/svg+xml";
+  return null; // kein erkennbares Bild → verwerfen, egal was der Server behauptet
+}
+
+async function findSiteIcon(domain) {
+  const tried = new Set();
+  const tryImage = async (u) => {
+    if (tried.has(u)) return null; tried.add(u);
+    const r = await fetchLimited(u, LOGO_MAX_BYTES);
+    if (!r || r.bytes.byteLength < 100) return null;
+    const type = sniffImageType(r.bytes);
+    return type ? { type, bytes: r.bytes } : null;
+  };
+  for (const home of [`https://${domain}/`, `https://www.${domain}/`]) {
+    const page = await fetchLimited(home, 600_000);
+    if (!page || !/html/.test(page.type)) continue;
+    const html = new TextDecoder().decode(page.bytes);
+    for (const c of iconCandidates(html, page.url).slice(0, 4)) {
+      const img = await tryImage(c);
+      if (img) return img;
+    }
+    const origin = new URL(page.url).origin;
+    for (const p of ["/apple-touch-icon.png", "/favicon.ico"]) {
+      const img = await tryImage(origin + p);
+      if (img) return img;
+    }
+    break;
+  }
+  return null;
+}
+
+function toBase64(bytes) {
+  let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+function fromBase64(b64) {
+  const bin = atob(b64); const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+function logoResponse(row, cors) {
+  const safe = {
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
+    "Cross-Origin-Resource-Policy": "cross-origin",
+  };
+  if (!row || !row.data) {
+    return new Response(null, { status: 404, headers: { "Cache-Control": "public, max-age=86400", ...safe, ...cors } });
+  }
+  return new Response(fromBase64(row.data), {
+    headers: { "content-type": row.content_type, "Cache-Control": "public, max-age=604800", ...safe, ...cors },
+  });
+}
+
+async function handleLogo(ctx, url) {
+  const { env, s, request, cors } = ctx;
+  const domain = cleanDomain(url.searchParams.get("domain") || "");
+  if (!domain) return logoResponse(null, cors);
+
+  const row = await env.DB.prepare("SELECT content_type, data, fetched_at FROM logos WHERE domain = ?").bind(domain).first();
+  if (row && Date.now() - row.fetched_at < (row.data ? LOGO_TTL_MS : LOGO_MISS_TTL_MS)) return logoResponse(row, cors);
+
+  // Neue Abrufe pro Gerät begrenzen; bekannte (auch abgelaufene) Logos weiter ausliefern
+  if (!(await rateLimitOk(env, s, request, "logo", s.logoPerHour))) return logoResponse(row, cors);
+
+  const icon = await findSiteIcon(domain);
+  const fresh = icon ? { content_type: icon.type, data: toBase64(icon.bytes) } : (row?.data ? row : { content_type: null, data: null });
+  await env.DB.prepare(
+    `INSERT INTO logos (domain, content_type, data, fetched_at) VALUES (?, ?, ?, ?)
+     ON CONFLICT(domain) DO UPDATE SET content_type = excluded.content_type, data = excluded.data, fetched_at = excluded.fetched_at`
+  ).bind(domain, fresh.content_type, fresh.data, Date.now()).run();
+  return logoResponse(fresh, cors);
 }
 
 // ── Gemeinsamer Ablauf: Archiv → (Schalter, Limits) → KI → Prüfung → Archiv ──
@@ -203,6 +355,7 @@ function companyFromParams(url) {
     id, name,
     ticker:   (url.searchParams.get("ticker")   || "").trim().slice(0, 16) || null,
     exchange: (url.searchParams.get("exchange") || "").trim().slice(0, 24) || null,
+    domain:   cleanDomain(url.searchParams.get("domain") || ""),
   };
 }
 
@@ -304,6 +457,11 @@ export default {
     const ctx = { env, s: settings(env), request, cors };
 
     try {
+      // Logos werden als <img> geladen (ohne Kennung) – sie kosten keine KI
+      if (request.method === "GET" && url.pathname === "/logo") return await handleLogo(ctx, url);
+      if (!url.pathname.startsWith("/admin/") && !appAllowed(request, env)) {
+        return json({ error: "forbidden" }, 403, cors);
+      }
       if (request.method === "GET" && url.pathname === "/status") {
         return json({ ai_enabled: ctx.s.aiEnabled, budget: await budgetStatus(env, ctx.s) }, 200, cors);
       }

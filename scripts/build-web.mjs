@@ -9,9 +9,9 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const out  = join(root, "www");
 
 const files = [
-  "index.html", "style.css",
-  "config.js", "tooltips.js", "app.js", "dive-mindmap.js",
-  "data",
+  "index.html", "impressum.html", "datenschutz.html", "manifest.webmanifest", "style.css",
+  "config.js", "tooltips.js", "app.js", "dive-mindmap.js", "onboarding.js",
+  "data", "legal",
   "assets",
 ];
 

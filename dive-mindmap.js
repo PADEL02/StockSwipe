@@ -43,11 +43,7 @@
   const esc  = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 
   function logoHTML(company) {
-    if (company.icon) {
-      return `<img src="https://cdn.simpleicons.org/${company.icon}/ffffff" alt="" ` +
-             `data-fallback="${esc(company.logoText)}" onerror="brandIconError(this)">`;
-    }
-    return `<span class="brand-fallback">${esc(company.logoText)}</span>`;
+    return logoMarkup(company.domain, company.logoText);
   }
 
   function makeNode(type, data, parent) {

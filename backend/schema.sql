@@ -19,6 +19,15 @@ CREATE TABLE IF NOT EXISTS usage (
 
 -- Anfragen pro Gerät/Stunde (Schutz vor Missbrauch)
 CREATE TABLE IF NOT EXISTS ratelimit (
-  key    TEXT PRIMARY KEY,               -- "<IP>|<YYYY-MM-DDTHH>"
+  key    TEXT PRIMARY KEY,               -- "<YYYY-MM-DDTHH>|<Art>|<Hash der IP>" (nie die IP selbst)
   count  INTEGER NOT NULL DEFAULT 0
+);
+
+-- Firmenlogos (Website-Symbole der Unternehmen, Base64), damit die App nie
+-- direkt fremde Server anfragt
+CREATE TABLE IF NOT EXISTS logos (
+  domain        TEXT PRIMARY KEY,
+  content_type  TEXT,                    -- NULL = kein Logo gefunden
+  data          TEXT,
+  fetched_at    INTEGER NOT NULL
 );

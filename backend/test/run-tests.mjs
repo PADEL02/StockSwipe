@@ -229,6 +229,89 @@ test("CORS: erlaubte Herkunft wird gespiegelt", async () => {
   assert.equal(res.headers.get("Access-Control-Allow-Origin"), "capacitor://localhost");
 });
 
+// ── Phase 5: Datenschutz & Zugang ────────────────────────────────────────────
+test("App-Kennung: ohne Kennung kein Zugriff, mit Kennung schon", async () => {
+  const env = makeEnv({ APP_KEY: "app-123" });
+  assert.equal((await get(env, "/status")).status, 403);
+  assert.equal((await get(env, "/status", { "X-App-Key": "app-123" })).status, 200);
+});
+
+test("Fremde Website (Origin) wird abgewiesen", async () => {
+  const env = makeEnv();
+  assert.equal((await get(env, "/status", { Origin: "https://evil.example" })).status, 403);
+  assert.equal((await get(env, "/status", { Origin: "https://padel02.github.io" })).status, 200);
+});
+
+test("IP-Adressen werden nur als Hash gespeichert", async () => {
+  const env = makeEnv();
+  await get(env, "/card?company=ip1&name=IP Test", { "CF-Connecting-IP": "203.0.113.77" });
+  const rows = env.DB._db.prepare("SELECT key FROM ratelimit").all();
+  assert.ok(rows.length >= 1);
+  assert.ok(rows.every(r => !r.key.includes("203.0.113.77")), "IP darf nicht im Klartext stehen");
+});
+
+test("Logos: Website-Symbol der Firma über das Backend, mit Archiv", async () => {
+  const env = makeEnv();
+  const png = new Uint8Array(400); png.set([0x89, 0x50, 0x4E, 0x47]);
+  const real = globalThis.fetch;
+  const hits = [];
+  globalThis.fetch = async (u, i) => {
+    const url = String(u);
+    if (url === "https://apple.com/") {
+      hits.push(url);
+      return new Response('<html><head><link rel="icon" href="/fav.ico"><link rel="apple-touch-icon" sizes="180x180" href="/touch.png"></head></html>',
+        { headers: { "content-type": "text/html; charset=utf-8" } });
+    }
+    if (url === "https://apple.com/touch.png") { hits.push(url); return new Response(png, { headers: { "content-type": "image/png" } }); }
+    if (url.startsWith("https://")) { hits.push(url); return new Response("nope", { status: 404 }); }
+    return real(u, i);
+  };
+  try {
+    let res = await worker.fetch(new Request("https://api.test/logo?domain=apple.com"), env);
+    assert.equal(res.status, 200);
+    assert.equal(res.headers.get("content-type"), "image/png");
+    assert.equal(res.headers.get("X-Content-Type-Options"), "nosniff");
+    assert.ok(hits.includes("https://apple.com/touch.png"), "Apple-Touch-Icon wird bevorzugt");
+    const n = hits.length;
+    res = await worker.fetch(new Request("https://api.test/logo?domain=apple.com"), env);
+    assert.equal(res.status, 200);
+    assert.equal(hits.length, n, "zweiter Abruf kommt aus dem Archiv");
+    res = await worker.fetch(new Request("https://api.test/logo?domain=../../etc"), env);
+    assert.equal(res.status, 404, "ungültige Domains werden abgelehnt");
+    res = await worker.fetch(new Request("https://api.test/logo?domain=keinlogo.com"), env);
+    assert.equal(res.status, 404, "ohne Logo → 404, App zeigt Kürzel");
+  } finally { globalThis.fetch = real; }
+});
+
+test("Logos: Nicht-Bilder werden verworfen", async () => {
+  const env = makeEnv();
+  const real = globalThis.fetch;
+  globalThis.fetch = async (u, i) => {
+    const url = String(u);
+    if (url === "https://evil.com/") return new Response('<link rel="icon" href="/x.png">', { headers: { "content-type": "text/html" } });
+    if (url.startsWith("https://evil.com/")) return new Response("<script>alert(1)</script>".repeat(10), { headers: { "content-type": "image/png" } });
+    if (url.startsWith("https://")) return new Response("", { status: 404 });
+    return real(u, i);
+  };
+  try {
+    const res = await worker.fetch(new Request("https://api.test/logo?domain=evil.com"), env);
+    assert.equal(res.status, 404);
+  } finally { globalThis.fetch = real; }
+});
+
+test("Website der Firma wird als Domain übernommen", async () => {
+  const env = makeEnv();
+  override = () => ({
+    stop_reason: "end_turn", usage: { input_tokens: 5000, output_tokens: 500 },
+    content: [{ type: "web_search_tool_result", content: [{ url: "https://ir.test.com/a" }] },
+      { type: "text", text: "```json\n" + JSON.stringify({ name: "Test", website: "https://www.Test-Firma.com/de/", sector: "Industrie",
+        description: "Test baut Maschinen.", products: ["A"], competitors: ["B"] }) + "\n```" }],
+  });
+  const r = await get(env, "/card?company=dom&name=Test");
+  override = null;
+  assert.equal(r.body.domain, "test-firma.com");
+});
+
 // ── Ausführen ────────────────────────────────────────────────────────────────
 let failed = 0;
 for (const t of tests) {

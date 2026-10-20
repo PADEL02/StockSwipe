@@ -6,9 +6,10 @@
   <meta name="theme-color" content="#05070A" />
   <title>StockSwipe</title>
   
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
   
   <link rel="stylesheet" href="style.css">
 </head>
@@ -23,10 +24,15 @@
         </div>
       </div>
 
+      <div class="topbar-actions">
+      <button id="infoBtn" class="watchlist-btn info-btn" type="button" aria-label="Über die App, Impressum und Datenschutz">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9.25" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="10.5" x2="12" y2="16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.4" r="1.25" fill="currentColor"/></svg>
+      </button>
       <button id="watchlistBtn" class="watchlist-btn" aria-label="Watchlist öffnen">
         <span aria-hidden="true">★</span>
         <span id="watchlistBadge" class="watchlist-badge" style="display:none;">0</span>
       </button>
+      </div>
     </header>
 
     <section id="pageSwipe" class="page active" aria-label="Swipe Seite">
@@ -217,13 +223,103 @@
     <button id="tabEtf"   class="tab"        type="button" aria-label="ETF Builder">ETF</button>
   </nav>
 
+  <!-- Startbildschirm -->
+  <div id="appSplash" class="app-splash" aria-hidden="true">
+    <svg viewBox="0 0 1024 1024" width="132" height="132"><defs>
+  <linearGradient id="spl-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#141A26"/><stop offset="1" stop-color="#06080D"/></linearGradient>
+  <radialGradient id="spl-glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#C5A059" stop-opacity="0.22"/><stop offset="1" stop-color="#C5A059" stop-opacity="0"/></radialGradient>
+  <linearGradient id="spl-gold" gradientUnits="userSpaceOnUse" x1="180" y1="150" x2="860" y2="880"><stop offset="0" stop-color="#F0D59A"/><stop offset="0.55" stop-color="#C9A25E"/><stop offset="1" stop-color="#9C7638"/></linearGradient>
+</defs><g transform="translate(487 512) scale(1.12) translate(-512 -512)"><circle cx="512" cy="512" r="360" fill="url(#spl-glow)"/><line x1="512.0" y1="512.0" x2="512.0" y2="262.0" stroke="url(#spl-gold)" stroke-width="22" stroke-linecap="round"/><line x1="512.0" y1="512.0" x2="749.8" y2="434.7" stroke="url(#spl-gold)" stroke-width="22" stroke-linecap="round"/><line x1="512.0" y1="512.0" x2="658.9" y2="714.3" stroke="url(#spl-gold)" stroke-width="22" stroke-linecap="round"/><line x1="512.0" y1="512.0" x2="365.1" y2="714.3" stroke="url(#spl-gold)" stroke-width="22" stroke-linecap="round"/><line x1="512.0" y1="512.0" x2="274.2" y2="434.7" stroke="url(#spl-gold)" stroke-width="22" stroke-linecap="round"/><line x1="749.8" y1="434.7" x2="890.7" y2="486.0" stroke="url(#spl-gold)" stroke-width="16" stroke-linecap="round"/><line x1="749.8" y1="434.7" x2="833.6" y2="310.4" stroke="url(#spl-gold)" stroke-width="16" stroke-linecap="round"/><circle cx="512.0" cy="262.0" r="46" fill="url(#spl-gold)"/><circle cx="749.8" cy="434.7" r="46" fill="url(#spl-gold)"/><circle cx="658.9" cy="714.3" r="46" fill="url(#spl-gold)"/><circle cx="365.1" cy="714.3" r="46" fill="url(#spl-gold)"/><circle cx="274.2" cy="434.7" r="46" fill="url(#spl-gold)"/><circle cx="890.7" cy="486.0" r="30" fill="url(#spl-gold)"/><circle cx="833.6" cy="310.4" r="30" fill="url(#spl-gold)"/><circle cx="512.0" cy="512.0" r="92" fill="url(#spl-gold)"/></g></svg>
+    <span id="splashName" class="splash-name"></span>
+  </div>
+
+  <!-- Einführung beim ersten Start -->
+  <div id="onboarding" class="onboarding" role="dialog" aria-modal="true" aria-label="Einführung" hidden>
+    <button id="obSkip" class="ob-skip" type="button">Überspringen</button>
+    <div class="ob-track" id="obTrack">
+      <section class="ob-slide">
+        <svg class="ob-art" viewBox="0 0 240 200" aria-hidden="true">
+          <rect x="70" y="20" width="100" height="140" rx="16" fill="#151B26" stroke="#C5A059" stroke-width="2"/>
+          <rect x="84" y="118" width="54" height="8" rx="4" fill="#C5A059" opacity=".8"/><rect x="84" y="132" width="38" height="6" rx="3" fill="#9CA3AF" opacity=".6"/>
+          <path d="M44 90 h-26 m8 -8 l-8 8 l8 8" stroke="#E11D48" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M196 90 h26 m-8 -8 l8 8 l-8 8" stroke="#10B981" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M120 190 v-22 m-8 8 l8 -8 l8 8" stroke="#F3F4F6" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2>Swipe</h2>
+        <p>Nach <b class="ok">rechts</b> wischen: Aktie merken. Nach <b class="no">links</b>: überspringen.</p>
+        <p class="ob-key">Karte <b>nach oben ziehen</b> = alle Details.</p>
+        <p class="ob-tip">Tipp: Einen Wert gedrückt halten zeigt eine kurze Erklärung.</p>
+      </section>
+      <section class="ob-slide">
+        <svg class="ob-art" viewBox="0 0 240 200" aria-hidden="true">
+          <g stroke="#C5A059" stroke-width="3" stroke-linecap="round"><line x1="120" y1="100" x2="62" y2="60"/><line x1="120" y1="100" x2="178" y2="60"/><line x1="120" y1="100" x2="120" y2="160"/><line x1="178" y1="60" x2="214" y2="34"/><line x1="178" y1="60" x2="218" y2="82"/></g>
+          <circle cx="120" cy="100" r="24" fill="#C5A059"/>
+          <rect x="40" y="48" width="44" height="24" rx="12" fill="#2a2414" stroke="#C5A059" stroke-width="2"/>
+          <rect x="156" y="48" width="44" height="24" rx="12" fill="#2a2414" stroke="#C5A059" stroke-width="2"/>
+          <rect x="98" y="148" width="44" height="24" rx="12" fill="#2a2414" stroke="#C5A059" stroke-width="2"/>
+          <circle cx="214" cy="34" r="10" fill="#0D121B" stroke="#60A5FA" stroke-width="3"/><circle cx="218" cy="82" r="10" fill="#0D121B" stroke="#60A5FA" stroke-width="3"/>
+          <circle cx="218" cy="82" r="18" fill="none" stroke="#F3F4F6" stroke-width="2" stroke-dasharray="4 4" opacity=".8"/>
+        </svg>
+        <h2>Dive</h2>
+        <p>Sieh, <b>wer ein Unternehmen beliefert</b>. Tippe auf eine Branche, dann auf einen Zulieferer, um tiefer zu tauchen.</p>
+        <p class="ob-key">Unternehmen <b>gedrückt halten</b> = Aktienkarte mit allen Details.</p>
+      </section>
+      <section class="ob-slide">
+        <svg class="ob-art" viewBox="0 0 240 200" aria-hidden="true">
+          <circle cx="120" cy="96" r="60" fill="none" stroke="#1E2533" stroke-width="22"/>
+          <circle cx="120" cy="96" r="60" fill="none" stroke="#C5A059" stroke-width="22" stroke-dasharray="160 377" transform="rotate(-90 120 96)"/>
+          <circle cx="120" cy="96" r="60" fill="none" stroke="#10B981" stroke-width="22" stroke-dasharray="110 377" stroke-dashoffset="-162" transform="rotate(-90 120 96)"/>
+          <circle cx="120" cy="96" r="60" fill="none" stroke="#60A5FA" stroke-width="22" stroke-dasharray="100 377" stroke-dashoffset="-274" transform="rotate(-90 120 96)"/>
+        </svg>
+        <h2>ETF bauen</h2>
+        <p>Stell dir aus Aktien deinen <b>eigenen Mix</b> zusammen und vergleiche ihn im Leaderboard.</p>
+      </section>
+      <section class="ob-slide ob-final">
+        <svg class="ob-art" viewBox="0 0 240 200" aria-hidden="true">
+          <circle cx="120" cy="96" r="58" fill="none" stroke="#C5A059" stroke-width="4"/>
+          <line x1="120" y1="80" x2="120" y2="124" stroke="#C5A059" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="120" cy="64" r="6" fill="#C5A059"/>
+        </svg>
+        <h2>Kurz wichtig</h2>
+        <ul class="ob-list">
+          <li><b>Keine Anlageberatung.</b> Die App informiert, sie empfiehlt nichts.</li>
+          <li><b>Daten ohne Gewähr.</b> Sie werden mit KI aus öffentlichen Quellen erstellt und können Fehler enthalten.</li>
+          <li><b>Investieren hat Risiken</b>, bis zum Totalverlust.</li>
+        </ul>
+      </section>
+    </div>
+    <div class="ob-footer">
+      <div class="ob-dots" id="obDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <button id="obNext" class="ob-next" type="button">Weiter</button>
+    </div>
+  </div>
+
+  <!-- Über die App: Impressum, Datenschutz, Hinweise -->
+  <div id="infoPanel" class="info-panel" role="dialog" aria-modal="true" aria-labelledby="infoTitle" hidden>
+    <div class="info-head">
+      <button id="infoBack" class="info-icon-btn" type="button" aria-label="Zurück" hidden>‹</button>
+      <h2 id="infoTitle">Über die App</h2>
+      <button id="infoClose" class="info-icon-btn" type="button" aria-label="Schließen">✕</button>
+    </div>
+    <div id="infoMenu" class="info-body">
+      <button class="info-row" type="button" data-show="intro">Einführung ansehen<span>›</span></button>
+      <button class="info-row" type="button" data-show="hinweise">Hinweise<span>›</span></button>
+      <button class="info-row" type="button" data-show="impressum">Impressum<span>›</span></button>
+      <button class="info-row" type="button" data-show="datenschutz">Datenschutz<span>›</span></button>
+      <p id="infoVersion" class="info-version"></p>
+    </div>
+    <div id="infoText" class="info-body info-text" hidden></div>
+  </div>
+
   <div id="tipBubble" class="tip-bubble" role="tooltip" aria-hidden="true"></div>
 
   <script src="config.js"></script>
+  <script src="legal/legal-texts.js"></script>
   <script src="data/demo-data.js"></script>
   <script src="data/data-service.js"></script>
   <script src="tooltips.js"></script>
   <script src="app.js"></script>
   <script src="dive-mindmap.js"></script>
+  <script src="onboarding.js"></script>
 </body>
 </html>

@@ -61,6 +61,13 @@ function isFoundUrl(url, searchUrls) {
   return !!n && searchUrls.has(n);
 }
 
+// Website → reine Domain (für das Firmenlogo), sonst null
+function cleanDomain(w) {
+  if (typeof w !== "string") return null;
+  const d = w.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/^www\./, "").split(/[/?#]/)[0];
+  return /^(?=.{3,100}$)([a-z0-9-]+\.)+[a-z]{2,}$/.test(d) ? d : null;
+}
+
 function cleanText(s, max) {
   if (typeof s !== "string") return null;
   const t = s.replace(/\s+/g, " ").trim();
@@ -93,6 +100,7 @@ function validateCompany(json, searchUrls, minMarketCapUsd) {
       ticker: cleanText(json.ticker, 16),
       exchange: cleanText(json.exchange, 24),
       country_iso: /^[A-Z]{2}$/.test(json.country_iso || "") ? json.country_iso : null,
+      domain: cleanDomain(json.website),
       market_cap_usd: Number.isFinite(cap) && cap > 0 ? cap : null,
     },
   };
@@ -137,6 +145,7 @@ function validateSupplyChain(json, searchUrls, rootCompany, maxAgeYears) {
         ticker: cleanText(s.ticker, 16),
         exchange: cleanText(s.exchange, 24),
         country_iso: /^[A-Z]{2}$/.test(s.country_iso || "") ? s.country_iso : null,
+        domain: cleanDomain(s.website),
         supplies: cleanText(s.what_they_supply, 120),
         sources: evidence.slice(0, 3).map(e => ({ url: e.url, publisher: cleanText(e.publisher, 60), date: e.date })),
       };
@@ -197,6 +206,7 @@ function validateCard(json, searchUrls, company) {
     ticker: cleanText(json.ticker, 16) || company.ticker || null,
     exchange: cleanText(json.exchange, 24) || company.exchange || null,
     country_iso: /^[A-Z]{2}$/.test(json.country_iso || "") ? json.country_iso : company.country_iso || null,
+    domain: cleanDomain(json.website) || company.domain || null,
     sector: cleanText(json.sector, 30),
     description,
     products: list(json.products, 6, 30),
@@ -216,5 +226,5 @@ function validateFinancials(json, searchUrls) {
 
 export {
   validateCompany, validateSupplyChain, validateCard, validateFinancials,
-  slug, isRecent, today, BLOCKED_HOSTS,
+  slug, isRecent, today, cleanDomain, BLOCKED_HOSTS,
 };

@@ -38,6 +38,7 @@ JSON-Format:
   "ticker": "z. B. 2330",
   "exchange": "z. B. TWSE",
   "country_iso": "zweistelliger ISO-Code, z. B. TW",
+  "website": "Hauptdomain der offiziellen Website, z. B. tsmc.com",
   "listed": true,
   "market_cap_usd": 1000000000000,
   "market_cap_as_of": "YYYY-MM-DD",
@@ -86,6 +87,7 @@ JSON-Format:
           "ticker": "z. B. 2330 oder null",
           "exchange": "z. B. TWSE oder null",
           "country_iso": "TW",
+          "website": "Hauptdomain der offiziellen Website, z. B. tsmc.com, oder null",
           "listed": true,
           "what_they_supply": "kurz auf Deutsch, z. B. Fertigung der KI-Chips",
           "evidence": [
@@ -123,6 +125,7 @@ JSON-Format:
   "ticker": "…",
   "exchange": "…",
   "country_iso": "US",
+  "website": "Hauptdomain der offiziellen Website, z. B. apple.com",
   "sector": "…",
   "description": "…",
   "products": ["…"],
