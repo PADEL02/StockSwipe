@@ -245,14 +245,20 @@
     }
 
     node.loading = true; draw();
+    // Neue Recherchen der KI dauern etwas – nach kurzer Zeit Bescheid geben
+    const slowHint = setTimeout(() => {
+      if (node.loading) showToast(`Lieferkette von ${node.data.name} wird recherchiert – das kann bis zu einer Minute dauern`, 6000);
+    }, 2500);
     let industries;
     try {
-      industries = await DataService.getSupplierIndustries(node.data.id);
+      industries = await DataService.getSupplierIndustries(node.data);
     } catch (err) {
+      clearTimeout(slowHint);
       node.loading = false; draw();
-      showToast("Daten konnten nicht geladen werden");
+      showToast(DataService.messageFor(err.code));
       return;
     }
+    clearTimeout(slowHint);
     node.loading = false;
     if (!root || !all.includes(node) || node.exiting) return; // inzwischen zurückgesetzt
 
@@ -263,7 +269,7 @@
     }
     if (!industries.length) {
       draw(); nudge(node);
-      showToast(`Keine börsennotierten Zulieferer gefunden`);
+      showToast(`Keine belegten börsennotierten Zulieferer gefunden`);
       return;
     }
 
@@ -289,7 +295,7 @@
 
   function openCard(node) {
     const company = node.data;
-    if (company.stockId && openStockCard(company.stockId)) return;
+    if (openStockCard(company)) return;
     showToast(`Für ${company.name} gibt es im Demo-Modus noch keine Aktienkarte`);
   }
 
@@ -309,45 +315,70 @@
     toggleCompany(root);
   }
 
-  function reset(showChips = true) {
+  function reset(showChips = true, keepInput = false) {
     all.forEach(n => { n.el.remove(); n.line && n.line.remove(); });
     all = []; root = null;
     if (showChips) {
-      inputEl.value = "";
-      clearBtn.style.display = "none";
+      if (!keepInput) inputEl.value = "";
+      clearBtn.style.display = inputEl.value ? "" : "none";
       chipsEl.style.display  = "";
       introEl.style.display  = "";
       mapEl.style.display    = "none";
-      filterChips("");
+      filterChips(inputEl.value);
     }
   }
 
   // ── Start-Auswahl (Chips + Suche) ───────────────────────────────────────────
-  const startCompanies = DataService.getDiveStartCompanies();
-  chipsEl.innerHTML = startCompanies.map(c =>
-    `<button class="dive-chip" data-id="${c.id}" type="button">${c.flag} ${esc(c.name)}</button>`
-  ).join("");
-  chipsEl.querySelectorAll(".dive-chip").forEach(btn =>
-    btn.addEventListener("click", () => start(DataService.getCompany(btn.dataset.id)))
-  );
+  // Vorschläge erst anzeigen, wenn feststeht, ob Demo- oder KI-Modus läuft.
+  let startCompanies = [];
+  AppReady.then(() => {
+    startCompanies = DataService.getDiveStartCompanies();
+    chipsEl.innerHTML = startCompanies.map(c =>
+      `<button class="dive-chip" data-id="${esc(c.id)}" type="button">${c.flag || ""} ${esc(c.name)}</button>`
+    ).join("");
+    chipsEl.querySelectorAll(".dive-chip").forEach(btn =>
+      btn.addEventListener("click", () => start(startCompanies.find(c => c.id === btn.dataset.id)))
+    );
+    if (DataService.isAI()) inputEl.placeholder = "Beliebiges Unternehmen suchen…";
+  });
 
   function filterChips(q) {
     const term = q.trim().toLowerCase();
     chipsEl.querySelectorAll(".dive-chip").forEach(btn => {
-      const c = DataService.getCompany(btn.dataset.id);
+      const c = startCompanies.find(x => x.id === btn.dataset.id);
       btn.style.display = !term || c.name.toLowerCase().includes(term) || c.id.includes(term) ? "" : "none";
     });
   }
 
   inputEl.addEventListener("input", e => {
-    if (root) reset();
+    if (root) reset(true, true); // neue Eingabe: Mindmap schließen, Eingabe behalten
     filterChips(e.target.value);
   });
-  inputEl.addEventListener("keydown", e => {
+
+  let searching = false;
+  inputEl.addEventListener("keydown", async e => {
     if (e.key !== "Enter") return;
+    const term = inputEl.value.trim();
     const first = [...chipsEl.querySelectorAll(".dive-chip")].find(c => c.style.display !== "none");
-    if (first) { inputEl.blur(); start(DataService.getCompany(first.dataset.id)); }
-    else showToast("Im Demo-Modus nur für die angezeigten Unternehmen verfügbar");
+    const exact = startCompanies.find(c => c.name.toLowerCase() === term.toLowerCase());
+
+    if (!DataService.isAI() || exact) {
+      if (exact || first) { inputEl.blur(); start(exact || startCompanies.find(c => c.id === first.dataset.id)); }
+      else showToast("Im Demo-Modus nur für die angezeigten Unternehmen verfügbar");
+      return;
+    }
+    // KI-Modus: jedes börsennotierte Unternehmen suchen
+    if (term.length < 2 || searching) return;
+    searching = true;
+    inputEl.blur();
+    showToast("Unternehmen wird gesucht…");
+    try {
+      start(await DataService.searchCompany(term));
+    } catch (err) {
+      showToast(DataService.messageFor(err.code));
+    } finally {
+      searching = false;
+    }
   });
   clearBtn.addEventListener("click", () => reset());
 

@@ -8,18 +8,20 @@ Die App ist reines HTML/CSS/JavaScript. Dieselben Dateien laufen als Website (Gi
 
 | Datei | Inhalt |
 |---|---|
-| `config.js` | **Zentrale Einstellungen:** App-Name, KI-Schalter, Bezahlmodell |
+| `config.js` | **Zentrale Einstellungen:** App-Name, Backend-Adresse, Bezahlmodell |
 | `data/data-service.js` | Einzige Stelle, über die Daten geladen werden (Demo oder KI-Backend) |
 | `data/demo-data.js` | Beispieldaten für den Demo-Modus |
 | `app.js` | Swipe, Watchlist, ETF-Builder, Leaderboard |
 | `dive-mindmap.js` | Dive-Mindmap |
 | `tooltips.js` | Erklär-Tooltips (gedrückt halten / hovern) |
 | `style.css` | Design (Farben zentral als Variablen in `:root`) |
+| `backend/` | KI-Backend (Cloudflare Worker) – Einrichtung und **KI-Schalter** siehe `backend/README.md` |
 
 ## Wichtige Schalter in `config.js`
 
 - `name` – endgültigen App-Namen hier eintragen (zusätzlich in `capacitor.config.json` → `appName`).
-- `ai.enabled` – **aus** = Demo-Modus mit Beispieldaten, keine KI-Kosten. Erst nach Freigabe einschalten.
+- `ai.endpoint` – Adresse des KI-Backends. Leer = immer Demo-Modus.
+- **Der KI-Schalter selbst liegt im Backend** (Cloudflare-Variable `AI_ENABLED`, siehe `backend/README.md`). Steht er auf `false`, zeigt die App Beispieldaten und es entstehen keine Kosten.
 - `paywall.enabled` – **aus** = alle Dive-Ebenen frei. Später für das Pro-Modell einschalten.
 
 ## Native Apps bauen (einmalig einrichten)

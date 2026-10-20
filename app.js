@@ -1,5 +1,9 @@
 // ── Daten & Grundzustand ─────────────────────────────────────────────────────
-const stocks = DataService.getStockCards();
+// Der Swipe-Stapel: Einträge { id, name, ticker, …, card }. Im KI-Modus wird
+// card erst geladen, wenn die Karte gleich gebraucht wird (spart Kosten).
+let deck = [];
+let deckTotal = 0;
+let deckLoading = false;
 
 let index = 0;
 let dx = 0, dy = 0;
@@ -13,63 +17,143 @@ const toast   = document.getElementById("toast");
 document.title = APP_CONFIG.name;
 document.getElementById("brandName").textContent  = APP_CONFIG.name;
 document.getElementById("brandBadge").textContent = APP_CONFIG.badge;
-document.querySelectorAll("[data-source-label]").forEach(el => el.textContent = dataSourceLabel());
 
 const nfShort = new Intl.NumberFormat("de-DE", { notation:"compact", compactDisplay:"short" });
+const nfDate  = new Intl.DateTimeFormat("de-DE", { day:"2-digit", month:"2-digit", year:"numeric" });
 
 function formatCap(x)  { return typeof x === "number" ? nfShort.format(x) : "–"; }
 function formatPerf(p) { return typeof p === "number" ? `${p > 0 ? "+" : ""}${p.toFixed(1)}%` : "–"; }
 function perfColor(p)  { return p > 0 ? "var(--like)" : p < 0 ? "var(--nope)" : "var(--muted)"; }
 function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+// Texte aus Daten (v. a. von der KI) immer escapen, bevor sie ins HTML gehen
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
 
-function showToast(text) {
+function showToast(text, ms = 2200) {
   toast.textContent = text;
   toast.classList.add("show");
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+  showToast._t = setTimeout(() => toast.classList.remove("show"), ms);
 }
 
 // ── Card Helpers ──────────────────────────────────────────────────────────────
 function brandIconError(img) {
   const fb = img.dataset.fallback || "?";
-  img.parentElement.innerHTML = `<span class="brand-fallback">${fb}</span>`;
+  img.parentElement.innerHTML = `<span class="brand-fallback">${esc(fb)}</span>`;
 }
 
 function renderBrandRow(container, items) {
   if (!items || !items.length) { container.innerHTML = ""; return; }
   container.innerHTML = items.map(item => {
     if (item.icon) {
-      return `<div class="brand-icon" title="${item.name}">` +
-        `<img src="https://cdn.simpleicons.org/${item.icon}/ffffff" alt="${item.name}"` +
-        ` data-fallback="${item.short}" onerror="brandIconError(this)">` +
+      return `<div class="brand-icon" title="${esc(item.name)}">` +
+        `<img src="https://cdn.simpleicons.org/${esc(item.icon)}/ffffff" alt="${esc(item.name)}"` +
+        ` data-fallback="${esc(item.short)}" onerror="brandIconError(this)">` +
         `</div>`;
     }
-    return `<span class="brand-chip">${item.name}</span>`;
+    return `<span class="brand-chip">${esc(item.name)}</span>`;
   }).join("");
 }
 
 function renderDividendInfo(el, div) {
-  if (div && div.pays) {
+  // div === null → unbekannt (nicht sicher belegt): dann lieber gar nichts anzeigen
+  el.hidden = !div;
+  if (!div) { el.innerHTML = ""; return; }
+  if (div.pays) {
     const details = [div.amount, div.frequency].filter(Boolean).join(" · ");
     el.innerHTML =
       `<span class="div-badge div-yes">Dividende ja</span>` +
-      (details ? `<span class="div-amount">${details}</span>` : "");
+      (details ? `<span class="div-amount">${esc(details)}</span>` : "");
   } else {
     el.innerHTML = `<span class="div-badge div-no">Dividende nein</span>`;
   }
 }
 
 function renderTrendStamp(el, trend) {
-  if (!trend) { el.textContent = ""; el.className = "trend-stamp"; return; }
+  if (!trend) { el.textContent = ""; el.className = "trend-stamp"; el.hidden = true; return; }
+  el.hidden = false;
   el.textContent = `${trend.emoji} ${trend.label}`;
-  el.className = `trend-stamp trend-${trend.color}`;
+  el.className = `trend-stamp trend-${trend.color || "neutral"}`;
+}
+
+// ── Stapel laden ─────────────────────────────────────────────────────────────
+async function loadMoreDeck() {
+  if (deckLoading || (deckTotal && deck.length >= deckTotal)) return;
+  deckLoading = true;
+  try {
+    const batch = await DataService.getDeckBatch(deck.length, 20);
+    deckTotal = batch.total;
+    const known = new Set(deck.map(e => e.id));
+    batch.items.forEach(it => { if (!known.has(it.id)) deck.push(it); });
+  } catch {
+    showToast(DataService.messageFor());
+  } finally {
+    deckLoading = false;
+  }
+}
+
+const currentEntry = () => deck.length ? deck[index % deck.length] : null;
+
+// Karte eines Eintrags laden (nur KI-Modus, nur einmal gleichzeitig)
+function ensureCard(entry) {
+  if (!entry || entry.card || entry.error) return Promise.resolve();
+  if (!entry.loading) {
+    entry.loading = DataService.loadCard(entry)
+      .then(c => { entry.card = c; })
+      .catch(err => { entry.error = err.code || "error"; })
+      .finally(() => { entry.loading = null; });
+  }
+  return entry.loading;
+}
+
+function setCardStatus(text, busy) {
+  const el = document.getElementById("cardStatus");
+  el.hidden = !text;
+  el.classList.toggle("busy", !!busy);
+  el.querySelector("span").textContent = text || "";
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderStock() {
-  const s = stocks[index % stocks.length];
+  const entry = currentEntry();
 
-  // Card background photo + gradient fallback
+  card.style.transition = "none";
+  card.style.transform  = "translate3d(0,0,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
+  document.getElementById("stampLike").style.opacity  = 0;
+  document.getElementById("stampNope").style.opacity  = 0;
+  document.getElementById("stampSuper").style.opacity = 0;
+  sheet.classList.remove("open");
+  sheet.style.transform = "";
+
+  if (!entry) { renderPlaceholder({ name: "Wird geladen…" }); setCardStatus("Aktien werden geladen…", true); return; }
+
+  // Nachschub für den Stapel holen und die nächste Karte schon vorbereiten
+  if (DataService.isAI()) {
+    if (index + 5 >= deck.length) loadMoreDeck();
+    ensureCard(deck[(index + 1) % deck.length]);
+  }
+
+  if (entry.card) { setCardStatus(null); fillCard(entry.card); return; }
+
+  renderPlaceholder(entry);
+  if (entry.error) { setCardStatus(DataService.messageFor(entry.error) + " Wische weiter.", false); return; }
+  setCardStatus("Karte wird erstellt…", true);
+  const shownIndex = index;
+  ensureCard(entry).then(() => { if (index === shownIndex) renderStock(); });
+}
+
+// Platzhalter, solange die Kartendaten noch fehlen
+function renderPlaceholder(entry) {
+  fillCard({
+    name: entry.name, ticker: entry.ticker || "", logoText: DataService.initials(entry.name || "?"),
+    countryFlag: DataService.flagFor(entry.country_iso), sector: "–", country: "–",
+    description: "", products: [], competitors: [], dividend: null, trend: null,
+    marketCap: null, perf: null, photo: null, gradient: "linear-gradient(160deg,#0d1118 0%,#1a1f29 100%)",
+  });
+}
+
+function fillCard(s) {
   const cardBg = document.getElementById("cardBg");
   cardBg.style.background    = s.gradient;
   cardBg.style.backgroundImage = s.photo ? `url("${s.photo}")` : s.gradient;
@@ -79,19 +163,27 @@ function renderStock() {
   document.getElementById("logo").textContent        = s.logoText;
   document.getElementById("companyName").textContent = s.name;
   document.getElementById("ticker").textContent      = s.ticker;
+  document.getElementById("ticker").hidden           = !s.ticker;
   document.getElementById("countryFlag").textContent = s.countryFlag || "";
   document.getElementById("sectorBadge").textContent = s.sector;
-  document.getElementById("mcap").textContent        = formatCap(s.marketCap);
+  document.getElementById("sectorBadge").hidden      = !s.sector || s.sector === "–";
+  document.getElementById("mcap").textContent        = typeof s.marketCap === "number"
+    ? `${formatCap(s.marketCap)}${s.marketCapCurrency ? " " + s.marketCapCurrency : ""}` : "–";
+  const asOf = document.getElementById("mcapAsOf");
+  asOf.textContent = s.marketCapAsOf ? `Stand ${nfDate.format(new Date(s.marketCapAsOf))}` : "";
+  asOf.hidden = !s.marketCapAsOf;
   document.getElementById("sheetTitle").textContent  = s.name;
   document.getElementById("description").textContent = s.description;
   document.getElementById("sector").textContent      = s.sector;
   document.getElementById("country").textContent     = s.country;
 
   renderBrandRow(document.getElementById("productList"),    s.products    || []);
-  renderDividendInfo(document.getElementById("dividendInfo"), s.dividend  || { pays:false });
+  renderDividendInfo(document.getElementById("dividendInfo"), s.dividend ?? null);
   renderBrandRow(document.getElementById("competitorList"), s.competitors || []);
   renderTrendStamp(document.getElementById("trendStamp"),   s.trend       || null);
 
+  // Wertentwicklung nur zeigen, wenn Zahlen vorliegen (im KI-Modus ausgeblendet)
+  document.getElementById("perfPill").hidden = !s.perf;
   const setPerf = (id, val) => {
     const el = document.getElementById(id);
     el.textContent = formatPerf(val);
@@ -101,14 +193,6 @@ function renderStock() {
   setPerf("perfW", perf.w);
   setPerf("perfM", perf.m);
   setPerf("perfY", perf.y);
-
-  card.style.transition = "none";
-  card.style.transform  = "translate3d(0,0,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
-  document.getElementById("stampLike").style.opacity  = 0;
-  document.getElementById("stampNope").style.opacity  = 0;
-  document.getElementById("stampSuper").style.opacity = 0;
-  sheet.classList.remove("open");
-  sheet.style.transform = "";
 }
 
 // ── Card Physics ──────────────────────────────────────────────────────────────
@@ -230,21 +314,32 @@ document.getElementById("closeSheetBtn").addEventListener("click", () => {
 
 // ── Watchlist ─────────────────────────────────────────────────────────────────
 // Die Watchlist wird dauerhaft auf dem Gerät gespeichert (nur IDs + Superlike).
+// Gespeichert werden nur die Angaben, die die Watchlist anzeigt.
 function persistWatchlist() {
-  Store.set("watchlist", [...watchlist.values()].map(s => ({ id: s.id, superliked: s.superliked })));
+  Store.set("watchlist", [...watchlist.values()]);
 }
 
 function loadWatchlist() {
-  Store.get("watchlist", []).forEach(({ id, superliked }) => {
-    const s = stocks.find(x => x.id === id);
-    if (s) watchlist.set(id, { ...s, superliked: !!superliked });
+  Store.get("watchlist", []).forEach(item => {
+    if (!item || !item.id) return;
+    // ältere Version speicherte nur { id, superliked } → mit Demo-Daten ergänzen
+    const demo = item.name ? null : DataService.getDemoCard(item.id);
+    const s = demo ? { id: demo.id, name: demo.name, ticker: demo.ticker, country: demo.country,
+                       sector: demo.sector, logoText: demo.logoText, superliked: !!item.superliked } : item;
+    if (s.name) watchlist.set(s.id, s);
   });
   updateWatchlistBadge();
 }
 
 function saveToWatchlist(superliked = false) {
-  const s = stocks[index % stocks.length];
-  watchlist.set(s.id, { ...s, superliked });
+  const entry = currentEntry();
+  if (!entry) return;
+  const c = entry.card || {};
+  watchlist.set(entry.id, {
+    id: entry.id, name: c.name || entry.name, ticker: c.ticker || entry.ticker || "",
+    country: c.country || "", sector: c.sector || "", logoText: c.logoText || DataService.initials(entry.name),
+    superliked,
+  });
   persistWatchlist();
   updateWatchlistBadge();
 }
@@ -270,16 +365,16 @@ function renderWatchlistItems() {
   }
   list.innerHTML = [...watchlist.values()].map(s => `
     <div class="wl-item">
-      <div class="wl-logo">${s.logoText}</div>
+      <div class="wl-logo">${esc(s.logoText)}</div>
       <div class="wl-info">
-        <strong>${s.name}</strong>
-        <small>${s.ticker} &middot; ${s.country}</small>
+        <strong>${esc(s.name)}</strong>
+        <small>${[s.ticker, s.country].filter(Boolean).map(esc).join(" &middot; ")}</small>
       </div>
       <div class="wl-right">
-        <span class="wl-sector">${s.sector}</span>
+        <span class="wl-sector">${esc(s.sector)}</span>
         ${s.superliked ? `<span class="wl-super">★</span>` : ""}
       </div>
-      <button class="wl-remove" onclick="removeFromWatchlist('${s.id}')" aria-label="${s.name} entfernen">×</button>
+      <button class="wl-remove" onclick="removeFromWatchlist('${esc(s.id)}')" aria-label="${esc(s.name)} entfernen">×</button>
     </div>
   `).join("");
 }
@@ -309,10 +404,18 @@ function switchTab(active) {
   document.dispatchEvent(new CustomEvent("tabchange", { detail: active }));
 }
 
-// Öffnet eine bestimmte Aktienkarte im Swipe-Tab (z. B. aus der Dive-Mindmap).
-function openStockCard(stockId) {
-  const i = stocks.findIndex(s => s.id === stockId);
-  if (i < 0) return false;
+// Öffnet die Aktienkarte eines Unternehmens im Swipe-Tab (z. B. aus der Dive-Mindmap).
+// Im KI-Modus geht das für jedes Unternehmen: Fehlt die Karte, wird sie erzeugt.
+function openStockCard(company) {
+  const id = DataService.isAI() ? company.id : company.stockId;
+  if (!id) return false;
+  let i = deck.findIndex(e => e.id === id);
+  if (i < 0) {
+    if (!DataService.isAI()) return false;
+    const pos = deck.length ? index % deck.length : 0;
+    deck.splice(pos, 0, { id, name: company.name, ticker: company.ticker, exchange: company.exchange, card: null });
+    i = pos;
+  }
   switchTab("Swipe");
   index = i;
   renderStock();
@@ -338,12 +441,14 @@ function simulateTodayPerf(stock) {
 }
 
 // Einmalig alle today-Werte befüllen
-stocks.forEach(s => { if (s.perf) s.perf.d = simulateTodayPerf(s); });
+// Der ETF-Builder nutzt (vorerst) die Beispieldaten – dort gibt es Wertentwicklungen.
+const etfStocks = DEMO_STOCKS;
+etfStocks.forEach(s => { if (s.perf) s.perf.d = simulateTodayPerf(s); });
 
 function calcEtfPerf(holdings, period) {
   let result = 0;
   for (const h of holdings) {
-    const stock = stocks.find(s => s.ticker === h.ticker);
+    const stock = etfStocks.find(s => s.ticker === h.ticker);
     if (!stock) continue;
     result += (stock.perf?.[period] ?? 0) * h.weight / 100;
   }
@@ -379,7 +484,7 @@ function addHolding() {
   const weight   = parseInt(weightEl.value, 10);
 
   if (!ticker)          { showToast("Bitte einen Ticker eingeben"); return; }
-  if (!stocks.find(s => s.ticker === ticker)) { showToast(`${ticker} nicht in unserer Datenbank`); return; }
+  if (!etfStocks.find(s => s.ticker === ticker && s.perf)) { showToast(`${ticker} ist in den Beispieldaten nicht verfügbar`); return; }
   if (isNaN(weight) || weight < 1 || weight > 100) { showToast("Gewichtung: 1–100 %"); return; }
   if (etfHoldings.find(h => h.ticker === ticker)) { showToast(`${ticker} bereits enthalten`); return; }
 
@@ -473,8 +578,8 @@ function renderLeaderboard() {
       <div class="lb-item">
         <span class="lb-rank">#${i + 1}</span>
         <div class="lb-info">
-          <strong>${etf.name}${badge}</strong>
-          <small>${tickers}</small>
+          <strong>${esc(etf.name)}${badge}</strong>
+          <small>${esc(tickers)}</small>
         </div>
         <span class="lb-perf ${perfCls}">${perfSign}${etf.perf.toFixed(2)} %</span>
       </div>`;
@@ -482,6 +587,13 @@ function renderLeaderboard() {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-renderStock();
+// ── Start ─────────────────────────────────────────────────────────────────────
 loadWatchlist();
 renderLeaderboard();
+renderStock(); // Platzhalter, bis klar ist, ob Demo- oder KI-Modus
+AppReady.then(async () => {
+  document.querySelectorAll("[data-source-label]").forEach(el => el.textContent = dataSourceLabel());
+  await loadMoreDeck();
+  index = 0;
+  renderStock();
+});

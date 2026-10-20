@@ -10,11 +10,14 @@ const APP_CONFIG = {
   badge:     "S",
 
   // ── KI / Datenquelle ──────────────────────────────────────────────────────
-  // Solange `enabled` false ist, läuft die App im Demo-Modus mit Beispieldaten.
-  // Es werden dann KEINE KI-Anfragen gestellt und es entstehen keine Kosten.
+  // Adresse des Backends (Cloudflare Worker), z. B.
+  // "https://stockswipe-api.DEIN-NAME.workers.dev". Leer = immer Demo-Modus.
+  //
+  // DER KI-SCHALTER liegt im Backend: Variable AI_ENABLED in Cloudflare.
+  // So lässt er sich jederzeit umlegen, ohne die App neu zu veröffentlichen.
+  // Solange er aus ist, zeigt die App Beispieldaten – es entstehen keine Kosten.
   ai: {
-    enabled:  false,
-    endpoint: "",          // URL des Backends (Cloudflare Worker), kommt in Phase 4
+    endpoint: "",
   },
 
   // ── Bezahlmodell ──────────────────────────────────────────────────────────
@@ -28,8 +31,9 @@ const APP_CONFIG = {
 };
 
 // Kennzeichnung der Daten – erscheint klein auf Karten und in der Mindmap.
+// (AI_STATE wird beim Start in data/data-service.js gesetzt.)
 function dataSourceLabel() {
-  return APP_CONFIG.ai.enabled ? "KI-generiert · ohne Gewähr" : "Beispieldaten";
+  return (typeof AI_STATE !== "undefined" && AI_STATE.active) ? "KI-generiert · ohne Gewähr" : "Beispieldaten";
 }
 
 // Zentrale Prüfung: Darf diese Ebene aufgeklappt werden?

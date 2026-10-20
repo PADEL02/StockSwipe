@@ -37,6 +37,9 @@
             <!-- Hintergrundfoto -->
             <div class="card-bg" id="cardBg"></div>
 
+            <!-- Hinweis, solange eine Karte erstellt wird -->
+            <div id="cardStatus" class="card-status" hidden><i aria-hidden="true"></i><span></span></div>
+
             <!-- Gradient-Overlay mit Inhalten -->
             <div class="card-overlay" aria-hidden="true">
               <div class="stamp like" id="stampLike">LIKE</div>
@@ -80,8 +83,9 @@
                   <div class="pill" style="grid-column: 1 / -1;" data-tip="mcap">
                     <small>Unternehmenswert</small>
                     <strong id="mcap">–</strong>
+                    <span id="mcapAsOf" class="pill-note" hidden></span>
                   </div>
-                  <div class="pill" style="grid-column: 1 / -1;" data-tip="perf">
+                  <div class="pill" id="perfPill" style="grid-column: 1 / -1;" data-tip="perf">
                     <small>Wertentwicklung</small>
                     <div class="trend">
                       <span class="trend-chip" data-tip="perfW">1W <b id="perfW">–</b></span>

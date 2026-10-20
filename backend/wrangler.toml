@@ -1,0 +1,45 @@
+# Cloudflare-Worker für das KI-Backend
+name = "stockswipe-api"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Variablen, die du im Cloudflare-Dashboard änderst (z. B. den KI-Schalter),
+# werden beim nächsten Deploy NICHT überschrieben.
+keep_vars = true
+
+[vars]
+# ── DER SCHALTER ─────────────────────────────────────────────
+# "false" = keine KI-Aufrufe, keine Kosten (Demo-Modus in der App)
+# "true"  = KI erzeugt neue Daten
+AI_ENABLED = "false"
+
+# Kostenbremse: max. KI-Ausgaben pro Tag in Euro
+DAILY_BUDGET_EUR = "5"
+USD_PER_EUR = "1.15"
+
+# Max. neue KI-Anfragen pro Gerät und Stunde (bereits archivierte Daten zählen nicht)
+RATE_LIMIT_PER_HOUR = "30"
+
+# Modelle
+MODEL_DIVE = "claude-sonnet-5-5"
+MODEL_CARD = "claude-haiku-5-5"
+MODEL_SEARCH = "claude-haiku-5-5"
+
+# Archiv-Laufzeiten in Tagen
+TTL_SUPPLY_DAYS = "90"
+TTL_CARD_DAYS = "180"
+TTL_DIVIDEND_DAYS = "90"
+
+# Mindestgröße für die Dive-Suche (Marktkapitalisierung in US-Dollar)
+MIN_MARKET_CAP_USD = "50000000"
+# Belege für Lieferbeziehungen dürfen höchstens so alt sein (Jahre)
+EVIDENCE_MAX_AGE_YEARS = "4"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "stockswipe"
+database_id = "HIER-DIE-ID-EINTRAGEN"   # kommt von: npx wrangler d1 create stockswipe
+
+# Geheimnisse (NICHT hier eintragen, sondern per Befehl bzw. im Dashboard):
+#   ANTHROPIC_API_KEY  → npx wrangler secret put ANTHROPIC_API_KEY
+#   ADMIN_TOKEN        → npx wrangler secret put ADMIN_TOKEN   (optional, zum Löschen einzelner Archiv-Einträge)
