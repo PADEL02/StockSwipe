@@ -172,7 +172,8 @@ const LOGO_TTL_MS      = 30 * DAY_MS;   // gefundene Logos 30 Tage behalten
 const LOGO_MISS_TTL_MS = 7 * DAY_MS;    // „kein Logo“ nach 7 Tagen neu versuchen
 const LOGO_MAX_BYTES   = 150_000;
 
-async function fetchLimited(target, maxBytes, timeoutMs = 5000) {
+// truncate = true: bei Überschreitung nur den Anfang behalten (für HTML reicht der <head>)
+async function fetchLimited(target, maxBytes, timeoutMs = 5000, truncate = false) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
@@ -188,7 +189,13 @@ async function fetchLimited(target, maxBytes, timeoutMs = 5000) {
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > maxBytes) { try { await reader.cancel(); } catch {} return null; }
+      if (size > maxBytes) {
+        try { await reader.cancel(); } catch {}
+        if (!truncate) return null;
+        chunks.push(value.subarray(0, value.byteLength - (size - maxBytes)));
+        size = maxBytes;
+        break;
+      }
       chunks.push(value);
     }
     const bytes = new Uint8Array(size); let off = 0;
@@ -236,20 +243,27 @@ async function findSiteIcon(domain) {
     const type = sniffImageType(r.bytes);
     return type ? { type, bytes: r.bytes } : null;
   };
+  const origins = new Set();
+  // 1) Startseite lesen und dort verlinkte Symbole probieren (größtes zuerst)
   for (const home of [`https://${domain}/`, `https://www.${domain}/`]) {
-    const page = await fetchLimited(home, 600_000);
-    if (!page || !/html/.test(page.type)) continue;
+    const page = await fetchLimited(home, 400_000, 5000, true);
+    if (!page) continue;
+    origins.add(new URL(page.url).origin);
+    if (!/html/.test(page.type)) continue;
     const html = new TextDecoder().decode(page.bytes);
     for (const c of iconCandidates(html, page.url).slice(0, 4)) {
       const img = await tryImage(c);
       if (img) return img;
     }
-    const origin = new URL(page.url).origin;
-    for (const p of ["/apple-touch-icon.png", "/favicon.ico"]) {
-      const img = await tryImage(origin + p);
+    break;
+  }
+  // 2) Übliche Standard-Pfade (klappt oft auch, wenn die Startseite Bots blockiert)
+  origins.add(`https://${domain}`); origins.add(`https://www.${domain}`);
+  for (const o of origins) {
+    for (const p of ["/apple-touch-icon.png", "/apple-touch-icon-precomposed.png", "/favicon.ico"]) {
+      const img = await tryImage(o + p);
       if (img) return img;
     }
-    break;
   }
   return null;
 }
