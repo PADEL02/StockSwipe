@@ -38,7 +38,7 @@ EVIDENCE_MAX_AGE_YEARS = "4"
 [[d1_databases]]
 binding = "DB"
 database_name = "stockswipe"
-database_id = "HIER-DIE-ID-EINTRAGEN"   # kommt von: npx wrangler d1 create stockswipe
+database_id = "517ecac9-906c-46fb-be68-a1594a4db4f9"
 
 # Geheimnisse (NICHT hier eintragen, sondern per Befehl bzw. im Dashboard):
 #   ANTHROPIC_API_KEY  → npx wrangler secret put ANTHROPIC_API_KEY
